@@ -44,18 +44,12 @@ import * as fs from "fs";
 import {BastetConfiguration, mergeConfigFilesToJson} from "./utils/BastetConfiguration";
 import {ParsingException} from "./core/exceptions/ParsingException";
 import {NodeSystemLayer} from "./utils/SystemLayer";
-import {ImmutableList} from "./utils/ImmutableList";
-import {Script} from "./syntax/app/controlflow/Script";
-import {MessageReceivedEvent, QualifiedMessageNamespace} from "./syntax/ast/core/CoreEvent";
-import {extractStringLiteral} from "./syntax/ast/core/expressions/StringExpression";
-import {SYSTEM_NAMESPACE_NAME} from "./syntax/ast/core/Message";
 import {
     CallStmtContext,
     MessageReceivedEventContext,
     ScriptContext,
     StringLiteralExpressionContext
 } from "./syntax/parser/grammar/LeilaParser";
-import {ImplementMeForException} from "./core/exceptions/ImplementMeException";
 
 const process = require('process');
 
@@ -83,12 +77,12 @@ class BastetRootConfig extends BastetConfiguration {
 export class Bastet {
 
     private parseProgramArguments(): any {
-        function commaSeparatedList(value, dummy) {
+        function commaSeparatedList(value) {
             return value.split(',');
         }
 
         const program = new commander.Command();
-        return program
+        program
             .version('0.0.1')
             .option('-d, --debug', 'Debugging mode')
             .option('-c, --configuration <required>', 'Configuration files, separated by comma', commaSeparatedList)
@@ -96,6 +90,7 @@ export class Bastet {
             .requiredOption('-P, --program <required>', 'Program file')
             .requiredOption('-S, --specification <required>', 'Specification file')
             .parse(process.argv);
+        return program.opts();
     }
 
     private async nullResult(): Promise<AnalysisResult> {
@@ -109,17 +104,18 @@ export class Bastet {
      */
     public async run(): Promise<AnalysisResult> {
         // Parsing of command line options
-        const cmdlineArguments = this.parseProgramArguments();
-        if (!cmdlineArguments) {
+        const options = this.parseProgramArguments();
+        console.log(options);
+        if (!options) {
             return this.nullResult();
         }
 
         this.registerOnExitNotifiers();
 
-        const intermLibFilepath: string = cmdlineArguments.intermediateLibrary;
-        const programFilepath: string = cmdlineArguments.program;
-        const specFilepath: string = cmdlineArguments.specification;
-        const configFilepaths: string[] = cmdlineArguments['configuration'] || ["./config/default.json"];
+        const intermLibFilepath: string = options.intermediateLibrary;
+        const programFilepath: string = options.program;
+        const specFilepath: string = options.specification;
+        const configFilepaths: string[] = options['configuration'] || ["./config/default.json"];
 
         return this.runFor(configFilepaths, intermLibFilepath, programFilepath, specFilepath);
     }
@@ -136,7 +132,7 @@ export class Bastet {
     }
 
     public async runFor(configFilepath: string[], libraryFilepath: string, programFilepath: string, specFilepath: string): Promise<AnalysisResult> {
-        Preconditions.checkArgument(fs.existsSync(libraryFilepath), "Library File does not exists.");
+        Preconditions.checkArgument(fs.existsSync(libraryFilepath), `Library File "${libraryFilepath}" does not exists.`);
         Preconditions.checkArgument(fs.existsSync(programFilepath), "Program File does not exists.");
         Preconditions.checkArgument(fs.existsSync(specFilepath), "Spec File does not exists.");
 

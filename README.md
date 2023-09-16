@@ -23,15 +23,14 @@ See the list of [contributors](./CONTRIBUTORS.md) and `git shortlog -sne` for al
 
 ### Development Environment
 
-- NodeJs 14.x 
-- TypeScript 4.x (`npm install -g typescript@4.1.2`)
-- JetBrains WebStorm 2020.x
+- NodeJs 18.x or later
+- VS Code
 
 ### Building BASTET
 
 ```
-npm install
-npm run build
+pnpm install
+pnpm build
 ```
 
 ### Running BASTET
