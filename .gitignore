@@ -17,7 +17,7 @@ tmp
 public/css/main.css
 
 # Coverage reports
-./coverage/
+/coverage/
 
 # API keys and secrets
 .env
@@ -37,11 +37,6 @@ Thumbs.db
 # Ignore built ts files
 dist/**/*
 
-# ignore yarn.lock
-yarn.lock
-
-
 !.idea
 
 test/programs/debug.sc
-

@@ -39,7 +39,7 @@ import * as fs from "fs";
 import {ResourceDefinition} from "../ast/core/ResourceDefinition";
 import * as path from "path";
 import {IntegerLiteral} from "../ast/core/expressions/NumberExpression";
-import {imageSize} from "image-size";
+import probe = require("probe-image-size");
 import {ScopeTypeInformation} from "../DeclarationScopes";
 
 export class LookupTransformer {
@@ -229,7 +229,10 @@ export class LookupTransformer {
                 let varWithDataLoc = new VariableWithDataLocation(new TypedDataLocation("ident", StringType.instance().typeId));
                 let cond = new StrEqualsExpression(varWithDataLoc, new StringLiteral(name));
 
-                let dimensions = imageSize(uri);
+                let dimensions = probe.sync(fs.readFileSync(uri));
+                if (dimensions == null) {
+                    throw new Error(`Unable to determine image dimensions for ${uri}`);
+                }
                 let width = dimensions.width;
                 if (fileName.endsWith(".png")) {
                     width = this.resizeWidthAndHeight(dimensions.width, dimensions.height)[0]
@@ -281,7 +284,10 @@ export class LookupTransformer {
                 let varWithDataLoc = new VariableWithDataLocation(new TypedDataLocation("ident", StringType.instance().typeId));
                 let cond = new StrEqualsExpression(varWithDataLoc, new StringLiteral(name));
 
-                let dimensions = imageSize(uri);
+                let dimensions = probe.sync(fs.readFileSync(uri));
+                if (dimensions == null) {
+                    throw new Error(`Unable to determine image dimensions for ${uri}`);
+                }
                 let height = dimensions.height;
                 if (fileName.endsWith(".png")) {
                     height = this.resizeWidthAndHeight(dimensions.width, dimensions.height)[1]

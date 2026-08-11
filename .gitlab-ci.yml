@@ -1,4 +1,8 @@
-image: node:14
+image: node:24
+
+before_script:
+  - corepack enable
+  - pnpm config set store-dir .pnpm-store
 
 stages:
   - build
@@ -6,13 +10,12 @@ stages:
 
 cache:
   paths:
-    - node_modules/
+    - .pnpm-store/
 
 install_dependencies:
   stage: build
   script:
-    - npm install -D typescript@4.1.2
-    - npm install
+    - pnpm install --frozen-lockfile
     - mkdir -p output/static
   artifacts:
     paths:
@@ -21,7 +24,5 @@ install_dependencies:
 testing_testing:
   stage: test
   script:
-    - npm install -D typescript@4.1.2
-    - npm install
-    - npm test
+    - pnpm test
     - mkdir -p output/static

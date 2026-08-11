@@ -23,15 +23,17 @@ See the list of [contributors](./CONTRIBUTORS.md) and `git shortlog -sne` for al
 
 ### Development Environment
 
-- NodeJs 14.x 
-- TypeScript 4.x (`npm install -g typescript@4.1.2`)
+- Node.js 24.x
+- pnpm 11.x (provided through Corepack)
+- TypeScript 5.x (installed with the project dependencies)
 - JetBrains WebStorm 2020.x
 
 ### Building BASTET
 
 ```
-npm install
-npm run build
+corepack enable
+pnpm install --frozen-lockfile
+pnpm run build
 ```
 
 ### Running BASTET

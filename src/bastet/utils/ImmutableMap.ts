@@ -28,7 +28,7 @@ export class ImmutableMap<K, V> implements ReadonlyMap<K, V>, Iterable<[K, V]> {
 
     private readonly _map: Map<K, V>;
 
-    constructor(entries: IterableIterator<[K, V]>) {
+    constructor(entries: Iterable<[K, V]>) {
         this._map = new Map<K, V>(entries);
     }
 
@@ -40,15 +40,15 @@ export class ImmutableMap<K, V> implements ReadonlyMap<K, V>, Iterable<[K, V]> {
         return this._map.has(key);
     }
 
-    public keys(): IterableIterator<K> {
+    public keys(): MapIterator<K> {
         return this._map.keys();
     }
 
-    public entries(): IterableIterator<[K, V]> {
+    public entries(): MapIterator<[K, V]> {
         return this._map.entries();
     }
 
-    public values(): IterableIterator<V> {
+    public values(): MapIterator<V> {
         return this._map.values();
     }
 
@@ -65,7 +65,7 @@ export class ImmutableMap<K, V> implements ReadonlyMap<K, V>, Iterable<[K, V]> {
         return result;
     }
 
-    public [Symbol.iterator](): IterableIterator<[K, V]> {
+    public [Symbol.iterator](): MapIterator<[K, V]> {
         return this._map[Symbol.iterator]();
     }
 
@@ -93,5 +93,4 @@ export class ImmutableMap<K, V> implements ReadonlyMap<K, V>, Iterable<[K, V]> {
     }
 
 }
-
 
