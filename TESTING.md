@@ -1,38 +1,69 @@
-# Testing the Bastet Framework Implementation
+# Testing Bastet
 
-We aim at a high test coverage of the Bastet Framework.
-
-This document describes conventions and best practices
-that should be used for this project.
+The test suite is split into a fast feedback tier and a required slow verification
+tier. Both tiers must pass before a change is merged.
 
 ## Specification-Oriented Testing
 
 Three constructs are central:
 
-- `describe("the thing or the case we test") { .. }`: 
-    The function `describe` is parameterized
-    with a description of the **subject to test** or 
-    a specific **case** for that the subject is tested.
-    Multiple `describe` can be nested; convention: 
-    The outer for the test subjects, the inner for the cases.
+- `describe("the thing or the case we test") { .. }`: groups tests by subject or
+  scenario. Groups may be nested.
     
-- `beforeEach(() => { .. })`: 
-    Is an optional function that **initializes** the 
-    test subject before the actual test is conducted.
+- `beforeEach(() => { .. })`: optionally initializes the subject before each test.
     
-- `it("the expected behavior", () => { .. })`:
-    The actual **test to conduct** to check whether a **behavior exists or not**.
+- `it("the expected behavior", () => { .. })`: describes and checks observable
+  behavior.
+
+Tests that perform asynchronous work must return or `await` its promise. Do not mix
+an `async` test with Jest's `done` callback, and do not catch and discard failures.
     
 ## Placement of Tests
 
-Test are separated into a separate folder structure
-under `test/`. This folder structure reflects the
-structure of the project source code it self, which
-is placed under `src/`.
+Tests live under `test/` and normally mirror the structure under `src/`.
+
+- Fast unit, parser, and transformation tests use the `*.test.ts` suffix outside
+  the slow-tier directories.
+- Solver tests live under `test/bastet/utils/smt/`.
+- Verification fixtures live under `test/bastet/procedures/analyses/data/`.
+- End-to-end tests live under `test/integration/`.
+- Verification fixture names end in `_SAFE.sc` or `_UNSAFE.sc` and the test must
+  assert the corresponding result.
+
+Committed focused or skipped tests (`test.only`, `describe.only`, `test.skip`,
+`it.skip`, `xtest`, or `xit`) are not permitted.
 
 ## Test Execution
 
-We use the JEST framework to execute tests.  
+Run the fast tier while developing:
+
+```sh
+pnpm run test:fast
+```
+
+It collects coverage only from handwritten Bastet TypeScript. Generated ANTLR and
+Z3 bindings are excluded. The global threshold records the current risk-based
+floor and should only move upward as coverage grows.
+
+Run the required solver, fixture, and integration tier with:
+
+```sh
+pnpm run test:slow
+```
+
+Slow suites run one file per Jest process to isolate native Z3 state. Jest limits
+each individual test to 120 seconds; the outer runner terminates any suite that
+does not finish within 240 seconds. This prevents a synchronous solver call from
+stalling CI indefinitely.
+
+The complete local gate is:
+
+```sh
+pnpm test
+```
+
+CI exposes the fast and slow tiers as separate required jobs so failures remain
+easy to diagnose.
 
 ## Literature
 

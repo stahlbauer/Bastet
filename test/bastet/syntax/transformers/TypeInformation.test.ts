@@ -6,7 +6,7 @@ import {
     ScopeTypeInformation,
     TypeInformationStorage,
 } from "../../../../src/bastet/syntax/DeclarationScopes";
-import {BooleanType, IntegerType} from "../../../../src/bastet/syntax/ast/core/ScratchType";
+import {BooleanType, IntegerType, ListType, StringType} from "../../../../src/bastet/syntax/ast/core/ScratchType";
 import {IllegalArgumentException} from "../../../../src/bastet/core/exceptions/IllegalArgumentException";
 
 describe('ScopeTypeInformation', function() {
@@ -67,5 +67,12 @@ describe('ScopeTypeInformation', function() {
 
         expect(union.lookupTyped("global")).toBe(IntegerType.instance());
         expect(union.lookupTyped("actor1@local")).toBe(BooleanType.instance());
+    });
+
+    test('reuses list types for the same element type', function() {
+        expect(ListType.withElementType(StringType.instance()))
+            .toBe(ListType.withElementType(StringType.instance()));
+        expect(ListType.withElementType(StringType.instance()))
+            .not.toBe(ListType.withElementType(IntegerType.instance()));
     });
 });

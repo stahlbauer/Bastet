@@ -38,16 +38,25 @@ const specFilePath = path.join(__dirname, specRelPath);
 let timeout: number = 120000; // in milliseconds
 export {timeout, execFixture, execute, execute_explicit};
 
-async function execFixture(fixturePath: string): Promise<void> {
+async function execFixture(
+    fixturePath: string,
+    configurationFilepaths: string[] = [configFilePath, ciConfigFilePath],
+    libraryFilepath: string = intermediatePath,
+): Promise<void> {
     const bastet = new Bastet();
-    await execute(bastet, fixturePath);
+    await execute(bastet, fixturePath, configurationFilepaths, libraryFilepath);
 }
 
-async function execute(bastet: Bastet, fixturePath: string): Promise<void> {
+async function execute(
+    bastet: Bastet,
+    fixturePath: string,
+    configurationFilepaths: string[] = [configFilePath, ciConfigFilePath],
+    libraryFilepath: string = intermediatePath,
+): Promise<void> {
     if (fixturePath.endsWith("_SAFE.sc")) {
-        await execute_explicit(bastet, fixturePath, true);
+        await execute_explicit(bastet, fixturePath, true, configurationFilepaths, libraryFilepath);
     } else if (fixturePath.endsWith("_UNSAFE.sc")) {
-        await execute_explicit(bastet, fixturePath, false);
+        await execute_explicit(bastet, fixturePath, false, configurationFilepaths, libraryFilepath);
     } else {
         throw new Error("Fixture file does not fit the _SAFE.sc/_UNSAFE.sc naming scheme");
     }
@@ -57,10 +66,12 @@ async function execute_explicit(
     bastet: Bastet,
     fixturePath: string,
     expectSuccess: boolean,
+    configurationFilepaths: string[] = [configFilePath, ciConfigFilePath],
+    libraryFilepath: string = intermediatePath,
 ): Promise<void> {
     const result: AnalysisResult = await bastet.runFor(
-        [configFilePath, ciConfigFilePath],
-        intermediatePath,
+        configurationFilepaths,
+        libraryFilepath,
         fixturePath,
         specFilePath,
     );

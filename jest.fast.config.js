@@ -9,4 +9,12 @@ module.exports = {
         '/test/bastet/procedures/analyses/data/',
         '/test/bastet/utils/smt/',
     ],
+    coverageThreshold: {
+        global: {
+            statements: 22,
+            branches: 16,
+            functions: 15,
+            lines: 22,
+        },
+    },
 };

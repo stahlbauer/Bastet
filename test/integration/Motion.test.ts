@@ -20,6 +20,15 @@
  *
  */
 import * as utils from "../bastet/procedures/analyses/data/TestUtils";
+import path from "path";
+
+const predicateConfig = path.join(__dirname, "../../config/predicate-abstraction.json");
+const ciConfig = path.join(__dirname, "../../config/ci.delta.json");
+const defaultConfig = path.join(__dirname, "../../config/default.json");
+const minimalMotionLibrary = path.join(
+    __dirname,
+    "../programs/library-coverage/motion/minimal-library.sc",
+);
 
 test("Test pointTowards 1 safe", async () => {
     const fixtureRelPath: string = "test/programs/library-coverage/motion/motion-pointTowards-1_SAFE.sc"
@@ -28,7 +37,7 @@ test("Test pointTowards 1 safe", async () => {
 
 test("Test pointTowards 1 unsafe", async () => {
     const fixtureRelPath: string = "test/programs/library-coverage/motion/motion-pointTowards-1_UNSAFE.sc"
-    await utils.execFixture(fixtureRelPath);
+    await utils.execFixture(fixtureRelPath, [defaultConfig, ciConfig], minimalMotionLibrary);
 }, utils.timeout);
 
 test("Test pointTowardsPos 1 safe", async () => {

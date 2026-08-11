@@ -226,10 +226,10 @@ export class ListType extends ScratchType {
         }
 
         const elementTypeName: string = elementType.constructor.name;
-        let result: ScratchType = this.TYPE_INSTANCES[elementTypeName];
+        let result: ListType = this.TYPE_INSTANCES[elementTypeName];
         if (!result) {
             result = new ListType(elementType);
-            this.TYPE_INSTANCES[elementTypeName]
+            this.TYPE_INSTANCES[elementTypeName] = result;
         }
 
         return result;
@@ -239,5 +239,3 @@ export class ListType extends ScratchType {
         return this._elementType;
     }
 }
-
-

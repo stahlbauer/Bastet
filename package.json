@@ -17,7 +17,7 @@
     "watch": "concurrently -k -p \"[{name}]\" -n \"TypeScript,Node\" -c \"yellow.bold,cyan.bold,green.bold\" \"pnpm run watch-ts\" \"pnpm run watch-node\"",
     "test": "pnpm run build-no-lint && pnpm run test:fast && pnpm run test:slow",
     "test:fast": "jest --config jest.fast.config.js --coverage",
-    "test:slow": "jest --config jest.slow.config.js --runInBand",
+    "test:slow": "node scripts/run-slow-tests.js",
     "watch-test": "jest --config jest.fast.config.js --watchAll",
     "build-ts": "tsc --incremental",
     "upgrade-all-packages": "pnpm update --latest",

@@ -2,11 +2,11 @@ import * as utils from "../bastet/procedures/analyses/data/TestUtils";
 
 const scenarios = [
     ["broadcast", "common-broadcast-1"],
-    ["clone lifecycle", "common-create-clone-1"],
-    ["list length", "expr-num-list-length-1"],
+    ["clone creation", "common-create-clone-basic-1"],
+    ["string length", "expr-num-string-length-1"],
     ["string-to-number cast", "cast-str-to-num-1"],
     ["method call", "ctrl-call-1"],
-    ["wait until", "common-wait-until-1"],
+    ["wait", "common-wait-2"],
 ] as const;
 
 describe.each(scenarios)("%s verifier scenarios", (_name, fixtureBase) => {

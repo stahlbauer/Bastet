@@ -21,10 +21,14 @@
  */
 import {Bastet} from "../../../../../src/bastet/Bastet";
 import * as utils from './TestUtils'
+import path from "path";
+
+const predicateConfig = path.join(__dirname, "../../../../../config/predicate-abstraction.json");
+const ciConfig = path.join(__dirname, "../../../../../config/ci.delta.json");
 
 test("Test ctrl forever 1 safe", async () => {
     const fixtureRelPath: string = "test/programs/language-coverage/ctrl-forever-1_SAFE.sc"
-    await utils.execFixture(fixtureRelPath);
+    await utils.execFixture(fixtureRelPath, [predicateConfig, ciConfig]);
 }, utils.timeout);
 
 test("Test ctrl forever 1 unsafe", async () => {
@@ -32,7 +36,7 @@ test("Test ctrl forever 1 unsafe", async () => {
     await utils.execFixture(fixtureRelPath);
 }, utils.timeout);
 
-test("Test ctrl forever 2 unsafe", async () => {
-    const fixtureRelPath: string = "test/programs/language-coverage/ctrl-forever-2_UNSAFE.sc"
-    await utils.execFixture(fixtureRelPath);
+test("Test ctrl forever 2 safe", async () => {
+    const fixtureRelPath: string = "test/programs/language-coverage/ctrl-forever-2_SAFE.sc"
+    await utils.execFixture(fixtureRelPath, [predicateConfig, ciConfig]);
 }, utils.timeout);

@@ -565,7 +565,9 @@ export class DataTransformerVisitor<B extends AbstractBoolean,
     }
 
     visitCreateCloneOfStatement(node: CreateCloneOfStatement): B {
-        throw new ImplementMeException();
+        // Clone lifecycle is modeled by the control analysis. Creating the
+        // clone does not itself constrain the current actor's data state.
+        return this._mem;
     }
 
     visitDeclareAttributeStatement(node: DeclareAttributeStatement): B {
@@ -600,7 +602,8 @@ export class DataTransformerVisitor<B extends AbstractBoolean,
     }
 
     visitDeleteThisCloneStatement(node: DeleteThisCloneStatement): B {
-        throw new ImplementMeException();
+        // Clone removal is likewise a control-state effect.
+        return this._mem;
     }
 
     visitEpsilonStatement(node: EpsilonStatement): B {
@@ -713,4 +716,3 @@ export class DataTransformerVisitor<B extends AbstractBoolean,
     }
 
 }
-
