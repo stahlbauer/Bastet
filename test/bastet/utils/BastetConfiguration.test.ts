@@ -25,16 +25,30 @@ import {BastetConfiguration} from "../../../src/bastet/utils/BastetConfiguration
 
 describe("BastetConfiguration", () => {
 
-    test("Scoped Option", async (done) => {
-        const cfg = new BastetConfiguration({"foo": { "bar": 1}}, ["foo"]);
-        expect(cfg.getProperty("bar")).toEqual(1);
-        done();
+    test("reads typed values from the configured scope", () => {
+        const cfg = new BastetConfiguration({
+            foo: {
+                count: 1,
+                enabled: false,
+                name: "analysis",
+                labels: ["a", "b"],
+                limits: [1, 2],
+            },
+        }, ["foo"]);
+
+        expect(cfg.getNumberProperty("count")).toBe(1);
+        expect(cfg.getBoolProperty("enabled", true)).toBe(false);
+        expect(cfg.getStringProperty("name")).toBe("analysis");
+        expect(cfg.getStringListProperty("labels")).toEqual(["a", "b"]);
+        expect(cfg.getNumberListProperty("limits")).toEqual([1, 2]);
     });
 
-    test("Scoped Option Boolean", async (done) => {
-        const cfg = new BastetConfiguration({"foo": { "bar": false}}, ["foo"]);
-        expect(cfg.getProperty("bar", true)).toEqual(false);
-        done();
+    test("returns defaults for missing properties and scopes", () => {
+        const missingProperty = new BastetConfiguration({foo: {}}, ["foo"]);
+        const missingScope = new BastetConfiguration({}, ["foo", "bar"]);
+
+        expect(missingProperty.getStringProperty("name", "default")).toBe("default");
+        expect(missingScope.getNumberProperty("count", 42)).toBe(42);
     });
 
 });

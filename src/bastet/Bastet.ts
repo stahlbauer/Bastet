@@ -95,7 +95,8 @@ export class Bastet {
             .requiredOption('-I, --intermediateLibrary <required>', 'Program file that defines the intermediate functions')
             .requiredOption('-P, --program <required>', 'Program file')
             .requiredOption('-S, --specification <required>', 'Specification file')
-            .parse(process.argv);
+            .parse(process.argv)
+            .opts();
     }
 
     private async nullResult(): Promise<AnalysisResult> {
@@ -292,5 +293,3 @@ export class Bastet {
     }
 
 }
-
-

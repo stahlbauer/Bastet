@@ -36,7 +36,7 @@ import {
     StringTheory
 } from "../../../procedures/domains/MemoryTransformer";
 import {Map as ImmMap, Record as ImmRec, Set as ImmSet} from "immutable";
-import {LibZ3InContext, Z3_ast, Z3_sort} from "./libz3";
+import {Bool, LibZ3InContext, Z3_ast, Z3_sort} from "./libz3";
 import {ConcreteBoolean, ConcreteNumber, ConcreteString} from "../../../procedures/domains/ConcreteElements";
 import {Preconditions} from "../../Preconditions";
 import {Ptr, Sint32, Uint32} from "./ctypes";
@@ -554,7 +554,12 @@ export class Z3IntegerTheory extends Z3AbstractNumberTheory<Z3IntegerFormula>
         if (from instanceof Z3RealFormula) {
             return new Z3IntegerFormula(this._ctx.mk_real2int(from.getAST()));
         } else if (from instanceof Z3FloatFormula) {
-            return new Z3IntegerFormula(this._ctx.mk_real2int(this._ctx.mk_fpa_to_real(from.getAST())));
+            const signedBitVector = this._ctx.mk_fpa_to_sbv(
+                this._ctx.mk_fpa_round_toward_zero(),
+                from.getAST(),
+                new Uint32(32),
+            );
+            return new Z3IntegerFormula(this._ctx.mk_bv2int(signedBitVector, new Bool(1)));
         }
 
         throw new ImplementMeForException(from.constructor.name);

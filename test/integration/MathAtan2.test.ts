@@ -22,24 +22,24 @@
 import {Bastet} from "../../src/bastet/Bastet";
 import * as utils from "../bastet/procedures/analyses/data/TestUtils";
 
-xtest("Test Atan2 1 safe", async (done) => {
+test("Test Atan2 1 safe", async () => {
     const fixtureRelPath: string = "test/programs/library-coverage/math-Atan2-1_SAFE.sc"
-    utils.execFixture(fixtureRelPath, done);
+    await utils.execFixture(fixtureRelPath);
 }, utils.timeout);
 
-xtest("Test Atan2 2 safe", async (done) => {
+test("Test Atan2 2 safe", async () => {
     const fixtureRelPath: string = "test/programs/library-coverage/math-Atan2-2_SAFE.sc"
-    utils.execFixture(fixtureRelPath, done);
+    await utils.execFixture(fixtureRelPath);
 }, utils.timeout);
 
-xtest("Test Atan2 1 unsafe", async (done) => {
+test("Test Atan2 1 unsafe", async () => {
     const fixtureRelPath: string = "test/programs/library-coverage/math-Atan2-1_UNSAFE.sc"
-    utils.execFixture(fixtureRelPath, done);
+    await utils.execFixture(fixtureRelPath);
 }, utils.timeout);
 
-xtest("Test Atan2 2 unsafe", async (done) => {
+test("Test Atan2 2 unsafe", async () => {
     const fixtureRelPath: string = "test/programs/library-coverage/math-Atan2-2_UNSAFE.sc"
-    utils.execFixture(fixtureRelPath, done);
+    await utils.execFixture(fixtureRelPath);
 }, utils.timeout);
 
 

@@ -38,16 +38,15 @@ let ctx;
 let theories: Z3Theories;
 let prover;
 
-beforeAll( async (done) => {
+beforeAll( async () => {
     smt = await SMTFactory.createZ3();
     ctx = smt.createContext();
     theories = smt.createTheories(ctx);
     prover = smt.createProver(ctx, new AnalysisStatistics("Test", {}));
 
-    done();
 });
 
-test ("Interpolation.SafeProgram", async (done) => {
+test ("Interpolation.SafeProgram", async () => {
 
     // loop-3-SAFE.sc
     /*
@@ -108,10 +107,9 @@ test ("Interpolation.SafeProgram", async (done) => {
     expect(interpolants).toContain("(= y@3 3)");
 
     prover.pop();
-    done();
 })
 
-test("Interpolation.OnlyY", async (done) => {
+test("Interpolation.OnlyY", async () => {
     prover.push();
 
     const y = new VariableWithDataLocation(DataLocations.createTypedLocation(Identifier.of("y@0"), IntegerType.instance()));
@@ -141,10 +139,9 @@ test("Interpolation.OnlyY", async (done) => {
     expect(interpolantsString).toContain("(= y@0 42)");
 
     prover.pop();
-    done();
 });
 
-test ("Interpolation", async (done) => {
+test ("Interpolation", async () => {
     prover.push();
 
     const x = new VariableWithDataLocation(DataLocations.createTypedLocation(Identifier.of("x"), IntegerType.instance()));
@@ -180,5 +177,4 @@ test ("Interpolation", async (done) => {
     }
 
     prover.pop();
-    done();
 });

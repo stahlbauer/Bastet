@@ -34,35 +34,39 @@ let ctx;
 let theories;
 let prover;
 
-beforeAll( async (done) => {
+beforeAll( async () => {
     smt = await SMTFactory.createZ3();
     ctx = smt.createContext();
     theories = smt.createTheories(ctx);
-    prover = smt.createProver(ctx, new AnalysisStatistics("Test", {}));
-    done();
 }, utils.timeout);
 
-test ("Case: 1 < 0", async (done) => {
+beforeEach(() => {
+    prover = smt.createProver(ctx, new AnalysisStatistics("Test", {}));
+});
+
+afterEach(() => {
+    prover.release();
+});
+
+test ("Case: 1 < 0", async () => {
     prover.push();
     const falseFormula = theories.floatTheory.isLessThan(theories.floatTheory.one(), theories.floatTheory.zero());
     prover.assert(falseFormula);
     const isUnsat: boolean = prover.isUnsat();
     expect(isUnsat).toBe(true);
     prover.pop();
-    done();
 });
 
-test ("Case: 1 > 0", async (done) => {
+test ("Case: 1 > 0", async () => {
     prover.push();
     const falseFormula = theories.floatTheory.isGreaterThan(theories.floatTheory.one(), theories.floatTheory.zero());
     prover.assert(falseFormula);
     const isUnsat: boolean = prover.isUnsat();
     expect(isUnsat).toBe(false);
     prover.pop();
-    done();
 });
 
-test ("Case: Cast float from int. True", async (done) => {
+test ("Case: Cast float from int. True", async () => {
     prover.push();
     const intFormula = theories.intTheory.fromConcreteNumber(new ConcreteNumber(42));
     const floatFormula = theories.floatTheory.castFrom(intFormula);
@@ -71,10 +75,9 @@ test ("Case: Cast float from int. True", async (done) => {
     const isUnsat: boolean = prover.isUnsat();
     expect(isUnsat).toBe(false);
     prover.pop();
-    done();
 });
 
-test ("Case: Cast float from int. False", async (done) => {
+test ("Case: Cast float from int. False", async () => {
     prover.push();
     const intFormula = theories.intTheory.fromConcreteNumber(new ConcreteNumber(42));
     const floatFormula = theories.floatTheory.castFrom(intFormula);
@@ -83,10 +86,9 @@ test ("Case: Cast float from int. False", async (done) => {
     const isUnsat: boolean = prover.isUnsat();
     expect(isUnsat).toBe(true);
     prover.pop();
-    done();
 });
 
-test ("Case: Cast float to int. True", async (done) => {
+test ("Case: Cast float to int. True", async () => {
     prover.push();
     const floatFormula = theories.floatTheory.fromConcreteNumber(new ConcreteNumber(1.1));
     const intFormula = theories.intTheory.castFrom(floatFormula);
@@ -95,10 +97,9 @@ test ("Case: Cast float to int. True", async (done) => {
     const isUnsat: boolean = prover.isUnsat();
     expect(isUnsat).toBe(true);
     prover.pop();
-    done();
 });
 
-xtest ("Case: Cast float to int. Variables. True", async (done) => {
+test ("Case: Cast float to int. Variables. True", async () => {
     prover.push();
     const floatOneOne = theories.floatTheory.fromConcreteNumber(new ConcreteNumber(1.1));
     const floatVar = theories.floatTheory.abstractNumberValue(
@@ -113,8 +114,21 @@ xtest ("Case: Cast float to int. Variables. True", async (done) => {
     prover.pop();
 });
 
+test ("Case: Cast negative float to int truncates toward zero", async () => {
+    prover.push();
+    const floatFormula = theories.floatTheory.fromConcreteNumber(new ConcreteNumber(-1.9));
+    const intFormula = theories.intTheory.castFrom(floatFormula);
+    const formula = theories.intTheory.isNumberEqualTo(
+        intFormula,
+        theories.intTheory.fromConcreteNumber(new ConcreteNumber(-1)),
+    );
+    prover.assert(formula);
+    expect(prover.isSat()).toBe(true);
+    prover.pop();
+});
 
-test ("Case: From string. True", async (done) => {
+
+test ("Case: From string. True", async () => {
     prover.push();
     const floatFormula1 = theories.floatTheory.fromConcreteString(new ConcreteString("12.4"));
     const floatFormula2 = theories.floatTheory.fromConcreteString(new ConcreteString("12.5"));
@@ -123,10 +137,9 @@ test ("Case: From string. True", async (done) => {
     const isUnsat: boolean = prover.isUnsat();
     expect(isUnsat).toBe(true);
     prover.pop();
-    done();
 });
 
-test ("Case: From string. False", async (done) => {
+test ("Case: From string. False", async () => {
     prover.push();
     const floatFormula1 = theories.floatTheory.fromConcreteString(new ConcreteString("12.4"));
     const floatFormula2 = theories.floatTheory.fromConcreteString(new ConcreteString("12.5"));
@@ -135,5 +148,4 @@ test ("Case: From string. False", async (done) => {
     const isUnsat: boolean = prover.isUnsat();
     expect(isUnsat).toBe(false);
     prover.pop();
-    done();
 });

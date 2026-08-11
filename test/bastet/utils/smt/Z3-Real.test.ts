@@ -29,35 +29,32 @@ let ctx;
 let theories;
 let prover;
 
-beforeAll( async (done) => {
+beforeAll( async () => {
     smt = await SMTFactory.createZ3();
     ctx = smt.createContext();
     theories = smt.createTheories(ctx);
     prover = smt.createProver(ctx, new AnalysisStatistics("Test", {}));
-    done();
 });
 
-test ("Case: 1 < 0", async (done) => {
+test ("Case: 1 < 0", async () => {
     prover.push();
     const falseFormula = theories.realTheory.isLessThan(theories.realTheory.one(), theories.realTheory.zero());
     prover.assert(falseFormula);
     const isUnsat: boolean = prover.isUnsat();
     expect(isUnsat).toBe(true);
     prover.pop();
-    done();
 });
 
-test ("Case: 1 > 0", async (done) => {
+test ("Case: 1 > 0", async () => {
     prover.push();
     const falseFormula = theories.realTheory.isGreaterThan(theories.realTheory.one(), theories.realTheory.zero());
     prover.assert(falseFormula);
     const isUnsat: boolean = prover.isUnsat();
     expect(isUnsat).toBe(false);
     prover.pop();
-    done();
 });
 
-test ("Case: Cast real from int. True", async (done) => {
+test ("Case: Cast real from int. True", async () => {
     prover.push();
     const intFormula = theories.intTheory.fromConcreteNumber(new ConcreteNumber(42));
     const realFormula = theories.realTheory.castFrom(intFormula);
@@ -66,10 +63,9 @@ test ("Case: Cast real from int. True", async (done) => {
     const isUnsat: boolean = prover.isUnsat();
     expect(isUnsat).toBe(false);
     prover.pop();
-    done();
 });
 
-test ("Case: Cast real from int. False", async (done) => {
+test ("Case: Cast real from int. False", async () => {
     prover.push();
     const intFormula = theories.intTheory.fromConcreteNumber(new ConcreteNumber(42));
     const realFormula = theories.realTheory.castFrom(intFormula);
@@ -78,10 +74,9 @@ test ("Case: Cast real from int. False", async (done) => {
     const isUnsat: boolean = prover.isUnsat();
     expect(isUnsat).toBe(true);
     prover.pop();
-    done();
 });
 
-test ("Case: From string. True", async (done) => {
+test ("Case: From string. True", async () => {
     prover.push();
     const realFormula1 = theories.realTheory.fromConcreteString(new ConcreteString("12.4"));
     const realFormula2 = theories.realTheory.fromConcreteString(new ConcreteString("12.5"));
@@ -90,10 +85,9 @@ test ("Case: From string. True", async (done) => {
     const isUnsat: boolean = prover.isUnsat();
     expect(isUnsat).toBe(true);
     prover.pop();
-    done();
 });
 
-test ("Case: From string. False", async (done) => {
+test ("Case: From string. False", async () => {
     prover.push();
     const realFormula1 = theories.realTheory.fromConcreteString(new ConcreteString("12.4"));
     const realFormula2 = theories.realTheory.fromConcreteString(new ConcreteString("12.5"));
@@ -102,5 +96,4 @@ test ("Case: From string. False", async (done) => {
     const isUnsat: boolean = prover.isUnsat();
     expect(isUnsat).toBe(false);
     prover.pop();
-    done();
 });

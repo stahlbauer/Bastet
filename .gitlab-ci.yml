@@ -21,8 +21,16 @@ install_dependencies:
     paths:
       - node_modules/
 
-testing_testing:
+testing_fast:
   stage: test
   script:
-    - pnpm test
+    - pnpm run build-no-lint
+    - pnpm run test:fast
+    - mkdir -p output/static
+
+testing_slow:
+  stage: test
+  script:
+    - pnpm run build-no-lint
+    - pnpm run test:slow
     - mkdir -p output/static

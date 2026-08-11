@@ -39,15 +39,14 @@ let ctx;
 let theories: Z3Theories;
 let prover;
 
-beforeAll( async (done) => {
+beforeAll( async () => {
     smt = await SMTFactory.createZ3();
     ctx = smt.createContext();
     theories = smt.createTheories(ctx);
     prover = smt.createProver(ctx, new AnalysisStatistics("Test", {}));
-    done();
 });
 
-test ("Collect and Substitute", async (done) => {
+test ("Collect and Substitute", async () => {
     const x = new VariableWithDataLocation(DataLocations.createTypedLocation(Identifier.of("x"), IntegerType.instance()));
     const y = new VariableWithDataLocation(DataLocations.createTypedLocation(Identifier.of("y"), IntegerType.instance()));
     const base = theories.boolTheory.and(
@@ -68,10 +67,9 @@ test ("Collect and Substitute", async (done) => {
     }
 
     expect(theories.stringRepresentation(result)).toEqual("(and (= x@0 0) (= y@0 42))");
-    done();
 });
 
-test ("Instantiate", async (done) => {
+test ("Instantiate", async () => {
     const x = new VariableWithDataLocation(DataLocations.createTypedLocation(Identifier.of("x"), IntegerType.instance()));
     const y = new VariableWithDataLocation(DataLocations.createTypedLocation(Identifier.of("y"), IntegerType.instance()));
     const base = theories.boolTheory.and(
@@ -85,10 +83,9 @@ test ("Instantiate", async (done) => {
     const result = theories.instantiate(base, (s) => 7);
 
     expect(theories.stringRepresentation(result)).toEqual("(and (= x@7 0) (= y@7 42))");
-    done();
 });
 
-test ("Uninstantiate", async (done) => {
+test ("Uninstantiate", async () => {
     const x = new VariableWithDataLocation(DataLocations.createTypedLocation(Identifier.of("x@3"), IntegerType.instance()));
     const y = new VariableWithDataLocation(DataLocations.createTypedLocation(Identifier.of("y@9"), IntegerType.instance()));
     const base = theories.boolTheory.and(
@@ -102,5 +99,4 @@ test ("Uninstantiate", async (done) => {
     const result = theories.instantiate(base, (s) => NaN);
 
     expect(theories.stringRepresentation(result)).toEqual("(and (= x 0) (= y 42))");
-    done();
 });

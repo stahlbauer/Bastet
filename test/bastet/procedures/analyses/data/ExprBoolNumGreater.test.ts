@@ -22,24 +22,24 @@
 import {Bastet} from "../../../../../src/bastet/Bastet";
 import * as utils from './TestUtils'
 
-test("Test bool num greater 1 safe", async (done) => {
+test("Test bool num greater 1 safe", async () => {
     const fixtureRelPath: string = "test/programs/language-coverage/expr-bool-number-greater-1_SAFE.sc"
-    utils.execFixture(fixtureRelPath, done);
+    await utils.execFixture(fixtureRelPath);
 }, utils.timeout);
 
-test("Test bool num greater 1 unsafe", async (done) => {
+test("Test bool num greater 1 unsafe", async () => {
     const fixtureRelPath: string = "test/programs/language-coverage/expr-bool-number-greater-1_UNSAFE.sc"
-    utils.execFixture(fixtureRelPath, done);
+    await utils.execFixture(fixtureRelPath);
 }, utils.timeout);
 
-xtest("Test bool num greater 2 safe", async (done) => {
+test("Test bool num greater 2 safe", async () => {
     const fixtureRelPath: string = "test/programs/language-coverage/expr-bool-number-greater-2_SAFE.sc"
-    utils.execFixture(fixtureRelPath, done);
+    await utils.execFixture(fixtureRelPath);
 }, utils.timeout);
 
-xtest("Test bool num greater 2 unsafe", async (done) => {
+test("Test bool num greater 2 unsafe", async () => {
     const fixtureRelPath: string = "test/programs/language-coverage/expr-bool-number-greater-2_UNSAFE.sc"
-    utils.execFixture(fixtureRelPath, done);
+    await utils.execFixture(fixtureRelPath);
 }, utils.timeout);
 
 

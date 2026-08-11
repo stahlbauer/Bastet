@@ -101,31 +101,35 @@ global['Module'] = PreModule;
 
 export class SMTFactory {
 
-    public static async createZ3(): Promise<Z3SMT> {
+    private static instancePromise: Promise<Z3SMT>;
+
+    public static createZ3(): Promise<Z3SMT> {
+        if (!this.instancePromise) {
+            this.instancePromise = this.initializeZ3().catch((error) => {
+                this.instancePromise = null;
+                throw error;
+            });
+        }
+        return this.instancePromise;
+    }
+
+    private static async initializeZ3(): Promise<Z3SMT> {
         try {
             require("../../../../lib/z3/libz3.so.js");
         } catch (e) {
             throw new IllegalStateException("Initialization of Z3 failed: " + e);
         }
 
-        let solverInitPromise = new Promise((resolve, reject) => {
-            global['Module']['onSolverInitDone'] = () => {
-                resolve('Success');
-            };
-
-        });
-
-        let solverInitTimeout = new Promise((resolve, reject) => {
-            setTimeout(_ => {
-                resolve('Success');
+        await new Promise<void>((resolve, reject) => {
+            const timeout = setTimeout(() => {
+                reject(new IllegalStateException("Initialization of Z3 timed out"));
             }, 15000);
-        });
 
-        await Promise.race([solverInitPromise, solverInitTimeout])
-            .then((value) => {
-            })
-            .catch((reason) => {
-            });
+            global['Module']['onSolverInitDone'] = () => {
+                clearTimeout(timeout);
+                resolve();
+            };
+        });
 
         return new Z3SMT(global['Module']);
     }

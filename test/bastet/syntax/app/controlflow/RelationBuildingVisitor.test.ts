@@ -39,7 +39,7 @@ describe("RelationBuildingVisitor", () => {
 
     const visitor = new RelationBuildingVisitor();
 
-    test("UntilQueriedConditionStatement", async (done) => {
+    test("UntilQueriedConditionStatement", async () => {
         const boolVar = new VariableWithDataLocation(
             DataLocations.createTypedLocation(Identifier.of("v"), BooleanType.instance()));
 
@@ -54,7 +54,6 @@ describe("RelationBuildingVisitor", () => {
         expect(result.entryLocationSet.size).toEqual(1);
         expect(result.exitLocationSet.size).toEqual(1);
 
-        done();
 
     });
 

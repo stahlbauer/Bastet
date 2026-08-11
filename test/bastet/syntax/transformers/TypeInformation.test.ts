@@ -1,42 +1,71 @@
 import {Identifier} from "../../../../src/bastet/syntax/ast/core/Identifier";
 import {DataLocations} from "../../../../src/bastet/syntax/app/controlflow/DataLocation";
 import {VariableWithDataLocation} from "../../../../src/bastet/syntax/ast/core/Variable";
-import {DeclarationScopeType, ScopeTypeInformation} from "../../../../src/bastet/syntax/DeclarationScopes";
-import {IntegerType} from "../../../../src/bastet/syntax/ast/core/ScratchType";
+import {
+    DeclarationScopeType,
+    ScopeTypeInformation,
+    TypeInformationStorage,
+} from "../../../../src/bastet/syntax/DeclarationScopes";
+import {BooleanType, IntegerType} from "../../../../src/bastet/syntax/ast/core/ScratchType";
+import {IllegalArgumentException} from "../../../../src/bastet/core/exceptions/IllegalArgumentException";
 
 describe('ScopeTypeInformation', function() {
 
-    test('not scoped', function() {
-        const ti = new ScopeTypeInformation(null, "actor1", DeclarationScopeType.ACTOR);
+    test('finds a variable in the current scope', function() {
+        const actor = new ScopeTypeInformation(null, "actor1", DeclarationScopeType.ACTOR);
 
-        ti.putVariable(new VariableWithDataLocation(DataLocations.createTypedLocation(
+        actor.putVariable(new VariableWithDataLocation(DataLocations.createTypedLocation(
             Identifier.of("test"), IntegerType.instance())));
 
-        expect(ti.getTypeOf(Identifier.of("test"))).toEqual(IntegerType.instance());
+        expect(actor.getTypeOf(Identifier.of("test"))).toBe(IntegerType.instance());
     });
 
-    test('scoped', function() {
-        const ti = new ScopeTypeInformation(null, "actor1", DeclarationScopeType.ACTOR);
+    test('inherits variables from parent scopes', function() {
+        const actor = new ScopeTypeInformation(null, "actor1", DeclarationScopeType.ACTOR);
+        actor.putTypeInformation(Identifier.of("value"), IntegerType.instance());
 
-        ti.beginScope("level1", DeclarationScopeType.METHOD);
-        ti.beginScope("level2", DeclarationScopeType.METHOD);
+        const method = actor.beginMethodScope("method1");
 
-        ti.putVariable(new VariableWithDataLocation(DataLocations.createTypedLocation(
-            Identifier.of("test"), IntegerType.instance())));
-
-        expect(ti.getTypeOf(Identifier.of("test"))).toEqual(IntegerType.instance());
+        expect(method.getTypeOf(Identifier.of("value"))).toBe(IntegerType.instance());
+        expect(method.endScope()).toBe(actor);
     });
 
-    test('scoped push pop', function() {
-        const ti = new ScopeTypeInformation(null, "actor1", DeclarationScopeType.ACTOR);
+    test('a child declaration shadows its parent', function() {
+        const actor = new ScopeTypeInformation(null, "actor1", DeclarationScopeType.ACTOR);
+        actor.putTypeInformation(Identifier.of("value"), IntegerType.instance());
+        const method = actor.beginMethodScope("method1");
+        method.putTypeInformation(Identifier.of("value"), BooleanType.instance());
 
-        ti.beginScope("level1", DeclarationScopeType.METHOD);
-        ti.beginScope("level2", DeclarationScopeType.METHOD);
-        ti.endScope();
+        expect(method.getTypeOf(Identifier.of("value"))).toBe(BooleanType.instance());
+        expect(actor.getTypeOf(Identifier.of("value"))).toBe(IntegerType.instance());
+    });
 
-        ti.putVariable(new VariableWithDataLocation(DataLocations.createTypedLocation(
-            Identifier.of("test"), IntegerType.instance())));
+    test('reuses a named child scope', function() {
+        const actor = new ScopeTypeInformation(null, "actor1", DeclarationScopeType.ACTOR);
 
-        expect(ti.getTypeOf(Identifier.of("test"))).toEqual(IntegerType.instance());
+        const first = actor.beginMethodScope("method1");
+        const second = actor.beginMethodScope("method1");
+
+        expect(second).toBe(first);
+        expect(actor.getChildScopes()).toEqual(["method1"]);
+    });
+
+    test('reports unknown variables with their identifier', function() {
+        const actor = new ScopeTypeInformation(null, "actor1", DeclarationScopeType.ACTOR);
+
+        expect(() => actor.getTypeOf(Identifier.of("missing")))
+            .toThrow(new IllegalArgumentException('Variable "missing" and it\'s type are unknown. Declaration missing?'));
+    });
+
+    test('unions system and actor type information', function() {
+        const left = new TypeInformationStorage();
+        left.getSystemScope().putTypeInformation(Identifier.of("global"), IntegerType.instance());
+        const right = new TypeInformationStorage();
+        right.beginActorScope("actor1").putTypeInformation(Identifier.of("local"), BooleanType.instance());
+
+        const union = TypeInformationStorage.union(left, right);
+
+        expect(union.lookupTyped("global")).toBe(IntegerType.instance());
+        expect(union.lookupTyped("actor1@local")).toBe(BooleanType.instance());
     });
 });

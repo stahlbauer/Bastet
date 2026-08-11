@@ -42,39 +42,36 @@ let ctx;
 let theories: Z3Theories;
 let prover;
 
-beforeAll( async (done) => {
+beforeAll( async () => {
     try {
         smt = await SMTFactory.createZ3();
         ctx = smt.createContext();
         theories = smt.createTheories(ctx);
         prover = smt.createProver(ctx, new AnalysisStatistics("Test", {}));
     } finally {
-        done();
     }
 });
 
 
-test ("Case: False",  async (done) => {
+test ("Case: False",  async () => {
     prover.push();
     const falseFormula = theories.boolTheory.falseBool();
     prover.assert(falseFormula);
     const isUnsat: boolean = prover.isUnsat();
     expect(isUnsat).toBe(true);
     prover.pop();
-    done();
 });
 
-test ("Case: True",  async (done) => {
+test ("Case: True",  async () => {
     prover.push();
     const trueFormula = theories.boolTheory.trueBool();
     prover.assert(trueFormula);
     const isUnsat: boolean = prover.isUnsat();
     expect(isUnsat).toBe(false);
     prover.pop();
-    done();
 });
 
-test ("Substitute",  async (done) => {
+test ("Substitute",  async () => {
     const x = new VariableWithDataLocation(DataLocations.createTypedLocation(Identifier.of("x"), IntegerType.instance()));
     const y = new VariableWithDataLocation(DataLocations.createTypedLocation(Identifier.of("y"), IntegerType.instance()));
     const xvar = theories.intTheory.abstractNumberValue(x);
@@ -90,10 +87,9 @@ test ("Substitute",  async (done) => {
 
     const fy = theories.substitute(fx, [xvar], [yvar]);
     expect(theories.stringRepresentation(fy)).toEqual("(and (= y 0) (= y 42))");
-    done();
 });
 
-test ("Instantiate, increment by 1",  async (done) => {
+test ("Instantiate, increment by 1",  async () => {
     const x = new VariableWithDataLocation(DataLocations.createTypedLocation(Identifier.of("x@2"), IntegerType.instance()));
     const y = new VariableWithDataLocation(DataLocations.createTypedLocation(Identifier.of("y@6"), IntegerType.instance()));
 
@@ -107,10 +103,9 @@ test ("Instantiate, increment by 1",  async (done) => {
 
     const fy = theories.instantiate(fx, (v, oldIndex) => oldIndex + 1);
     expect(theories.stringRepresentation(fy)).toEqual("(and (= x@3 0) (= y@7 42))");
-    done();
 });
 
-test ("Instantiate, increment by 10, case 1",  async (done) => {
+test ("Instantiate, increment by 10, case 1",  async () => {
     const x1 = new VariableWithDataLocation(DataLocations.createTypedLocation(Identifier.of("x@2"), IntegerType.instance()));
     const x2 = new VariableWithDataLocation(DataLocations.createTypedLocation(Identifier.of("x@6"), IntegerType.instance()));
 
@@ -124,10 +119,9 @@ test ("Instantiate, increment by 10, case 1",  async (done) => {
 
     const fy = theories.instantiate(fx, (v, oldIndex) => oldIndex + 10);
     expect(theories.stringRepresentation(fy)).toEqual("(and (= x@12 0) (= x@16 42))");
-    done();
 });
 
-test ("Instantiate, increment by 10, case 2",  async (done) => {
+test ("Instantiate, increment by 10, case 2",  async () => {
     const x1 = new VariableWithDataLocation(DataLocations.createTypedLocation(Identifier.of("x@2"), IntegerType.instance()));
     const x2 = new VariableWithDataLocation(DataLocations.createTypedLocation(Identifier.of("x@6"), IntegerType.instance()));
     const x3 = new VariableWithDataLocation(DataLocations.createTypedLocation(Identifier.of("x@7"), IntegerType.instance()));
@@ -146,10 +140,9 @@ test ("Instantiate, increment by 10, case 2",  async (done) => {
 
     const fy = theories.instantiate(fx, (v, oldIndex) => oldIndex + 10);
     expect(theories.stringRepresentation(fy)).toEqual("(and (= x@12 0) (= x@16 42) (= x@17 1))");
-    done();
 });
 
-test ("Instantiate, mapping 1",  async (done) => {
+test ("Instantiate, mapping 1",  async () => {
     const x = new VariableWithDataLocation(DataLocations.createTypedLocation(Identifier.of("x@2"), IntegerType.instance()));
     const y = new VariableWithDataLocation(DataLocations.createTypedLocation(Identifier.of("y@6"), IntegerType.instance()));
 
@@ -165,10 +158,9 @@ test ("Instantiate, mapping 1",  async (done) => {
 
     const fy = theories.instantiate(fx, (v, oldIndex) => mapping[v]);
     expect(theories.stringRepresentation(fy)).toEqual("(and (= x@22 0) (= y@66 42))");
-    done();
 });
 
-test ("Align, case 1",  async (done) => {
+test ("Align, case 1",  async () => {
     const x0 = new VariableWithDataLocation(DataLocations.createTypedLocation(Identifier.of("x@0"), IntegerType.instance()));
     const x1 = new VariableWithDataLocation(DataLocations.createTypedLocation(Identifier.of("x@1"), IntegerType.instance()));
     const x2 = new VariableWithDataLocation(DataLocations.createTypedLocation(Identifier.of("x@2"), IntegerType.instance()));
@@ -212,10 +204,9 @@ test ("Align, case 1",  async (done) => {
     const fs = theories.alignSsaIndices([f1, f2, f3, f4], [mapping1, mapping2, mapping3, mapping4]);
     const f = fs.reduce((e, r) => theories.boolTheory.and(e, r), theories.boolTheory.trueBool());
     console.log(theories.stringRepresentation(f));
-    done();
 });
 
-test ("Align, case 2",  async (done) => {
+test ("Align, case 2",  async () => {
     const x0 = new VariableWithDataLocation(DataLocations.createTypedLocation(Identifier.of("x@0"), IntegerType.instance()));
     const x1 = new VariableWithDataLocation(DataLocations.createTypedLocation(Identifier.of("x@1"), IntegerType.instance()));
     const x2 = new VariableWithDataLocation(DataLocations.createTypedLocation(Identifier.of("x@2"), IntegerType.instance()));
@@ -246,10 +237,9 @@ test ("Align, case 2",  async (done) => {
     const fs: Z3BooleanFormula[] = theories.alignSsaIndices([f1, f2], [mapping1, mapping2]);
     const f = fs.reduce((e, r) => theories.boolTheory.and(e, r), theories.boolTheory.trueBool());
     expect(theories.stringRepresentation(f)).toEqual("(and true (= x@1 0) (= y@2 42) (= x@2 (+ x@1 1)) (= y@2 42))")
-    done();
 });
 
-test ("Implication. Unsat",  async (done) => {
+test ("Implication. Unsat",  async () => {
     const x = new VariableWithDataLocation(DataLocations.createTypedLocation(Identifier.of("x"), IntegerType.instance()));
     prover.push();
     const f = theories.boolTheory.and(
@@ -263,10 +253,9 @@ test ("Implication. Unsat",  async (done) => {
     const isUnsat: boolean = prover.isUnsat();
     expect(isUnsat).toBe(true);
     prover.pop();
-    done();
 });
 
-test ("Implication. Sat", async (done) => {
+test ("Implication. Sat", async () => {
     const x = new VariableWithDataLocation(DataLocations.createTypedLocation(Identifier.of("x"), IntegerType.instance()));
     prover.push();
     const f = theories.boolTheory.and(
@@ -280,32 +269,28 @@ test ("Implication. Sat", async (done) => {
     const isUnsat: boolean = prover.isUnsat();
     expect(isUnsat).toBe(false);
     prover.pop();
-    done();
 });
 
 
-test("Lattice Include 1",  async (done) => {
+test("Lattice Include 1",  async () => {
     const lattice = new Z3FirstOrderLattice(theories.boolTheory, prover);
     const result = lattice.isIncluded(lattice.top(), lattice.bottom());
     expect(result).toBe(false);
-    done();
 });
 
-test("Lattice Include 2",  async (done) => {
+test("Lattice Include 2",  async () => {
     const lattice = new Z3FirstOrderLattice(theories.boolTheory, prover);
     const result = lattice.isIncluded(lattice.bottom(), lattice.bottom());
     expect(result).toBe(true);
-    done();
 });
 
-test("Lattice Include 3",  async (done) => {
+test("Lattice Include 3",  async () => {
     const lattice = new Z3FirstOrderLattice(theories.boolTheory, prover);
     const result = lattice.isIncluded(lattice.top(), lattice.top());
     expect(result).toBe(true);
-    done();
 });
 
-test("Lattice Include 4",  async (done) => {
+test("Lattice Include 4",  async () => {
     const lattice = new Z3FirstOrderLattice(theories.boolTheory, prover);
     const x = new VariableWithDataLocation(DataLocations.createTypedLocation(Identifier.of("x"), IntegerType.instance()));
     const f = theories.boolTheory.and(
@@ -317,10 +302,9 @@ test("Lattice Include 4",  async (done) => {
             theories.intTheory.fromConcreteNumber(new ConcreteNumber(42))));
     const result = lattice.isIncluded(f, lattice.bottom());
     expect(result).toBe(false);
-    done();
 });
 
-test("Lattice Include 5",  async (done) => {
+test("Lattice Include 5",  async () => {
     const lattice = new Z3FirstOrderLattice(theories.boolTheory, prover);
     const x = new VariableWithDataLocation(DataLocations.createTypedLocation(Identifier.of("x"), IntegerType.instance()));
     const f = theories.boolTheory.and(
@@ -332,10 +316,9 @@ test("Lattice Include 5",  async (done) => {
             theories.intTheory.fromConcreteNumber(new ConcreteNumber(42))));
     const result = lattice.isIncluded(f, lattice.bottom());
     expect(result).toBe(true);
-    done();
 });
 
-test("Lattice Include T 1",  async (done) => {
+test("Lattice Include T 1",  async () => {
     const lattice = new Z3FirstOrderLattice(theories.boolTheory, prover);
     const t: Z3NumberFormula = theories.intTheory.abstractNumberValue(new VariableWithDataLocation(DataLocations.createTypedLocation(Identifier.of("t"), IntegerType.instance())));
     const u1: Z3NumberFormula = theories.intTheory.abstractNumberValue(new VariableWithDataLocation(DataLocations.createTypedLocation(Identifier.of("u1"), IntegerType.instance())));
@@ -353,10 +336,9 @@ test("Lattice Include T 1",  async (done) => {
 
     const result = lattice.isIncluded(cond2, cond1);
     expect(result).toBe(false);
-    done();
 });
 
-test("Lattice Include T 2",  async (done) => {
+test("Lattice Include T 2",  async () => {
     const lattice = new Z3FirstOrderLattice(theories.boolTheory, prover);
     const t: Z3NumberFormula = theories.intTheory.abstractNumberValue(new VariableWithDataLocation(DataLocations.createTypedLocation(Identifier.of("t"), IntegerType.instance())));
     const u1: Z3NumberFormula = theories.intTheory.abstractNumberValue(new VariableWithDataLocation(DataLocations.createTypedLocation(Identifier.of("u1"), IntegerType.instance())));
@@ -374,10 +356,9 @@ test("Lattice Include T 2",  async (done) => {
 
     const result = lattice.isIncluded(cond1, cond2);
     expect(result).toBe(false);
-    done();
 });
 
-test("Lattice Join 1",  async (done) => {
+test("Lattice Join 1",  async () => {
     const lattice = new Z3FirstOrderLattice(theories.boolTheory, prover);
     const x = new VariableWithDataLocation(DataLocations.createTypedLocation(Identifier.of("x"), IntegerType.instance()));
     const f1 = theories.boolTheory.and(
@@ -395,11 +376,10 @@ test("Lattice Join 1",  async (done) => {
         expect(isUnsat).toBe(false);
     } finally {
         prover.pop();
-        done();
     }
 });
 
-test("Lattice Meet 1",  async (done) => {
+test("Lattice Meet 1",  async () => {
     const lattice = new Z3FirstOrderLattice(theories.boolTheory, prover);
     const x = new VariableWithDataLocation(DataLocations.createTypedLocation(Identifier.of("x"), IntegerType.instance()));
     const f1 = theories.boolTheory.and(
@@ -417,11 +397,10 @@ test("Lattice Meet 1",  async (done) => {
         expect(isUnsat).toBe(true);
     } finally {
         prover.pop();
-        done();
     }
 });
 
-test("Get model for unsat formula",  async (done) => {
+test("Get model for unsat formula",  async () => {
    const oneGreaterZero = theories.intTheory.isGreaterThan(theories.intTheory.one(), theories.intTheory.zero());
 
    prover.push();
@@ -435,11 +414,10 @@ test("Get model for unsat formula",  async (done) => {
        expect(model.getValueMap().getSize()).toBe(0);
    } finally {
        prover.pop();
-       done();
    }
 });
 
-test("Get model for int formula",  async (done) => {
+test("Get model for int formula",  async () => {
     const x = new VariableWithDataLocation(DataLocations.createTypedLocation(Identifier.of("x"), IntegerType.instance()));
     const y = new VariableWithDataLocation(DataLocations.createTypedLocation(Identifier.of("y"), IntegerType.instance()));
 
@@ -462,11 +440,10 @@ test("Get model for int formula",  async (done) => {
         expect(model.getValueMap().getPrimitiveValue("x")).toStrictEqual(2);
     } finally {
         prover.pop();
-        done();
     }
 });
 
-test('Get model for string formula',  async (done) => {
+test('Get model for string formula',  async () => {
     const x = new VariableWithDataLocation(DataLocations.createTypedLocation(Identifier.of("x"), StringType.instance()));
 
     const xContainsB = theories.stringTheory.stringContains(
@@ -492,11 +469,10 @@ test('Get model for string formula',  async (done) => {
         expect(model.getValueMap().getPrimitiveValue("x")).toStrictEqual("Bo"); // Seems to be a bug in Z3 (should return Bob)
     } finally {
         prover.pop();
-        done();
     }
 });
 
-test('Get model for boolean formula (x && !z)',  async (done) => {
+test('Get model for boolean formula (x && !z)',  async () => {
     const x = theories.boolTheory.abstractBooleanValue(new VariableWithDataLocation(DataLocations.createTypedLocation(Identifier.of("x"), BooleanType.instance())));
     const z = theories.boolTheory.abstractBooleanValue(new VariableWithDataLocation(DataLocations.createTypedLocation(Identifier.of("z"), BooleanType.instance())));
     const notZ = theories.boolTheory.not(z);
@@ -515,6 +491,5 @@ test('Get model for boolean formula (x && !z)',  async (done) => {
         expect(constValues.getPrimitiveValue("x")).toBe(true);
     } finally {
         prover.pop();
-        done();
     }
 });

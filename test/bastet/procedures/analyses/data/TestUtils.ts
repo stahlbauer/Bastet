@@ -35,37 +35,40 @@ const ciConfigFilePath = path.join(__dirname, ciConfigRelPath);
 const specRelPath = "../../../../specs/empty.sc";
 const specFilePath = path.join(__dirname, specRelPath);
 
-let timeout: number = 20000; // in milliseconds
+let timeout: number = 120000; // in milliseconds
 export {timeout, execFixture, execute, execute_explicit};
 
-function execFixture(fixturePath: string, done) {
+async function execFixture(fixturePath: string): Promise<void> {
     const bastet = new Bastet();
-    execute(bastet, fixturePath, done)
+    await execute(bastet, fixturePath);
 }
 
-function execute(bastet: Bastet, fixturePath: string, done) {
+async function execute(bastet: Bastet, fixturePath: string): Promise<void> {
     if (fixturePath.endsWith("_SAFE.sc")) {
-        execute_explicit(bastet, fixturePath, true, done);
+        await execute_explicit(bastet, fixturePath, true);
     } else if (fixturePath.endsWith("_UNSAFE.sc")) {
-        execute_explicit(bastet, fixturePath, false, done);
+        await execute_explicit(bastet, fixturePath, false);
     } else {
-        fail("Fixture file does not fit naming scheme")
+        throw new Error("Fixture file does not fit the _SAFE.sc/_UNSAFE.sc naming scheme");
     }
 }
 
-function execute_explicit(bastet: Bastet, fixturePath: string, expectSuccess: boolean, done) {
-    async function asyncAwaitFunction(): Promise<AnalysisResult> {
-        return await bastet.runFor([configFilePath, ciConfigFilePath], intermediatePath, fixturePath, specFilePath);
-    }
+async function execute_explicit(
+    bastet: Bastet,
+    fixturePath: string,
+    expectSuccess: boolean,
+): Promise<void> {
+    const result: AnalysisResult = await bastet.runFor(
+        [configFilePath, ciConfigFilePath],
+        intermediatePath,
+        fixturePath,
+        specFilePath,
+    );
+    const analysisResult = result as MultiPropertyAnalysisResult;
 
-    asyncAwaitFunction().then(result => {
-            const analysisResult: MultiPropertyAnalysisResult = result as MultiPropertyAnalysisResult;
-            if (expectSuccess) {
-                expect(analysisResult.satisfied.size).toBeGreaterThan(0);
-            } else {
-                expect(analysisResult.violated.size).toBeGreaterThan(0);
-            }
-        })
-        .catch(e => {fail("No exception expected!"); done()})
-        .finally(() => done());
+    if (expectSuccess) {
+        expect(analysisResult.satisfied.size).toBeGreaterThan(0);
+    } else {
+        expect(analysisResult.violated.size).toBeGreaterThan(0);
+    }
 }
