@@ -18,6 +18,13 @@
     "test": "pnpm run build-no-lint && pnpm run test:fast && pnpm run test:slow",
     "test:fast": "jest --config jest.fast.config.js --coverage",
     "test:slow": "node scripts/run-slow-tests.js",
+    "test:node:spike": "pnpm run build-no-lint && pnpm run test:node:spike:tsx && pnpm run test:node:spike:compiled && pnpm run test:node:spike:coverage && pnpm run test:node:spike:deadline && pnpm run test:node:spike:diagnostics",
+    "test:node:spike:tsx": "node scripts/run-node-test-spike.js --tsx",
+    "test:node:spike:compile": "tsc -p tsconfig.node-test.json && node scripts/copy-node-test-assets.js",
+    "test:node:spike:compiled": "pnpm run test:node:spike:compile && node scripts/run-node-test-spike.js --compiled",
+    "test:node:spike:coverage": "node scripts/run-node-test-spike.js --coverage",
+    "test:node:spike:deadline": "node scripts/run-node-test-spike.js --probe-timeout",
+    "test:node:spike:diagnostics": "node scripts/run-node-test-spike.js --probe-diagnostics",
     "watch-test": "jest --config jest.fast.config.js --watchAll",
     "build-ts": "tsc --incremental",
     "upgrade-all-packages": "pnpm update --latest",
@@ -58,6 +65,7 @@
     "shelljs": "^0.10.0",
     "ts-jest": "^29.4.12",
     "ts-node": "^10.9.2",
+    "tsx": "^4.23.11",
     "typescript": "^5.9.3"
   },
   "dependencies": {
