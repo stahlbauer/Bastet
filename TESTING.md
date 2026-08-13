@@ -15,7 +15,7 @@ Three constructs are central:
 - `test("the expected behavior", () => { .. })`: describes and checks observable
   behavior.
 
-Native tests import their tests and hooks explicitly from `node:test` and assertions
+Tests import their tests and hooks explicitly from `node:test` and assertions
 from `node:assert/strict`. Tests that perform asynchronous work must return or
 `await` their promise; do not catch and discard failures.
     
@@ -23,22 +23,25 @@ from `node:assert/strict`. Tests that perform asynchronous work must return or
 
 Tests live under `test/` and normally mirror the structure under `src/`.
 
-- Native fast unit, parser, and transformation tests use the `*.node.test.ts`
+- Fast unit, parser, and transformation tests use the `*.node.test.ts`
   suffix outside the slow-tier directories.
-- The colocated `*.test.ts` fast suites remain temporarily as the Jest behavioral
-  oracle while the migration is in progress.
-- Native solver, verification-fixture, and end-to-end tests use the
-  `*.node.test.ts` suffix in their existing slow-tier directories. Their
-  `*.test.ts` counterparts remain temporarily as the Jest behavioral oracle.
+- Solver, verification-fixture, and end-to-end tests use the `*.node.test.ts`
+  suffix in their existing slow-tier directories.
 - Verification fixture names end in `_SAFE.sc` or `_UNSAFE.sc` and the test must
   assert the corresponding result.
 
-Committed focused or skipped tests (`test.only`, `describe.only`, `test.skip`,
-`it.skip`, `xtest`, or `xit`) are not permitted.
+Committed focused or skipped tests are not permitted. This includes `.only` and
+`.skip` methods, `{only: true}` and `{skip: true}` options, legacy `xtest`/`xit`
+forms, and test-context `skip()` or `runOnly(true)` calls. Enforce the policy
+locally with:
+
+```sh
+pnpm run test:policy
+```
 
 ## Test Execution
 
-Run the complete native fast tier while developing:
+Run the complete fast tier while developing:
 
 ```sh
 pnpm run test:fast
@@ -46,33 +49,29 @@ pnpm run test:fast
 
 It executes TypeScript directly with tsx and collects Node V8 coverage only from
 handwritten Bastet TypeScript. Generated ANTLR and Z3 bindings are excluded. Node
-enforces the current line, branch, and function floors; these metrics will be
-re-baselined after the complete test migration because V8 and Istanbul account for
-TypeScript differently.
+enforces floors of 78% lines, 89% branches, and 57% functions. The command also
+runs the test-policy checker and its regression tests.
 
-Run one selected native file:
+Run one selected file:
 
 ```sh
-pnpm run test:fast:node:file -- test/bastet/utils/Optional.node.test.ts
+pnpm run test:fast:file -- test/bastet/utils/Optional.node.test.ts
 ```
 
 Run tests matching a name, optionally restricted to one file:
 
 ```sh
-pnpm run test:fast:node:test -- "updates immutably" test/bastet/utils/Optional.node.test.ts
+pnpm run test:fast:test -- "updates immutably" test/bastet/utils/Optional.node.test.ts
 ```
 
-Run the native fast tier in watch mode:
+Run the fast tier in watch mode:
 
 ```sh
-pnpm run test:fast:node:watch
+pnpm run test:fast:watch
 ```
 
-During the transition, compare the retained Jest tier with:
-
-```sh
-pnpm run test:fast:jest
-```
+Watch mode observes the selected fast test files. Pass a file after `--file` to
+limit the initial run and subsequent reruns to that file.
 
 Run the required solver, fixture, and integration tier with:
 
@@ -87,21 +86,17 @@ seconds; the outer runner terminates the suite's entire process group, including
 descendants, if it does not finish within 240 seconds. Every run prints per-suite
 and total elapsed times.
 
-Run one or more selected native slow suites:
+Run one or more selected slow suites:
 
 ```sh
-pnpm run test:slow:node:file -- \
+pnpm run test:slow:file -- \
   test/bastet/utils/smt/Z3-Boolean.node.test.ts \
   test/integration/DegToRad.node.test.ts
 ```
 
 The runner accepts `--concurrency 1` through `--concurrency 4` after its runner
 script when explicitly needed locally; CI and the documented commands remain
-sequential. During the transition, compare the retained Jest tier with:
-
-```sh
-pnpm run test:slow:jest
-```
+sequential.
 
 Run the short process-tree deadline regression probe with:
 
@@ -115,9 +110,8 @@ The complete local gate is:
 pnpm test
 ```
 
-CI runs Jest and Node jobs for both the fast and slow tiers. The paired jobs run
-against the same fixtures and report failures independently until the final
-cutover removes the Jest oracle.
+CI requires one fast job and one slow job. The slow job also runs the process-tree
+deadline regression probe so a native solver hang cannot stall CI indefinitely.
 
 ## Literature
 

@@ -4,7 +4,6 @@
 
 # Compiled output and caches
 /dist/
-/.node-test-dist/
 /coverage/
 *.tsbuildinfo
 .eslintcache
