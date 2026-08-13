@@ -19,6 +19,7 @@
  *   limitations under the License.
  *
  */
+import assert from "node:assert/strict";
 import path from "path"
 import {Bastet} from "../../../../../src/bastet/Bastet";
 import {AnalysisResult, MultiPropertyAnalysisResult} from "../../../../../src/bastet/procedures/AnalysisProcedure";
@@ -78,8 +79,8 @@ async function execute_explicit(
     const analysisResult = result as MultiPropertyAnalysisResult;
 
     if (expectSuccess) {
-        expect(analysisResult.satisfied.size).toBeGreaterThan(0);
+        assert.ok(analysisResult.satisfied.size > 0);
     } else {
-        expect(analysisResult.violated.size).toBeGreaterThan(0);
+        assert.ok(analysisResult.violated.size > 0);
     }
 }

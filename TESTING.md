@@ -27,9 +27,9 @@ Tests live under `test/` and normally mirror the structure under `src/`.
   suffix outside the slow-tier directories.
 - The colocated `*.test.ts` fast suites remain temporarily as the Jest behavioral
   oracle while the migration is in progress.
-- Solver tests live under `test/bastet/utils/smt/`.
-- Verification fixtures live under `test/bastet/procedures/analyses/data/`.
-- End-to-end tests live under `test/integration/`.
+- Native solver, verification-fixture, and end-to-end tests use the
+  `*.node.test.ts` suffix in their existing slow-tier directories. Their
+  `*.test.ts` counterparts remain temporarily as the Jest behavioral oracle.
 - Verification fixture names end in `_SAFE.sc` or `_UNSAFE.sc` and the test must
   assert the corresponding result.
 
@@ -80,10 +80,34 @@ Run the required solver, fixture, and integration tier with:
 pnpm run test:slow
 ```
 
-Slow suites run one file per Jest process to isolate native Z3 state. Jest limits
-each individual test to 120 seconds; the outer runner terminates any suite that
-does not finish within 240 seconds. This prevents a synchronous solver call from
-stalling CI indefinitely.
+Slow suites execute TypeScript directly with tsx. The runner starts one file per
+process to isolate native Z3 state and defaults to one active process so
+solver-heavy suites cannot overload CI. Node limits each individual test to 120
+seconds; the outer runner terminates the suite's entire process group, including
+descendants, if it does not finish within 240 seconds. Every run prints per-suite
+and total elapsed times.
+
+Run one or more selected native slow suites:
+
+```sh
+pnpm run test:slow:node:file -- \
+  test/bastet/utils/smt/Z3-Boolean.node.test.ts \
+  test/integration/DegToRad.node.test.ts
+```
+
+The runner accepts `--concurrency 1` through `--concurrency 4` after its runner
+script when explicitly needed locally; CI and the documented commands remain
+sequential. During the transition, compare the retained Jest tier with:
+
+```sh
+pnpm run test:slow:jest
+```
+
+Run the short process-tree deadline regression probe with:
+
+```sh
+pnpm run test:slow:deadline
+```
 
 The complete local gate is:
 
@@ -91,9 +115,9 @@ The complete local gate is:
 pnpm test
 ```
 
-CI runs the Jest and Node fast tiers as separate required jobs alongside the slow
-job. This keeps the 16-suite, 67-test Jest result as the behavioral comparison
-until the final cutover and reports failures independently.
+CI runs Jest and Node jobs for both the fast and slow tiers. The paired jobs run
+against the same fixtures and report failures independently until the final
+cutover removes the Jest oracle.
 
 ## Literature
 

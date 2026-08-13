@@ -35,9 +35,16 @@ testing_fast_node:
     - pnpm run test:fast:node
     - mkdir -p output/static
 
-testing_slow:
+testing_slow_jest:
   stage: test
   script:
     - pnpm run build-no-lint
-    - pnpm run test:slow
+    - pnpm run test:slow:jest
+    - mkdir -p output/static
+
+testing_slow_node:
+  stage: test
+  script:
+    - pnpm run build-no-lint
+    - pnpm run test:slow:node
     - mkdir -p output/static

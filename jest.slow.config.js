@@ -9,5 +9,9 @@ module.exports = {
         '**/test/bastet/procedures/analyses/data/**/*.test.(ts|js)',
         '**/test/bastet/utils/smt/**/*.test.(ts|js)',
     ],
+    testPathIgnorePatterns: [
+        '/node_modules/',
+        '/test/.*\\.node\\.test\\.ts$',
+    ],
     testTimeout: 120000,
 };
