@@ -2,7 +2,7 @@
 
 const fs = require('fs');
 const path = require('path');
-const {spawnSync} = require('child_process');
+const {spawn, spawnSync} = require('child_process');
 
 const repositoryRoot = path.resolve(__dirname, '..');
 const testRoot = path.join(repositoryRoot, 'test');
@@ -79,9 +79,9 @@ function coverageArguments() {
         '--test-coverage-exclude=src/bastet/syntax/parser/grammar/**',
         '--test-coverage-exclude=src/bastet/utils/smt/z3/libz3.ts',
         '--test-coverage-exclude=src/bastet/utils/smt/z3/ctypes.ts',
-        '--test-coverage-lines=22',
-        '--test-coverage-branches=16',
-        '--test-coverage-functions=15',
+        '--test-coverage-lines=78',
+        '--test-coverage-branches=89',
+        '--test-coverage-functions=57',
     ];
 }
 
@@ -105,11 +105,60 @@ const nodeArguments = [
     'tsx',
     '--test',
     '--test-concurrency=1',
-    ...(options.watch ? ['--watch'] : []),
     ...(options.testNamePattern ? [`--test-name-pattern=${options.testNamePattern}`] : []),
     ...(options.coverage ? coverageArguments() : []),
     ...tests,
 ];
+
+function watchTests() {
+    let child = null;
+    let restartRequested = false;
+    let restartTimer = null;
+
+    function run() {
+        restartRequested = false;
+        child = spawn(process.execPath, nodeArguments, {
+            cwd: repositoryRoot,
+            env: {...process.env, CI: process.env.CI || 'true'},
+            stdio: 'inherit',
+        });
+        child.once('error', (error) => console.error(error.message));
+        child.once('close', () => {
+            child = null;
+            if (restartRequested) run();
+            else console.log('[fast:watch] Waiting for test-file changes...');
+        });
+    }
+
+    function requestRestart(testPath) {
+        clearTimeout(restartTimer);
+        restartTimer = setTimeout(() => {
+            console.log(`\n[fast:watch] Change detected: ${testPath}`);
+            restartRequested = true;
+            if (child) child.kill('SIGTERM');
+            else run();
+        }, 50);
+    }
+
+    const watchers = tests.map((testPath) => fs.watch(
+        path.resolve(repositoryRoot, testPath),
+        () => requestRestart(testPath),
+    ));
+    function stop() {
+        clearTimeout(restartTimer);
+        for (const watcher of watchers) watcher.close();
+        if (child) child.kill('SIGTERM');
+    }
+    process.once('SIGINT', stop);
+    process.once('SIGTERM', stop);
+    console.log(`[fast:watch] Watching ${tests.length} test file(s).`);
+    run();
+}
+
+if (options.watch) {
+    watchTests();
+    return;
+}
 
 const result = spawnSync(process.execPath, nodeArguments, {
     cwd: repositoryRoot,

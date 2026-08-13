@@ -22,28 +22,26 @@ function normalizePath(testPath) {
     return testPath.split(path.sep).join('/');
 }
 
-function isTestForMode(filename, mode) {
-    if (mode === 'node') return filename.endsWith('.node.test.ts');
-    return filename.endsWith('.test.ts') && !filename.endsWith('.node.test.ts');
+function isSlowTest(filename) {
+    return filename.endsWith('.node.test.ts');
 }
 
-function collectTests(directory, mode) {
+function collectTests(directory) {
     return fs.readdirSync(directory, {withFileTypes: true}).flatMap((entry) => {
         const entryPath = path.join(directory, entry.name);
-        if (entry.isDirectory()) return collectTests(entryPath, mode);
-        return isTestForMode(entry.name, mode) ? [entryPath] : [];
+        if (entry.isDirectory()) return collectTests(entryPath);
+        return isSlowTest(entry.name) ? [entryPath] : [];
     });
 }
 
-function relativeTestPath(testPath, mode) {
+function relativeTestPath(testPath) {
     const absolutePath = path.resolve(repositoryRoot, testPath);
     const relativePath = normalizePath(path.relative(repositoryRoot, absolutePath));
     const isInsideRepository = relativePath !== '..' && !relativePath.startsWith('../');
     const isInsideSlowRoot = slowRoots.some((root) => relativePath.startsWith(`${root}/`));
 
-    if (!isInsideRepository || !isInsideSlowRoot || !isTestForMode(relativePath, mode)) {
-        const suffix = mode === 'node' ? '.node.test.ts' : '.test.ts';
-        throw new Error(`Expected a ${suffix} file inside a slow-test root: ${testPath}`);
+    if (!isInsideRepository || !isInsideSlowRoot || !isSlowTest(relativePath)) {
+        throw new Error(`Expected a .node.test.ts file inside a slow-test root: ${testPath}`);
     }
     if (!fs.existsSync(absolutePath) || !fs.statSync(absolutePath).isFile()) {
         throw new Error(`Test file does not exist: ${testPath}`);
@@ -52,18 +50,12 @@ function relativeTestPath(testPath, mode) {
 }
 
 function parseArguments(argv) {
-    const options = {concurrency: 1, mode: null, probeTimeout: false, tests: []};
+    const options = {concurrency: 1, probeTimeout: false, tests: []};
     const args = argv.filter((argument) => argument !== '--');
 
     while (args.length > 0) {
         const argument = args.shift();
-        if (argument === '--node' || argument === '--jest') {
-            const mode = argument.slice(2);
-            if (options.mode && options.mode !== mode) {
-                throw new Error('Choose exactly one slow-test runner: --node or --jest');
-            }
-            options.mode = mode;
-        } else if (argument === '--concurrency') {
+        if (argument === '--concurrency') {
             const value = Number(args.shift());
             if (!Number.isInteger(value) || value < 1 || value > maxConcurrency) {
                 throw new Error(`--concurrency must be an integer from 1 to ${maxConcurrency}`);
@@ -82,34 +74,19 @@ function parseArguments(argv) {
     }
 
     if (options.probeTimeout) return options;
-    if (!options.mode) throw new Error('Choose a slow-test runner with --node or --jest');
-    options.tests = options.tests.map((testPath) => relativeTestPath(testPath, options.mode));
+    options.tests = options.tests.map(relativeTestPath);
     return options;
 }
 
-function commandForSuite(mode, testPath) {
-    if (mode === 'node') {
-        return {
-            command: process.execPath,
-            args: [
-                '--import',
-                'tsx',
-                '--test',
-                '--test-concurrency=1',
-                `--test-timeout=${testTimeoutMs}`,
-                testPath,
-            ],
-        };
-    }
+function commandForSuite(testPath) {
     return {
-        command: path.join(repositoryRoot, 'node_modules/.bin/jest'),
+        command: process.execPath,
         args: [
-            '--config',
-            'jest.slow.config.js',
-            '--runInBand',
-            '--coverage=false',
-            '--silent',
-            '--runTestsByPath',
+            '--import',
+            'tsx',
+            '--test',
+            '--test-concurrency=1',
+            `--test-timeout=${testTimeoutMs}`,
             testPath,
         ],
     };
@@ -128,10 +105,10 @@ function killProcessTree(child, signal) {
     }
 }
 
-function runSuite(mode, testPath, timeoutMs = suiteTimeoutMs, extraEnv = {}) {
+function runSuite(testPath, timeoutMs = suiteTimeoutMs, extraEnv = {}) {
     return new Promise((resolve) => {
         const startedAt = performance.now();
-        const {command, args} = commandForSuite(mode, testPath);
+        const {command, args} = commandForSuite(testPath);
         const child = spawn(command, args, {
             cwd: repositoryRoot,
             detached: process.platform !== 'win32',
@@ -168,7 +145,7 @@ function formatDuration(durationMs) {
     return `${(durationMs / 1000).toFixed(3)}s`;
 }
 
-async function runTests(mode, tests, concurrency) {
+async function runTests(tests, concurrency) {
     const startedAt = performance.now();
     let nextIndex = 0;
     let failed = false;
@@ -177,28 +154,28 @@ async function runTests(mode, tests, concurrency) {
     async function worker() {
         while (!failed && !interrupted && nextIndex < tests.length) {
             const testPath = tests[nextIndex++];
-            console.log(`\n[slow:${mode}] ${testPath}`);
-            const result = await runSuite(mode, testPath);
+            console.log(`\n[slow] ${testPath}`);
+            const result = await runSuite(testPath);
             completed += 1;
 
             if (result.timedOut) {
-                console.error(`[slow:${mode}] TIMEOUT ${testPath} after ${suiteTimeoutMs / 1000}s`);
+                console.error(`[slow] TIMEOUT ${testPath} after ${suiteTimeoutMs / 1000}s`);
                 failed = true;
             } else if (result.error) {
-                console.error(`[slow:${mode}] ERROR ${testPath}: ${result.error.message}`);
+                console.error(`[slow] ERROR ${testPath}: ${result.error.message}`);
                 failed = true;
             } else if (result.code !== 0) {
-                console.error(`[slow:${mode}] FAIL ${testPath} (${formatDuration(result.durationMs)}, exit ${result.code ?? result.signal})`);
+                console.error(`[slow] FAIL ${testPath} (${formatDuration(result.durationMs)}, exit ${result.code ?? result.signal})`);
                 failed = true;
             } else {
-                console.log(`[slow:${mode}] PASS ${testPath} (${formatDuration(result.durationMs)})`);
+                console.log(`[slow] PASS ${testPath} (${formatDuration(result.durationMs)})`);
             }
         }
     }
 
     await Promise.all(Array.from({length: Math.min(concurrency, tests.length)}, worker));
     const totalDuration = performance.now() - startedAt;
-    console.log(`\n[slow:${mode}] ${completed}/${tests.length} suite(s) completed in ${formatDuration(totalDuration)}`);
+    console.log(`\n[slow] ${completed}/${tests.length} suite(s) completed in ${formatDuration(totalDuration)}`);
     return !failed && !interrupted && completed === tests.length;
 }
 
@@ -230,8 +207,7 @@ async function probeTimeoutCleanup() {
     const pidPath = path.join(temporaryDirectory, 'descendant.pid');
     try {
         const result = await runSuite(
-            'node',
-            'test/node-test/fixtures/stuck-slow-suite.node.js',
+            'test/fixtures/stuck-slow-suite.node.js',
             1_000,
             {BASTET_DESCENDANT_PID_PATH: pidPath},
         );
@@ -274,11 +250,11 @@ async function main() {
     const tests = options.tests.length > 0
         ? options.tests
         : slowRoots
-            .flatMap((root) => collectTests(path.join(repositoryRoot, root), options.mode))
+            .flatMap((root) => collectTests(path.join(repositoryRoot, root)))
             .sort()
             .map((testPath) => normalizePath(path.relative(repositoryRoot, testPath)));
 
-    return await runTests(options.mode, tests, options.concurrency) ? 0 : 1;
+    return await runTests(tests, options.concurrency) ? 0 : 1;
 }
 
 main()
