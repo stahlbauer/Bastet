@@ -5,6 +5,7 @@ module.exports = {
     displayName: 'fast',
     testPathIgnorePatterns: [
         '/node_modules/',
+        '/test/.*\\.node\\.test\\.ts$',
         '/test/integration/',
         '/test/bastet/procedures/analyses/data/',
         '/test/bastet/utils/smt/',
