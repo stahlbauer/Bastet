@@ -34,8 +34,7 @@ import {
     Z3Theories
 } from "../../../../src/bastet/utils/smt/z3/Z3Theories";
 import {BooleanType, IntegerType, StringType} from "../../../../src/bastet/syntax/ast/core/ScratchType";
-import {Map as ImmMap, Record as ImmRec} from "immutable";
-import {FirstOrderFormula} from "../../../../src/bastet/utils/ConjunctiveNormalForm";
+import {Map as ImmMap} from "immutable";
 import {AnalysisStatistics} from "../../../../src/bastet/procedures/analyses/AnalysisStatistics";
 
 

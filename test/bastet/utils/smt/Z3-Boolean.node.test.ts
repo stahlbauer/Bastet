@@ -26,10 +26,9 @@
 import assert from "node:assert/strict";
 import {before, test} from "node:test";
 import {SMTFactory, Z3SMT} from "../../../../src/bastet/utils/smt/z3/Z3SMT";
-import {ConcreteNumber, ConcreteString} from "../../../../src/bastet/procedures/domains/ConcreteElements";
 import {VariableWithDataLocation} from "../../../../src/bastet/syntax/ast/core/Variable";
 import {DataLocations} from "../../../../src/bastet/syntax/app/controlflow/DataLocation";
-import {BooleanType, FloatType} from "../../../../src/bastet/syntax/ast/core/ScratchType";
+import {BooleanType} from "../../../../src/bastet/syntax/ast/core/ScratchType";
 import {Identifier} from "../../../../src/bastet/syntax/ast/core/Identifier";
 import {AnalysisStatistics} from "../../../../src/bastet/procedures/analyses/AnalysisStatistics";
 import * as utils from "../../../bastet/procedures/analyses/data/TestUtils";

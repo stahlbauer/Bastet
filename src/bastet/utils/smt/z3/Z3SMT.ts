@@ -47,7 +47,7 @@ import {Identifier} from "../../../syntax/ast/core/Identifier";
 import {BooleanType} from "../../../syntax/ast/core/ScratchType";
 import {ImplementMeException} from "../../../core/exceptions/ImplementMeException";
 import {AnalysisStatistics} from "../../../procedures/analyses/AnalysisStatistics";
-import {List as ImmList, Map as ImmMap, Set as ImmSet} from "immutable"
+import { Map as ImmMap} from "immutable"
 import {
     ConcreteBoolean, ConcreteFloat,
     ConcreteInteger,

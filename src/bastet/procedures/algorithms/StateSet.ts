@@ -25,7 +25,7 @@
 
 import {AbstractElement} from "../../lattices/Lattice";
 import {Preconditions} from "../../utils/Preconditions";
-import {List as ImmList, Map as ImmMap, OrderedSet, Record as ImmRec, Set as ImmSet} from "immutable";
+import {List as ImmList, Map as ImmMap, Record as ImmRec, Set as ImmSet} from "immutable";
 import {getTheOnlyElement} from "../../utils/Collections";
 import {Heap} from 'heap-js';
 import {LexiKey} from "../../utils/Lexicographic";

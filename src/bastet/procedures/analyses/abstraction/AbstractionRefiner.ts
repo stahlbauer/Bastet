@@ -25,7 +25,7 @@
 
 import {Refiner, Unwrapper} from "../Refiner";
 import {FrontierSet, ReachedSet} from "../../algorithms/StateSet";
-import {ImplementMeException, ImplementMeForException} from "../../../core/exceptions/ImplementMeException";
+import { ImplementMeForException} from "../../../core/exceptions/ImplementMeException";
 import {AbstractElement, AbstractState} from "../../../lattices/Lattice";
 import {AbstractionState, AbstractionStateLattice} from "./AbstractionAbstractDomain";
 import {Preconditions} from "../../../utils/Preconditions";
@@ -44,10 +44,8 @@ import {AccessibilityRelation, AccessibilityRelations} from "../Accessibility";
 import {FirstOrderSolver} from "../../domains/FirstOrderDomain";
 import {TransformerTheories} from "../../domains/MemoryTransformer";
 import {BastetConfiguration} from "../../../utils/BastetConfiguration";
-import {getAtMostOneElement, getTheOnlyElement} from "../../../utils/Collections";
+import { getTheOnlyElement} from "../../../utils/Collections";
 import {AbstractionStateStates} from "./AbstractionStates";
-import {Map as ImmMap} from "immutable"
-import {SSAState} from "../ssa/SSAAbstractDomain";
 import {SSAAbstractStates} from "../ssa/SSAAbstractStates";
 import {DataAbstractStates} from "../data/DataAbstractStates";
 import {PerfTimer} from "../../../utils/PerfTimer";

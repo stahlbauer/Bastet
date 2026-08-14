@@ -25,16 +25,12 @@
 
 
 import {
-    ConcreteBoolean,
-    ConcreteDomain, ConcreteElement, ConcreteFloat, ConcreteInteger,
-    ConcreteList,
-    ConcreteMemory,
-    ConcreteNumber,
-    ConcreteString
+    ConcreteDomain, ConcreteElement,
+    ConcreteMemory
 } from "./ConcreteElements";
 import {FirstOrderFormula} from "../../utils/ConjunctiveNormalForm";
 import {LatticeWithComplements, WithReferenceCounting} from "../../lattices/Lattice";
-import {ImplementMeException, ImplementMeForException} from "../../core/exceptions/ImplementMeException";
+import {ImplementMeException} from "../../core/exceptions/ImplementMeException";
 import {Preconditions} from "../../utils/Preconditions";
 import {BooleanTheory} from "./MemoryTransformer";
 import {IllegalArgumentException} from "../../core/exceptions/IllegalArgumentException";
@@ -43,7 +39,6 @@ import {AbstractDomain} from "./AbstractDomain";
 import {AbstractionPrecision} from "../AbstractionPrecision";
 import {Z3Model, Z3Vector} from "../../utils/smt/z3/Z3SMT";
 import {Z3BooleanFormula} from "../../utils/smt/z3/Z3Theories";
-import {List as ImmList, Map as ImmMap, Set as ImmSet} from "immutable"
 
 export interface FirstOrderLattice<F extends FirstOrderFormula> extends LatticeWithComplements<F>, WithReferenceCounting<F> {
 

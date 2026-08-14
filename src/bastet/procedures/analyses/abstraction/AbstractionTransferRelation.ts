@@ -24,7 +24,7 @@
  */
 
 import {LabeledTransferRelation} from "../TransferRelation";
-import {ProgramOperation, ProgramOperationInContext} from "../../../syntax/app/controlflow/ops/ProgramOperation";
+import { ProgramOperationInContext} from "../../../syntax/app/controlflow/ops/ProgramOperation";
 import {AbstractElement} from "../../../lattices/Lattice";
 import {Preconditions} from "../../../utils/Preconditions";
 import {IllegalStateException} from "../../../core/exceptions/IllegalStateException";

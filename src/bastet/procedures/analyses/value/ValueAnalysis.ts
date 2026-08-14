@@ -30,20 +30,11 @@ import {App} from "../../../syntax/app/App";
 import {LabeledTransferRelation} from "../TransferRelation";
 import {ProgramOperation, ProgramOperationInContext} from "../../../syntax/app/controlflow/ops/ProgramOperation";
 import {ValueTransferRelation} from "./ValueTransferRelation";
-import {ConcreteElement, ConcreteMemory} from "../../domains/ConcreteElements";
+import { ConcreteMemory} from "../../domains/ConcreteElements";
 import {Preconditions} from "../../../utils/Preconditions";
 import {
     AbstractBoolean, AbstractFloat, AbstractInteger, AbstractList,
-    AbstractMemory,
-    AbstractNumber, AbstractReal, AbstractString,
-    AbstractTheories,
-    BooleanTheory,
-    FloatTheory,
-    IntegerTheory,
-    ListTheory,
-    NumberTheory,
-    RealTheory,
-    StringTheory,
+    AbstractMemory, AbstractReal, AbstractString,
     TransformerTheories
 } from "../../domains/MemoryTransformer";
 import {
@@ -55,8 +46,7 @@ import {
     RealFormula,
     StringFormula
 } from "../../../utils/ConjunctiveNormalForm";
-import {PropositionalFormula} from "../../../utils/bdd/BDD";
-import {AbstractElement, AbstractState, LatticeWithComplements} from "../../../lattices/Lattice";
+import {AbstractElement, AbstractState} from "../../../lattices/Lattice";
 import {Refiner} from "../Refiner";
 import {Property} from "../../../syntax/Property";
 import {FrontierSet, PartitionKey, ReachedSet, StateSet} from "../../algorithms/StateSet";

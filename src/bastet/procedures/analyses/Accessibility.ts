@@ -23,7 +23,7 @@
  *
  */
 
-import {AbstractElement, AbstractState} from "../../lattices/Lattice";
+import { AbstractState} from "../../lattices/Lattice";
 import {ConcreteElement} from "../domains/ConcreteElements";
 import {TransitionLabelProvider} from "./ProgramAnalysis";
 import {Concretizer} from "../domains/AbstractDomain";
@@ -31,7 +31,6 @@ import {Map as ImmMap, Set as ImmSet} from "immutable";
 import {Preconditions} from "../../utils/Preconditions";
 import {DirectedGraph, DirectedGraphs} from "../../utils/DirectedGraph";
 import {getAtMostOneElement, getTheOnlyElement} from "../../utils/Collections";
-import {AbstractionStateStates} from "./abstraction/AbstractionStates";
 import {AbstractStates} from "./AbstractStates";
 
 

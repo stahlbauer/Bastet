@@ -44,18 +44,12 @@ import * as fs from "fs";
 import {BastetConfiguration, mergeConfigFilesToJson} from "./utils/BastetConfiguration";
 import {ParsingException} from "./core/exceptions/ParsingException";
 import {NodeSystemLayer} from "./utils/SystemLayer";
-import {ImmutableList} from "./utils/ImmutableList";
-import {Script} from "./syntax/app/controlflow/Script";
-import {MessageReceivedEvent, QualifiedMessageNamespace} from "./syntax/ast/core/CoreEvent";
-import {extractStringLiteral} from "./syntax/ast/core/expressions/StringExpression";
-import {SYSTEM_NAMESPACE_NAME} from "./syntax/ast/core/Message";
 import {
     CallStmtContext,
     MessageReceivedEventContext,
     ScriptContext,
     StringLiteralExpressionContext
 } from "./syntax/parser/grammar/LeilaParser";
-import {ImplementMeForException} from "./core/exceptions/ImplementMeException";
 
 const process = require('process');
 

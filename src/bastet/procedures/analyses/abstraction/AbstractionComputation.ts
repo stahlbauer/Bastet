@@ -43,7 +43,6 @@ import {SSAState} from "../ssa/SSAAbstractDomain";
 import {DataAbstractStates} from "../data/DataAbstractStates";
 import {getTheOnlyElement} from "../../../utils/Collections";
 import {SSAAbstractStates} from "../ssa/SSAAbstractStates";
-import {BlockSummary} from "./BlockSummary";
 
 export interface AbstractionComputation<E extends AbstractState, P extends AbstractionPrecision> {
 

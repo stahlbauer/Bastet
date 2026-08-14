@@ -27,9 +27,7 @@
 import {AbstractElement, AbstractState} from "../../lattices/Lattice";
 import {Preconditions} from "../../utils/Preconditions";
 import {FrontierSet, ReachedSet} from "../algorithms/StateSet";
-import {ImplementMeException} from "../../core/exceptions/ImplementMeException";
 import {AccessibilityRelation} from "./Accessibility";
-import {AbstractionState} from "./abstraction/AbstractionAbstractDomain";
 
 export interface Refiner<F extends AbstractState> {
 

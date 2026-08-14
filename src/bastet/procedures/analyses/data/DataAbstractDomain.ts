@@ -29,7 +29,6 @@ import {ImplementMeException} from "../../../core/exceptions/ImplementMeExceptio
 import {AbstractDomain} from "../../domains/AbstractDomain";
 import {FirstOrderFormula} from "../../../utils/ConjunctiveNormalForm";
 import {ConcreteDomain, ConcreteElement, ConcreteMemory,} from "../../domains/ConcreteElements";
-import {PropositionalFormula} from "../../../utils/bdd/BDD";
 import {Preconditions} from "../../../utils/Preconditions";
 import {FirstOrderDomain, FirstOrderLattice, FirstOrderSolver} from "../../domains/FirstOrderDomain";
 import {AbstractionPrecision} from "../../AbstractionPrecision";

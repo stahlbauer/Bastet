@@ -41,7 +41,7 @@ import {
     AfterStatementMonitoringEventContext,
     AnonymousScriptIdentContext,
     AssumeStatementContext, AtomicBlockContext,
-    AtomicMethodContext, BlockModeContext,
+    AtomicMethodContext,
     BoolAndExpressionContext,
     BoolAsStringExpressionContext,
     BoolCallStatementExpressionContext,

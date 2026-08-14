@@ -28,7 +28,6 @@ import {ValueAbstractDomain, ValueAbstractState} from "./ValueAbstractDomain";
 import {IllegalStateException} from "../../../core/exceptions/IllegalStateException";
 import {
     AssumeOperation,
-    ProgramOperation,
     ProgramOperationInContext
 } from "../../../syntax/app/controlflow/ops/ProgramOperation";
 import {TransformerTheories} from "../../domains/MemoryTransformer";

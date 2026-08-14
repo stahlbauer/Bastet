@@ -23,8 +23,7 @@
  *
  */
 
-import {AbstractElementVisitor, AbstractState, Lattice, LatticeWithComplements} from "../../../lattices/Lattice";
-import {Record as ImmRec} from "immutable";
+import { Lattice} from "../../../lattices/Lattice";
 import {ImplementMeException} from "../../../core/exceptions/ImplementMeException";
 import {AbstractDomain} from "../../domains/AbstractDomain";
 import {ConcreteDomain, ConcreteElement, ConcreteMemory, ConcreteMemoryLattice,} from "../../domains/ConcreteElements";

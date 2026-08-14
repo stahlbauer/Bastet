@@ -23,7 +23,7 @@
  *
  */
 
-import {AbstractElement, Lattice, Lattices} from "../lattices/Lattice";
+import {AbstractElement, Lattice} from "../lattices/Lattice";
 import {List as ImmList, Record as ImmRec, Set as ImmSet} from "immutable";
 import {FirstOrderFormula} from "../utils/ConjunctiveNormalForm";
 import {FirstOrderLattice} from "./domains/FirstOrderDomain";

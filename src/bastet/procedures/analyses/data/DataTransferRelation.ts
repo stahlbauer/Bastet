@@ -28,7 +28,6 @@ import {DataAbstractDomain, DataAbstractState} from "./DataAbstractDomain";
 import {IllegalStateException} from "../../../core/exceptions/IllegalStateException";
 import {
     AssumeOperation,
-    ProgramOperation,
     ProgramOperationInContext
 } from "../../../syntax/app/controlflow/ops/ProgramOperation";
 import {DataTransformerVisitor} from "./DataTransformerVisitor";

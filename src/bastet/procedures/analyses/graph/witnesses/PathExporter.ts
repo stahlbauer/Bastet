@@ -33,7 +33,6 @@ import {TransitionLabelProvider, WrappingProgramAnalysis} from "../../ProgramAna
 import {
     ConcreteBoolean,
     ConcreteElement, ConcreteFloat, ConcreteInteger,
-    ConcreteNumber,
     ConcreteString,
     ConcreteUnifiedMemory
 } from "../../../domains/ConcreteElements";
@@ -41,9 +40,7 @@ import {AccessibilityRelation} from "../../Accessibility";
 import {ProgramOperation} from "../../../../syntax/app/controlflow/ops/ProgramOperation";
 import {CorePrintVisitor} from "../../../../syntax/ast/CorePrintVisitor";
 import {getTheOnlyElement} from "../../../../utils/Collections";
-import {IllegalStateException} from "../../../../core/exceptions/IllegalStateException";
 import {ImplementMeException} from "../../../../core/exceptions/ImplementMeException";
-import {IllegalArgumentException} from "../../../../core/exceptions/IllegalArgumentException";
 import {asUnifiedMemory} from "../../control/ConcreteProgramState";
 
 export class PathExporter implements WitnessHandler<GraphAbstractState> {

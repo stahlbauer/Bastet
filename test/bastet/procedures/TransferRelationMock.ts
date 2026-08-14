@@ -20,7 +20,7 @@
  *
  */
 
-import {Map as ImmMap, Record as ImmRec} from "immutable"
+import { Record as ImmRec} from "immutable"
 import {LabeledTransferRelation} from "../../../src/bastet/procedures/analyses/TransferRelation";
 import {AbstractElement} from "../../../src/bastet/lattices/Lattice";
 import {

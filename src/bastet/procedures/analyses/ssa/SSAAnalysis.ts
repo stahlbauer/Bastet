@@ -31,7 +31,6 @@ import {Preconditions} from "../../../utils/Preconditions";
 import {
     ConcreteElement,
     ConcreteMemory,
-    ConcretePrimitive,
     ConcreteUnifiedMemory
 } from "../../domains/ConcreteElements";
 import {LabeledTransferRelation} from "../TransferRelation";

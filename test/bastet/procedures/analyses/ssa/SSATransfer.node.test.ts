@@ -23,11 +23,11 @@
 
 import assert from 'node:assert/strict';
 import {describe, test} from 'node:test';
-import {Map as ImmMap, Record as ImmRec} from "immutable"
+import {Map as ImmMap} from "immutable"
 import {SSATransferRelation} from "../../../../../src/bastet/procedures/analyses/ssa/SSATransferRelation";
 import {AbstractMockElement, TransferRelationMock} from "../../TransferRelationMock";
 import {SSAState} from "../../../../../src/bastet/procedures/analyses/ssa/SSAAbstractDomain";
-import {IntegerType, ScratchType} from "../../../../../src/bastet/syntax/ast/core/ScratchType";
+import {IntegerType} from "../../../../../src/bastet/syntax/ast/core/ScratchType";
 import {
     ProgramOperationFactory,
     ProgramOperationInContext

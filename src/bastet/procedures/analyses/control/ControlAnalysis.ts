@@ -49,14 +49,11 @@ import {LexiKey} from "../../../utils/Lexicographic";
 import {getTheOnlyElement} from "../../../utils/Collections";
 import {TransitionRelation} from "../../../syntax/app/controlflow/TransitionRelation";
 import {ControlCoverageExaminer} from "./coverage/ControlCoverage";
-import {ControlLocationExtractor} from "./ControlUtils";
 import {CallStatement} from "../../../syntax/ast/core/statements/CallStatement";
-import {Record as ImmRec, Map as ImmMap} from "immutable";
 import {ReturnStatement} from "../../../syntax/ast/core/statements/ControlStatement";
 import {AccessibilityRelation} from "../Accessibility";
 import {
     ConcreteElement,
-    ConcretePrimitive,
     ConcreteUnifiedMemory
 } from "../../domains/ConcreteElements";
 import {NotSupportedException} from "../../../core/exceptions/NotSupportedException";

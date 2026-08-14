@@ -31,14 +31,12 @@ import {SMTFactory, Z3Model, Z3SMT} from "../../../../src/bastet/utils/smt/z3/Z3
 import {VariableWithDataLocation} from "../../../../src/bastet/syntax/ast/core/Variable";
 import {DataLocations} from "../../../../src/bastet/syntax/app/controlflow/DataLocation";
 import {Identifier} from "../../../../src/bastet/syntax/ast/core/Identifier";
-import {ConcreteNumber, ConcreteString} from "../../../../src/bastet/procedures/domains/ConcreteElements";
+import {ConcreteNumber} from "../../../../src/bastet/procedures/domains/ConcreteElements";
 import {
     Z3BooleanFormula,
-    Z3FirstOrderLattice,
-    Z3NumberFormula,
     Z3Theories
 } from "../../../../src/bastet/utils/smt/z3/Z3Theories";
-import {BooleanType, IntegerType, StringType} from "../../../../src/bastet/syntax/ast/core/ScratchType";
+import {BooleanType, IntegerType} from "../../../../src/bastet/syntax/ast/core/ScratchType";
 import {FirstOrderDomain} from "../../../../src/bastet/procedures/domains/FirstOrderDomain";
 import {AnalysisStatistics} from "../../../../src/bastet/procedures/analyses/AnalysisStatistics";
 

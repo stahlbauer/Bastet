@@ -30,7 +30,6 @@ import {ControlAnalysis} from "./analyses/control/ControlAnalysis";
 import {GraphAbstractState} from "./analyses/graph/GraphAbstractDomain";
 import {ReachabilityAlgorithm} from "./algorithms/ReachabilityAlgorithm";
 import {SMTFactory} from "../utils/smt/z3/Z3SMT";
-import {BDDLibraryFactory} from "../utils/bdd/BDD";
 import {Z3Theories} from "../utils/smt/z3/Z3Theories";
 import {SSAAnalysis} from "./analyses/ssa/SSAAnalysis";
 import {FeasibilityAlgorithm} from "./algorithms/FeasibilityAlgorithm";

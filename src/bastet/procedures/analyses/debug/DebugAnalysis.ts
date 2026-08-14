@@ -24,7 +24,6 @@
  */
 
 import {
-    ProgramAnalysis,
     ProgramAnalysisWithLabels,
     TransitionLabelProvider,
     WrappingProgramAnalysis
@@ -38,9 +37,7 @@ import {FrontierSet, PartitionKey, ReachedSet} from "../../algorithms/StateSet";
 import {App} from "../../../syntax/app/App";
 import {AbstractDomain} from "../../domains/AbstractDomain";
 import {Refiner, Unwrapper, WrappingRefiner} from "../Refiner";
-import {LabeledTransferRelation} from "../TransferRelation";
 import {ProgramOperation} from "../../../syntax/app/controlflow/ops/ProgramOperation";
-import {Concern} from "../../../syntax/Concern";
 import {ImplementMeException} from "../../../core/exceptions/ImplementMeException";
 import {List as ImmList, Set as ImmSet} from "immutable";
 import {LexiKey} from "../../../utils/Lexicographic";

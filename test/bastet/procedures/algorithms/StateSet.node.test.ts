@@ -23,10 +23,10 @@
 
 import assert from 'node:assert/strict';
 import {describe, test} from 'node:test';
-import {Map as ImmMap, List as ImmList, Record as ImmRec, Set as ImmSet} from "immutable"
+import {Map as ImmMap, List as ImmList, Record as ImmRec} from "immutable"
 import {DifferencingFrontierSet, PartitionKey} from "../../../../src/bastet/procedures/algorithms/StateSet";
 import {LexiKey} from "../../../../src/bastet/utils/Lexicographic";
-import {AbstractElement, AbstractState} from "../../../../src/bastet/lattices/Lattice";
+import {AbstractElement} from "../../../../src/bastet/lattices/Lattice";
 import {StateReferenceOperator} from "../../../../src/bastet/procedures/analyses/ProgramAnalysis";
 
 const DummyAbstractElementRecord = ImmRec({

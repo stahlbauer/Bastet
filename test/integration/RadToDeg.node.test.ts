@@ -20,7 +20,6 @@
  *
  */
 import {test} from "node:test";
-import {Bastet} from "../../src/bastet/Bastet";
 import * as utils from "../bastet/procedures/analyses/data/TestUtils";
 
 test("Test radToDeg 1 safe", {timeout: utils.timeout}, async () => {

@@ -40,8 +40,6 @@ import {Preconditions} from "../../utils/Preconditions";
 import {Record as ImmRec, Map as ImmMap} from "immutable";
 import {ImplementMeException} from "../../core/exceptions/ImplementMeException";
 import {IllegalArgumentException} from "../../core/exceptions/IllegalArgumentException";
-import {VariableWithDataLocation} from "../../syntax/ast/core/Variable";
-import {VAR_SCOPING_SPLITTER} from "../../syntax/app/controlflow/DataLocation";
 
 function containsAll<K, V>(map1: ImmMap<K, V>, map2: ImmMap<K, V>): boolean {
     throw new ImplementMeException();

@@ -20,7 +20,6 @@
  *
  */
 import {test} from "node:test";
-import {Bastet} from "../../../../../src/bastet/Bastet";
 import * as utils from './TestUtils'
 import path from "path";
 

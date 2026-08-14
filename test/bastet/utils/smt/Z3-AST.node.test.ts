@@ -32,7 +32,7 @@ import {Identifier} from "../../../../src/bastet/syntax/ast/core/Identifier";
 import {IntegerType} from "../../../../src/bastet/syntax/ast/core/ScratchType";
 import {ConcreteNumber} from "../../../../src/bastet/procedures/domains/ConcreteElements";
 import {SMTFactory, Z3SMT} from "../../../../src/bastet/utils/smt/z3/Z3SMT";
-import {VariableCollectingVisitor, Z3Visitor} from "../../../../src/bastet/utils/smt/z3/Z3AST";
+import {VariableCollectingVisitor} from "../../../../src/bastet/utils/smt/z3/Z3AST";
 import {Z3Theories} from "../../../../src/bastet/utils/smt/z3/Z3Theories";
 import {AnalysisStatistics} from "../../../../src/bastet/procedures/analyses/AnalysisStatistics";
 
