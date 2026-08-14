@@ -23,82 +23,104 @@
  *
  */
 
-
-import assert from "node:assert/strict";
-import {before, test} from "node:test";
-import {VariableWithDataLocation} from "../../../../src/bastet/syntax/ast/core/Variable";
-import {DataLocations} from "../../../../src/bastet/syntax/app/controlflow/DataLocation";
-import {Identifier} from "../../../../src/bastet/syntax/ast/core/Identifier";
-import {IntegerType} from "../../../../src/bastet/syntax/ast/core/ScratchType";
-import {ConcreteNumber} from "../../../../src/bastet/procedures/domains/ConcreteElements";
-import {SMTFactory, Z3SMT} from "../../../../src/bastet/utils/smt/z3/Z3SMT";
-import {VariableCollectingVisitor} from "../../../../src/bastet/utils/smt/z3/Z3AST";
-import {Z3Theories} from "../../../../src/bastet/utils/smt/z3/Z3Theories";
-import {AnalysisStatistics} from "../../../../src/bastet/procedures/analyses/AnalysisStatistics";
+import assert from 'node:assert/strict';
+import { before, test } from 'node:test';
+import { VariableWithDataLocation } from '../../../../src/bastet/syntax/ast/core/Variable';
+import { DataLocations } from '../../../../src/bastet/syntax/app/controlflow/DataLocation';
+import { Identifier } from '../../../../src/bastet/syntax/ast/core/Identifier';
+import { IntegerType } from '../../../../src/bastet/syntax/ast/core/ScratchType';
+import { ConcreteNumber } from '../../../../src/bastet/procedures/domains/ConcreteElements';
+import { SMTFactory, Z3SMT } from '../../../../src/bastet/utils/smt/z3/Z3SMT';
+import { VariableCollectingVisitor } from '../../../../src/bastet/utils/smt/z3/Z3AST';
+import { Z3Theories } from '../../../../src/bastet/utils/smt/z3/Z3Theories';
+import { AnalysisStatistics } from '../../../../src/bastet/procedures/analyses/AnalysisStatistics';
 
 let smt: Z3SMT;
 let ctx;
 let theories: Z3Theories;
 let prover;
 
-before( async () => {
+before(async () => {
     smt = await SMTFactory.createZ3();
     ctx = smt.createContext();
     theories = smt.createTheories(ctx);
-    prover = smt.createProver(ctx, new AnalysisStatistics("Test", {}));
+    prover = smt.createProver(ctx, new AnalysisStatistics('Test', {}));
 });
 
-test ("Collect and Substitute", async () => {
-    const x = new VariableWithDataLocation(DataLocations.createTypedLocation(Identifier.of("x"), IntegerType.instance()));
-    const y = new VariableWithDataLocation(DataLocations.createTypedLocation(Identifier.of("y"), IntegerType.instance()));
+test('Collect and Substitute', async () => {
+    const x = new VariableWithDataLocation(
+        DataLocations.createTypedLocation(Identifier.of('x'), IntegerType.instance())
+    );
+    const y = new VariableWithDataLocation(
+        DataLocations.createTypedLocation(Identifier.of('y'), IntegerType.instance())
+    );
     const base = theories.boolTheory.and(
         theories.intTheory.isNumberEqualTo(
             theories.intTheory.abstractNumberValue(x),
-            theories.intTheory.fromConcreteNumber(new ConcreteNumber(0))),
+            theories.intTheory.fromConcreteNumber(new ConcreteNumber(0))
+        ),
         theories.intTheory.isNumberEqualTo(
             theories.intTheory.abstractNumberValue(y),
-            theories.intTheory.fromConcreteNumber(new ConcreteNumber(42))));
+            theories.intTheory.fromConcreteNumber(new ConcreteNumber(42))
+        )
+    );
 
     const visitor = new VariableCollectingVisitor(ctx);
     let vars = visitor.visit(base.getAST());
 
     let result = base;
     for (let [v, f] of vars) {
-        const x = new VariableWithDataLocation(DataLocations.createTypedLocation(Identifier.of(`${v}@0`), IntegerType.instance()));
+        const x = new VariableWithDataLocation(
+            DataLocations.createTypedLocation(Identifier.of(`${v}@0`), IntegerType.instance())
+        );
         result = theories.substitute(result, [f], [theories.intTheory.abstractNumberValue(x)]);
     }
 
-    assert.deepEqual(theories.stringRepresentation(result), "(and (= x@0 0) (= y@0 42))");
+    assert.deepEqual(theories.stringRepresentation(result), '(and (= x@0 0) (= y@0 42))');
 });
 
-test ("Instantiate", async () => {
-    const x = new VariableWithDataLocation(DataLocations.createTypedLocation(Identifier.of("x"), IntegerType.instance()));
-    const y = new VariableWithDataLocation(DataLocations.createTypedLocation(Identifier.of("y"), IntegerType.instance()));
+test('Instantiate', async () => {
+    const x = new VariableWithDataLocation(
+        DataLocations.createTypedLocation(Identifier.of('x'), IntegerType.instance())
+    );
+    const y = new VariableWithDataLocation(
+        DataLocations.createTypedLocation(Identifier.of('y'), IntegerType.instance())
+    );
     const base = theories.boolTheory.and(
         theories.intTheory.isNumberEqualTo(
             theories.intTheory.abstractNumberValue(x),
-            theories.intTheory.fromConcreteNumber(new ConcreteNumber(0))),
+            theories.intTheory.fromConcreteNumber(new ConcreteNumber(0))
+        ),
         theories.intTheory.isNumberEqualTo(
             theories.intTheory.abstractNumberValue(y),
-            theories.intTheory.fromConcreteNumber(new ConcreteNumber(42))));
+            theories.intTheory.fromConcreteNumber(new ConcreteNumber(42))
+        )
+    );
 
     const result = theories.instantiate(base, (s) => 7);
 
-    assert.deepEqual(theories.stringRepresentation(result), "(and (= x@7 0) (= y@7 42))");
+    assert.deepEqual(theories.stringRepresentation(result), '(and (= x@7 0) (= y@7 42))');
 });
 
-test ("Uninstantiate", async () => {
-    const x = new VariableWithDataLocation(DataLocations.createTypedLocation(Identifier.of("x@3"), IntegerType.instance()));
-    const y = new VariableWithDataLocation(DataLocations.createTypedLocation(Identifier.of("y@9"), IntegerType.instance()));
+test('Uninstantiate', async () => {
+    const x = new VariableWithDataLocation(
+        DataLocations.createTypedLocation(Identifier.of('x@3'), IntegerType.instance())
+    );
+    const y = new VariableWithDataLocation(
+        DataLocations.createTypedLocation(Identifier.of('y@9'), IntegerType.instance())
+    );
     const base = theories.boolTheory.and(
         theories.intTheory.isNumberEqualTo(
             theories.intTheory.abstractNumberValue(x),
-            theories.intTheory.fromConcreteNumber(new ConcreteNumber(0))),
+            theories.intTheory.fromConcreteNumber(new ConcreteNumber(0))
+        ),
         theories.intTheory.isNumberEqualTo(
             theories.intTheory.abstractNumberValue(y),
-            theories.intTheory.fromConcreteNumber(new ConcreteNumber(42))));
+            theories.intTheory.fromConcreteNumber(new ConcreteNumber(42))
+        )
+    );
 
     const result = theories.instantiate(base, (s) => NaN);
 
-    assert.deepEqual(theories.stringRepresentation(result), "(and (= x 0) (= y 42))");
+    assert.deepEqual(theories.stringRepresentation(result), '(and (= x 0) (= y 42))');
 });

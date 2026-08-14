@@ -19,24 +19,24 @@
  *   limitations under the License.
  *
  */
-import {test} from "node:test";
-import * as utils from './TestUtils'
-import path from "path";
+import { test } from 'node:test';
+import * as utils from './TestUtils';
+import path from 'path';
 
-const predicateConfig = path.join(__dirname, "../../../../../config/predicate-abstraction.json");
-const ciConfig = path.join(__dirname, "../../../../../config/ci.delta.json");
+const predicateConfig = path.join(__dirname, '../../../../../config/predicate-abstraction.json');
+const ciConfig = path.join(__dirname, '../../../../../config/ci.delta.json');
 
-test("Test ctrl forever 1 safe", {timeout: utils.timeout}, async () => {
-    const fixtureRelPath: string = "test/programs/language-coverage/ctrl-forever-1_SAFE.sc"
+test('Test ctrl forever 1 safe', { timeout: utils.timeout }, async () => {
+    const fixtureRelPath: string = 'test/programs/language-coverage/ctrl-forever-1_SAFE.sc';
     await utils.execFixture(fixtureRelPath, [predicateConfig, ciConfig]);
 });
 
-test("Test ctrl forever 1 unsafe", {timeout: utils.timeout}, async () => {
-    const fixtureRelPath: string = "test/programs/language-coverage/ctrl-forever-1_UNSAFE.sc"
+test('Test ctrl forever 1 unsafe', { timeout: utils.timeout }, async () => {
+    const fixtureRelPath: string = 'test/programs/language-coverage/ctrl-forever-1_UNSAFE.sc';
     await utils.execFixture(fixtureRelPath);
 });
 
-test("Test ctrl forever 2 safe", {timeout: utils.timeout}, async () => {
-    const fixtureRelPath: string = "test/programs/language-coverage/ctrl-forever-2_SAFE.sc"
+test('Test ctrl forever 2 safe', { timeout: utils.timeout }, async () => {
+    const fixtureRelPath: string = 'test/programs/language-coverage/ctrl-forever-2_SAFE.sc';
     await utils.execFixture(fixtureRelPath, [predicateConfig, ciConfig]);
 });

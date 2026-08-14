@@ -9,16 +9,16 @@ Three constructs are central:
 
 - `describe("the thing or the case we test") { .. }`: groups tests by subject or
   scenario. Groups may be nested.
-    
+
 - `beforeEach(() => { .. })`: optionally initializes the subject before each test.
-    
+
 - `test("the expected behavior", () => { .. })`: describes and checks observable
   behavior.
 
 Tests import their tests and hooks explicitly from `node:test` and assertions
 from `node:assert/strict`. Tests that perform asynchronous work must return or
 `await` their promise; do not catch and discard failures.
-    
+
 ## Placement of Tests
 
 Tests live under `test/` and normally mirror the structure under `src/`.

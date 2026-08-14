@@ -20,37 +20,37 @@
  *
  */
 
-
 import assert from 'node:assert/strict';
-import {describe, test} from 'node:test';
-import {BastetConfiguration} from "../../../src/bastet/utils/BastetConfiguration";
+import { describe, test } from 'node:test';
+import { BastetConfiguration } from '../../../src/bastet/utils/BastetConfiguration';
 
-describe("BastetConfiguration", () => {
-
-    test("reads typed values from the configured scope", () => {
-        const cfg = new BastetConfiguration({
-            foo: {
-                count: 1,
-                enabled: false,
-                name: "analysis",
-                labels: ["a", "b"],
-                limits: [1, 2],
+describe('BastetConfiguration', () => {
+    test('reads typed values from the configured scope', () => {
+        const cfg = new BastetConfiguration(
+            {
+                foo: {
+                    count: 1,
+                    enabled: false,
+                    name: 'analysis',
+                    labels: ['a', 'b'],
+                    limits: [1, 2],
+                },
             },
-        }, ["foo"]);
+            ['foo']
+        );
 
-        assert.strictEqual(cfg.getNumberProperty("count"), 1);
-        assert.strictEqual(cfg.getBoolProperty("enabled", true), false);
-        assert.strictEqual(cfg.getStringProperty("name"), "analysis");
-        assert.deepStrictEqual(cfg.getStringListProperty("labels"), ["a", "b"]);
-        assert.deepStrictEqual(cfg.getNumberListProperty("limits"), [1, 2]);
+        assert.strictEqual(cfg.getNumberProperty('count'), 1);
+        assert.strictEqual(cfg.getBoolProperty('enabled', true), false);
+        assert.strictEqual(cfg.getStringProperty('name'), 'analysis');
+        assert.deepStrictEqual(cfg.getStringListProperty('labels'), ['a', 'b']);
+        assert.deepStrictEqual(cfg.getNumberListProperty('limits'), [1, 2]);
     });
 
-    test("returns defaults for missing properties and scopes", () => {
-        const missingProperty = new BastetConfiguration({foo: {}}, ["foo"]);
-        const missingScope = new BastetConfiguration({}, ["foo", "bar"]);
+    test('returns defaults for missing properties and scopes', () => {
+        const missingProperty = new BastetConfiguration({ foo: {} }, ['foo']);
+        const missingScope = new BastetConfiguration({}, ['foo', 'bar']);
 
-        assert.strictEqual(missingProperty.getStringProperty("name", "default"), "default");
-        assert.strictEqual(missingScope.getNumberProperty("count", 42), 42);
+        assert.strictEqual(missingProperty.getStringProperty('name', 'default'), 'default');
+        assert.strictEqual(missingScope.getNumberProperty('count', 42), 42);
     });
-
 });

@@ -23,33 +23,30 @@
  *
  */
 
-import assert from "node:assert/strict";
-import {before, test} from "node:test";
-import {SMTFactory, Z3SMT} from "../../../../src/bastet/utils/smt/z3/Z3SMT";
-import {VariableWithDataLocation} from "../../../../src/bastet/syntax/ast/core/Variable";
-import {DataLocations} from "../../../../src/bastet/syntax/app/controlflow/DataLocation";
-import {Identifier} from "../../../../src/bastet/syntax/ast/core/Identifier";
-import {ConcreteNumber} from "../../../../src/bastet/procedures/domains/ConcreteElements";
-import {Z3FirstOrderFormula, Z3Theories} from "../../../../src/bastet/utils/smt/z3/Z3Theories";
-import {IntegerType} from "../../../../src/bastet/syntax/ast/core/ScratchType";
-import {AnalysisStatistics} from "../../../../src/bastet/procedures/analyses/AnalysisStatistics";
-
+import assert from 'node:assert/strict';
+import { before, test } from 'node:test';
+import { SMTFactory, Z3SMT } from '../../../../src/bastet/utils/smt/z3/Z3SMT';
+import { VariableWithDataLocation } from '../../../../src/bastet/syntax/ast/core/Variable';
+import { DataLocations } from '../../../../src/bastet/syntax/app/controlflow/DataLocation';
+import { Identifier } from '../../../../src/bastet/syntax/ast/core/Identifier';
+import { ConcreteNumber } from '../../../../src/bastet/procedures/domains/ConcreteElements';
+import { Z3FirstOrderFormula, Z3Theories } from '../../../../src/bastet/utils/smt/z3/Z3Theories';
+import { IntegerType } from '../../../../src/bastet/syntax/ast/core/ScratchType';
+import { AnalysisStatistics } from '../../../../src/bastet/procedures/analyses/AnalysisStatistics';
 
 let smt: Z3SMT;
 let ctx;
 let theories: Z3Theories;
 let prover;
 
-before( async () => {
+before(async () => {
     smt = await SMTFactory.createZ3();
     ctx = smt.createContext();
     theories = smt.createTheories(ctx);
-    prover = smt.createProver(ctx, new AnalysisStatistics("Test", {}));
-
+    prover = smt.createProver(ctx, new AnalysisStatistics('Test', {}));
 });
 
-test ("Interpolation.SafeProgram", async () => {
-
+test('Interpolation.SafeProgram', async () => {
     // loop-3-SAFE.sc
     /*
     x@0 = 3       && y@0 = 0       && x@0 != 0 &&   // vor der Schleife
@@ -62,12 +59,18 @@ test ("Interpolation.SafeProgram", async () => {
     prover.push();
 
     const makeVariables = (index: number): [Z3FirstOrderFormula, Z3FirstOrderFormula] => {
-        const x0 = theories.intTheory.abstractNumberValue(new VariableWithDataLocation(
-            DataLocations.createTypedLocation(Identifier.of(`x@${index}`), IntegerType.instance())));
-        const y0 = theories.intTheory.abstractNumberValue(new VariableWithDataLocation(
-            DataLocations.createTypedLocation(Identifier.of(`y@${index}`), IntegerType.instance())));
+        const x0 = theories.intTheory.abstractNumberValue(
+            new VariableWithDataLocation(
+                DataLocations.createTypedLocation(Identifier.of(`x@${index}`), IntegerType.instance())
+            )
+        );
+        const y0 = theories.intTheory.abstractNumberValue(
+            new VariableWithDataLocation(
+                DataLocations.createTypedLocation(Identifier.of(`y@${index}`), IntegerType.instance())
+            )
+        );
         return [x0, y0];
-    }
+    };
 
     const [x0, y0] = makeVariables(0);
     const [x1, y1] = makeVariables(1);
@@ -94,35 +97,41 @@ test ("Interpolation.SafeProgram", async () => {
             p2 = theories.intTheory.isNumberEqualTo(xAfter, zero);
         }
         return theories.boolTheory.and(theories.boolTheory.and(p0, p1), p2);
-    }
+    };
 
     const l1 = makeLoopBody(x0, x1, y0, y1);
     const l2 = makeLoopBody(x1, x2, y1, y2);
     const l3 = makeLoopBody(x2, x3, y2, y3, false);
     const l4 = theories.boolTheory.not(theories.intTheory.isNumberEqualTo(y3, three));
 
-    [l0, l1, l2, l3, l4].forEach(x => prover.assert(x));
+    [l0, l1, l2, l3, l4].forEach((x) => prover.assert(x));
     const isUnsat = prover.isUnsat();
     assert.ok(isUnsat);
 
-    const interpolants = prover.collectInterpolants().map(x => theories.stringRepresentation(x));
-    assert.ok(interpolants.includes("(= y@3 3)"));
+    const interpolants = prover.collectInterpolants().map((x) => theories.stringRepresentation(x));
+    assert.ok(interpolants.includes('(= y@3 3)'));
 
     prover.pop();
-})
+});
 
-test("Interpolation.OnlyY", async () => {
+test('Interpolation.OnlyY', async () => {
     prover.push();
 
-    const y = new VariableWithDataLocation(DataLocations.createTypedLocation(Identifier.of("y@0"), IntegerType.instance()));
+    const y = new VariableWithDataLocation(
+        DataLocations.createTypedLocation(Identifier.of('y@0'), IntegerType.instance())
+    );
 
     const f1 = theories.intTheory.isNumberEqualTo(
         theories.intTheory.abstractNumberValue(y),
-        theories.intTheory.fromConcreteNumber(new ConcreteNumber(42)));
+        theories.intTheory.fromConcreteNumber(new ConcreteNumber(42))
+    );
 
-    const f2 = theories.boolTheory.not(theories.intTheory.isNumberEqualTo(
+    const f2 = theories.boolTheory.not(
+        theories.intTheory.isNumberEqualTo(
             theories.intTheory.abstractNumberValue(y),
-            theories.intTheory.fromConcreteNumber(new ConcreteNumber(42))));
+            theories.intTheory.fromConcreteNumber(new ConcreteNumber(42))
+        )
+    );
 
     prover.assert(f1);
     prover.assert(f2);
@@ -137,33 +146,45 @@ test("Interpolation.OnlyY", async () => {
         console.log(theories.stringRepresentation(c));
     }
 
-    const interpolantsString = prover.collectInterpolants().map(x => theories.stringRepresentation(x));
-    assert.ok(interpolantsString.includes("(= y@0 42)"));
+    const interpolantsString = prover.collectInterpolants().map((x) => theories.stringRepresentation(x));
+    assert.ok(interpolantsString.includes('(= y@0 42)'));
 
     prover.pop();
 });
 
-test ("Interpolation", async () => {
+test('Interpolation', async () => {
     prover.push();
 
-    const x = new VariableWithDataLocation(DataLocations.createTypedLocation(Identifier.of("x"), IntegerType.instance()));
-    const y = new VariableWithDataLocation(DataLocations.createTypedLocation(Identifier.of("y"), IntegerType.instance()));
+    const x = new VariableWithDataLocation(
+        DataLocations.createTypedLocation(Identifier.of('x'), IntegerType.instance())
+    );
+    const y = new VariableWithDataLocation(
+        DataLocations.createTypedLocation(Identifier.of('y'), IntegerType.instance())
+    );
 
     const f1 = theories.boolTheory.and(
         theories.intTheory.isNumberEqualTo(
             theories.intTheory.abstractNumberValue(x),
-            theories.intTheory.fromConcreteNumber(new ConcreteNumber(0))),
+            theories.intTheory.fromConcreteNumber(new ConcreteNumber(0))
+        ),
         theories.intTheory.isNumberEqualTo(
             theories.intTheory.abstractNumberValue(y),
-            theories.intTheory.fromConcreteNumber(new ConcreteNumber(42))));
+            theories.intTheory.fromConcreteNumber(new ConcreteNumber(42))
+        )
+    );
 
     const f2 = theories.boolTheory.and(
         theories.intTheory.isNumberEqualTo(
             theories.intTheory.abstractNumberValue(x),
-            theories.intTheory.fromConcreteNumber(new ConcreteNumber(0))),
-        theories.boolTheory.not(theories.intTheory.isNumberEqualTo(
-            theories.intTheory.abstractNumberValue(y),
-            theories.intTheory.fromConcreteNumber(new ConcreteNumber(42)))));
+            theories.intTheory.fromConcreteNumber(new ConcreteNumber(0))
+        ),
+        theories.boolTheory.not(
+            theories.intTheory.isNumberEqualTo(
+                theories.intTheory.abstractNumberValue(y),
+                theories.intTheory.fromConcreteNumber(new ConcreteNumber(42))
+            )
+        )
+    );
 
     prover.assert(f1);
     prover.assert(f2);

@@ -19,27 +19,25 @@
  *   limitations under the License.
  *
  */
-import {test} from "node:test";
-import * as utils from './TestUtils'
+import { test } from 'node:test';
+import * as utils from './TestUtils';
 
-test("Test setstmt define-from-call 1 safe", {timeout: utils.timeout}, async () => {
-    const fixtureRelPath: string = "test/programs/language-coverage/setstmt-define-from-call-1_SAFE.sc"
+test('Test setstmt define-from-call 1 safe', { timeout: utils.timeout }, async () => {
+    const fixtureRelPath: string = 'test/programs/language-coverage/setstmt-define-from-call-1_SAFE.sc';
     await utils.execFixture(fixtureRelPath);
 });
 
-test("Test setstmt define-from-call 1 unsafe", {timeout: utils.timeout}, async () => {
-    const fixtureRelPath: string = "test/programs/language-coverage/setstmt-define-from-call-1_UNSAFE.sc"
+test('Test setstmt define-from-call 1 unsafe', { timeout: utils.timeout }, async () => {
+    const fixtureRelPath: string = 'test/programs/language-coverage/setstmt-define-from-call-1_UNSAFE.sc';
     await utils.execFixture(fixtureRelPath);
 });
 
-test("Test setstmt define-from-expr 2 safe", {timeout: utils.timeout}, async () => {
-    const fixtureRelPath: string = "test/programs/language-coverage/setstmt-define-from-expr-1_SAFE.sc"
+test('Test setstmt define-from-expr 2 safe', { timeout: utils.timeout }, async () => {
+    const fixtureRelPath: string = 'test/programs/language-coverage/setstmt-define-from-expr-1_SAFE.sc';
     await utils.execFixture(fixtureRelPath);
 });
 
-test("Test setstmt define-from-expr 2 unsafe", {timeout: utils.timeout}, async () => {
-    const fixtureRelPath: string = "test/programs/language-coverage/setstmt-define-from-expr-1_UNSAFE.sc"
+test('Test setstmt define-from-expr 2 unsafe', { timeout: utils.timeout }, async () => {
+    const fixtureRelPath: string = 'test/programs/language-coverage/setstmt-define-from-expr-1_UNSAFE.sc';
     await utils.execFixture(fixtureRelPath);
 });
-
-

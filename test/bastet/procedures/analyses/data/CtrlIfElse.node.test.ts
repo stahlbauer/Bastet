@@ -19,27 +19,25 @@
  *   limitations under the License.
  *
  */
-import {test} from "node:test";
-import * as utils from './TestUtils'
+import { test } from 'node:test';
+import * as utils from './TestUtils';
 
-test("Test ctrl if-else 1 safe", {timeout: utils.timeout}, async () => {
-    const fixtureRelPath: string = "test/programs/language-coverage/ctrl-if-else-1_SAFE.sc"
+test('Test ctrl if-else 1 safe', { timeout: utils.timeout }, async () => {
+    const fixtureRelPath: string = 'test/programs/language-coverage/ctrl-if-else-1_SAFE.sc';
     await utils.execFixture(fixtureRelPath);
 });
 
-test("Test ctrl if-else 1 unsafe", {timeout: utils.timeout}, async () => {
-    const fixtureRelPath: string = "test/programs/language-coverage/ctrl-if-else-1_UNSAFE.sc"
+test('Test ctrl if-else 1 unsafe', { timeout: utils.timeout }, async () => {
+    const fixtureRelPath: string = 'test/programs/language-coverage/ctrl-if-else-1_UNSAFE.sc';
     await utils.execFixture(fixtureRelPath);
 });
 
-test("Test ctrl if-else 2 safe", {timeout: utils.timeout}, async () => {
-    const fixtureRelPath: string = "test/programs/language-coverage/ctrl-if-else-2_SAFE.sc"
+test('Test ctrl if-else 2 safe', { timeout: utils.timeout }, async () => {
+    const fixtureRelPath: string = 'test/programs/language-coverage/ctrl-if-else-2_SAFE.sc';
     await utils.execFixture(fixtureRelPath);
 });
 
-test("Test ctrl if-else 2 unsafe", {timeout: utils.timeout}, async () => {
-    const fixtureRelPath: string = "test/programs/language-coverage/ctrl-if-else-2_UNSAFE.sc"
+test('Test ctrl if-else 2 unsafe', { timeout: utils.timeout }, async () => {
+    const fixtureRelPath: string = 'test/programs/language-coverage/ctrl-if-else-2_UNSAFE.sc';
     await utils.execFixture(fixtureRelPath);
 });
-
-

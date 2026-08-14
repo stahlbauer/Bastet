@@ -19,38 +19,35 @@
  *   limitations under the License.
  *
  */
-import {test} from "node:test";
-import * as utils from "../bastet/procedures/analyses/data/TestUtils";
+import { test } from 'node:test';
+import * as utils from '../bastet/procedures/analyses/data/TestUtils';
 
-test("Test Sin 1 safe", {timeout: utils.timeout}, async () => {
-    const fixtureRelPath: string = "test/programs/library-coverage/math-Sin-1_SAFE.sc"
+test('Test Sin 1 safe', { timeout: utils.timeout }, async () => {
+    const fixtureRelPath: string = 'test/programs/library-coverage/math-Sin-1_SAFE.sc';
     await utils.execFixture(fixtureRelPath);
 });
 
-test("Test Sin 2 safe", {timeout: utils.timeout}, async () => {
-    const fixtureRelPath: string = "test/programs/library-coverage/math-Sin-2_SAFE.sc"
+test('Test Sin 2 safe', { timeout: utils.timeout }, async () => {
+    const fixtureRelPath: string = 'test/programs/library-coverage/math-Sin-2_SAFE.sc';
     await utils.execFixture(fixtureRelPath);
 });
 
-test("Test Sin 3 safe", {timeout: utils.timeout}, async () => {
-    const fixtureRelPath: string = "test/programs/library-coverage/math-Sin-3_SAFE.sc"
+test('Test Sin 3 safe', { timeout: utils.timeout }, async () => {
+    const fixtureRelPath: string = 'test/programs/library-coverage/math-Sin-3_SAFE.sc';
     await utils.execFixture(fixtureRelPath);
 });
 
-
-test("Test Sin 1 unsafe", {timeout: utils.timeout}, async () => {
-    const fixtureRelPath: string = "test/programs/library-coverage/math-Sin-1_UNSAFE.sc"
+test('Test Sin 1 unsafe', { timeout: utils.timeout }, async () => {
+    const fixtureRelPath: string = 'test/programs/library-coverage/math-Sin-1_UNSAFE.sc';
     await utils.execFixture(fixtureRelPath);
 });
 
-test("Test Sin 2 unsafe", {timeout: utils.timeout}, async () => {
-    const fixtureRelPath: string = "test/programs/library-coverage/math-Sin-2_UNSAFE.sc"
+test('Test Sin 2 unsafe', { timeout: utils.timeout }, async () => {
+    const fixtureRelPath: string = 'test/programs/library-coverage/math-Sin-2_UNSAFE.sc';
     await utils.execFixture(fixtureRelPath);
 });
 
-test("Test Sin 3 unsafe", {timeout: utils.timeout}, async () => {
-    const fixtureRelPath: string = "test/programs/library-coverage/math-Sin-3_UNSAFE.sc"
+test('Test Sin 3 unsafe', { timeout: utils.timeout }, async () => {
+    const fixtureRelPath: string = 'test/programs/library-coverage/math-Sin-3_UNSAFE.sc';
     await utils.execFixture(fixtureRelPath);
 });
-
-

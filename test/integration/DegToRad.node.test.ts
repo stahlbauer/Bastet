@@ -19,16 +19,15 @@
  *   limitations under the License.
  *
  */
-import {test} from "node:test";
-import * as utils from "../bastet/procedures/analyses/data/TestUtils";
+import { test } from 'node:test';
+import * as utils from '../bastet/procedures/analyses/data/TestUtils';
 
-test("Test degToRad 1 safe", {timeout: utils.timeout}, async () => {
-    const fixtureRelPath: string = "test/programs/library-coverage/math-degToRad-1_SAFE.sc"
+test('Test degToRad 1 safe', { timeout: utils.timeout }, async () => {
+    const fixtureRelPath: string = 'test/programs/library-coverage/math-degToRad-1_SAFE.sc';
     await utils.execFixture(fixtureRelPath);
 });
 
-test("Test degToRad 1 unsafe", {timeout: utils.timeout}, async () => {
-    const fixtureRelPath: string = "test/programs/library-coverage/math-degToRad-1_UNSAFE.sc"
+test('Test degToRad 1 unsafe', { timeout: utils.timeout }, async () => {
+    const fixtureRelPath: string = 'test/programs/library-coverage/math-degToRad-1_UNSAFE.sc';
     await utils.execFixture(fixtureRelPath);
 });
-

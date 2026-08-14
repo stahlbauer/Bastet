@@ -19,43 +19,43 @@
  *   limitations under the License.
  *
  */
-import {test} from "node:test";
-import {Bastet} from "../../../../../src/bastet/Bastet";
-import * as utils from './TestUtils'
+import { test } from 'node:test';
+import { Bastet } from '../../../../../src/bastet/Bastet';
+import * as utils from './TestUtils';
 
-test("Test num plus 1 safe", {timeout: utils.timeout}, async () => {
-    const fixtureRelPath: string = "test/programs/language-coverage/expr-num-plus-1_SAFE.sc"
+test('Test num plus 1 safe', { timeout: utils.timeout }, async () => {
+    const fixtureRelPath: string = 'test/programs/language-coverage/expr-num-plus-1_SAFE.sc';
     await utils.execFixture(fixtureRelPath);
 });
 
-test("Test num plus 2 safe", {timeout: utils.timeout}, async () => {
-    const fixtureRelPath: string = "test/programs/language-coverage/expr-num-plus-2_SAFE.sc"
+test('Test num plus 2 safe', { timeout: utils.timeout }, async () => {
+    const fixtureRelPath: string = 'test/programs/language-coverage/expr-num-plus-2_SAFE.sc';
     await utils.execFixture(fixtureRelPath);
 });
 
-test("Test num plus 3 safe", {timeout: utils.timeout}, async () => {
-    const fixtureRelPath: string = "test/programs/language-coverage/expr-num-plus-3_SAFE.sc"
+test('Test num plus 3 safe', { timeout: utils.timeout }, async () => {
+    const fixtureRelPath: string = 'test/programs/language-coverage/expr-num-plus-3_SAFE.sc';
     await utils.execFixture(fixtureRelPath);
 });
 
-test("Test num plus 4 safe", {timeout: utils.timeout}, async () => {
-    const fixtureRelPath: string = "test/programs/language-coverage/expr-num-plus-4_SAFE.sc"
+test('Test num plus 4 safe', { timeout: utils.timeout }, async () => {
+    const fixtureRelPath: string = 'test/programs/language-coverage/expr-num-plus-4_SAFE.sc';
     let bastet = new Bastet();
-    await utils.execute(bastet, fixtureRelPath)
+    await utils.execute(bastet, fixtureRelPath);
 });
 
-test("Test num plus 4 unsafe", {timeout: utils.timeout}, async () => {
-    const fixtureRelPath: string = "test/programs/language-coverage/expr-num-plus-4_UNSAFE.sc"
+test('Test num plus 4 unsafe', { timeout: utils.timeout }, async () => {
+    const fixtureRelPath: string = 'test/programs/language-coverage/expr-num-plus-4_UNSAFE.sc';
     await utils.execFixture(fixtureRelPath);
 });
 
-test("Test num plus 5 safe", {timeout: utils.timeout}, async () => {
-    const fixtureRelPath: string = "test/programs/language-coverage/expr-num-plus-5_SAFE.sc"
+test('Test num plus 5 safe', { timeout: utils.timeout }, async () => {
+    const fixtureRelPath: string = 'test/programs/language-coverage/expr-num-plus-5_SAFE.sc';
     await utils.execFixture(fixtureRelPath);
 });
 
-test("Test num plus 5 unsafe", {timeout: utils.timeout}, async () => {
-    const fixtureRelPath: string = "test/programs/language-coverage/expr-num-plus-5_UNSAFE.sc"
+test('Test num plus 5 unsafe', { timeout: utils.timeout }, async () => {
+    const fixtureRelPath: string = 'test/programs/language-coverage/expr-num-plus-5_UNSAFE.sc';
     let bastet = new Bastet();
     await utils.execute(bastet, fixtureRelPath);
 });

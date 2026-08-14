@@ -19,64 +19,60 @@
  *   limitations under the License.
  *
  */
-import {test} from "node:test";
-import * as utils from "../bastet/procedures/analyses/data/TestUtils";
+import { test } from 'node:test';
+import * as utils from '../bastet/procedures/analyses/data/TestUtils';
 
-test("Test getNumGraphics 1 safe", {timeout: utils.timeout}, async () => {
-    const fixtureRelPath: string = "test/programs/library-coverage/runtime/runtime-getNumGraphics-1_SAFE.sc"
+test('Test getNumGraphics 1 safe', { timeout: utils.timeout }, async () => {
+    const fixtureRelPath: string = 'test/programs/library-coverage/runtime/runtime-getNumGraphics-1_SAFE.sc';
     await utils.execFixture(fixtureRelPath);
 });
 
-test("Test getNumGraphics 1 unsafe", {timeout: utils.timeout}, async () => {
-    const fixtureRelPath: string = "test/programs/library-coverage/runtime/runtime-getNumGraphics-1_UNSAFE.sc"
+test('Test getNumGraphics 1 unsafe', { timeout: utils.timeout }, async () => {
+    const fixtureRelPath: string = 'test/programs/library-coverage/runtime/runtime-getNumGraphics-1_UNSAFE.sc';
     await utils.execFixture(fixtureRelPath);
 });
 
-
-test("Test getNumGraphics 2 safe", {timeout: utils.timeout}, async () => {
-    const fixtureRelPath: string = "test/programs/library-coverage/runtime/runtime-getNumGraphics-2_SAFE.sc"
+test('Test getNumGraphics 2 safe', { timeout: utils.timeout }, async () => {
+    const fixtureRelPath: string = 'test/programs/library-coverage/runtime/runtime-getNumGraphics-2_SAFE.sc';
     await utils.execFixture(fixtureRelPath);
 });
 
-
-test("Test getImageHeight 1 safe", {timeout: utils.timeout}, async () => {
-    const fixtureRelPath: string = "test/programs/library-coverage/runtime/runtime-getImageHeight-1_SAFE.sc"
+test('Test getImageHeight 1 safe', { timeout: utils.timeout }, async () => {
+    const fixtureRelPath: string = 'test/programs/library-coverage/runtime/runtime-getImageHeight-1_SAFE.sc';
     await utils.execFixture(fixtureRelPath);
 });
 
-test("Test getImageHeight 1 unsafe", {timeout: utils.timeout}, async () => {
-    const fixtureRelPath: string = "test/programs/library-coverage/runtime/runtime-getImageHeight-1_UNSAFE.sc"
+test('Test getImageHeight 1 unsafe', { timeout: utils.timeout }, async () => {
+    const fixtureRelPath: string = 'test/programs/library-coverage/runtime/runtime-getImageHeight-1_UNSAFE.sc';
     await utils.execFixture(fixtureRelPath);
 });
 
-test("Test getImageWidth 1 safe", {timeout: utils.timeout}, async () => {
-    const fixtureRelPath: string = "test/programs/library-coverage/runtime/runtime-getImageWidth-1_SAFE.sc"
+test('Test getImageWidth 1 safe', { timeout: utils.timeout }, async () => {
+    const fixtureRelPath: string = 'test/programs/library-coverage/runtime/runtime-getImageWidth-1_SAFE.sc';
     await utils.execFixture(fixtureRelPath);
 });
 
-test("Test getImageWidth 1 unsafe", {timeout: utils.timeout}, async () => {
-    const fixtureRelPath: string = "test/programs/library-coverage/runtime/runtime-getImageWidth-1_UNSAFE.sc"
+test('Test getImageWidth 1 unsafe', { timeout: utils.timeout }, async () => {
+    const fixtureRelPath: string = 'test/programs/library-coverage/runtime/runtime-getImageWidth-1_UNSAFE.sc';
     await utils.execFixture(fixtureRelPath);
 });
 
-test("Test getGraphicsIndexById 1 safe", {timeout: utils.timeout}, async () => {
-    const fixtureRelPath: string = "test/programs/library-coverage/runtime/runtime-getGraphicIndexById-1_SAFE.sc"
+test('Test getGraphicsIndexById 1 safe', { timeout: utils.timeout }, async () => {
+    const fixtureRelPath: string = 'test/programs/library-coverage/runtime/runtime-getGraphicIndexById-1_SAFE.sc';
     await utils.execFixture(fixtureRelPath);
 });
 
-
-test("Test getGraphicsIndexById 1 unsafe", {timeout: utils.timeout}, async () => {
-    const fixtureRelPath: string = "test/programs/library-coverage/runtime/runtime-getGraphicIndexById-1_UNSAFE.sc"
+test('Test getGraphicsIndexById 1 unsafe', { timeout: utils.timeout }, async () => {
+    const fixtureRelPath: string = 'test/programs/library-coverage/runtime/runtime-getGraphicIndexById-1_UNSAFE.sc';
     await utils.execFixture(fixtureRelPath);
 });
 
-test("Test changeCostumeTo 1 safe", {timeout: utils.timeout}, async () => {
-    const fixtureRelPath: string = "test/programs/library-coverage/looks/looks-changeCostumeTo-1_SAFE.sc"
+test('Test changeCostumeTo 1 safe', { timeout: utils.timeout }, async () => {
+    const fixtureRelPath: string = 'test/programs/library-coverage/looks/looks-changeCostumeTo-1_SAFE.sc';
     await utils.execFixture(fixtureRelPath);
 });
 
-
-test("Test changeCostumeTo 1 unsafe", {timeout: utils.timeout}, async () => {
-    const fixtureRelPath: string = "test/programs/library-coverage/looks/looks-changeCostumeTo-1_UNSAFE.sc"
+test('Test changeCostumeTo 1 unsafe', { timeout: utils.timeout }, async () => {
+    const fixtureRelPath: string = 'test/programs/library-coverage/looks/looks-changeCostumeTo-1_UNSAFE.sc';
     await utils.execFixture(fixtureRelPath);
 });

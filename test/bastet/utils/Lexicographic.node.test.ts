@@ -20,41 +20,38 @@
  *
  */
 
-
 import assert from 'node:assert/strict';
-import {describe, test} from 'node:test';
-import {LexiKey, OTHER_LARGER, THIS_LARGER} from "../../../src/bastet/utils/Lexicographic";
+import { describe, test } from 'node:test';
+import { LexiKey, OTHER_LARGER, THIS_LARGER } from '../../../src/bastet/utils/Lexicographic';
 
-describe('LexiKey', function() {
-
-    test('[1,3] > [1,2]', function() {
+describe('LexiKey', function () {
+    test('[1,3] > [1,2]', function () {
         const key1 = new LexiKey([1, 2]);
         const key2 = new LexiKey([1, 3]);
         assert.deepStrictEqual(key1.compareTo(key2), OTHER_LARGER);
     });
 
-    test('[1] > [1,2]', function() {
+    test('[1] > [1,2]', function () {
         const key1 = new LexiKey([1]);
         const key2 = new LexiKey([1, 2]);
         assert.deepStrictEqual(key1.compareTo(key2), THIS_LARGER);
     });
 
-    test('["a", "b"] > ["a", "a"]', function() {
-        const key1 = new LexiKey(["a", "b"]);
-        const key2 = new LexiKey(["a", "a"]);
+    test('["a", "b"] > ["a", "a"]', function () {
+        const key1 = new LexiKey(['a', 'b']);
+        const key2 = new LexiKey(['a', 'a']);
         assert.deepStrictEqual(key1.compareTo(key2), THIS_LARGER);
     });
 
-    test('["a", "ab"] > ["a", "a"]', function() {
-        const key1 = new LexiKey(["a", "ab"]);
-        const key2 = new LexiKey(["a", "a"]);
+    test('["a", "ab"] > ["a", "a"]', function () {
+        const key1 = new LexiKey(['a', 'ab']);
+        const key2 = new LexiKey(['a', 'a']);
         assert.deepStrictEqual(key1.compareTo(key2), THIS_LARGER);
     });
 
-    test('["a", [1,2]] > ["a", [1,1]]', function() {
-        const key1 = new LexiKey(["a", new LexiKey([1,2])]);
-        const key2 = new LexiKey(["a", new LexiKey([1,1])]);
+    test('["a", [1,2]] > ["a", [1,1]]', function () {
+        const key1 = new LexiKey(['a', new LexiKey([1, 2])]);
+        const key2 = new LexiKey(['a', new LexiKey([1, 1])]);
         assert.deepStrictEqual(key1.compareTo(key2), THIS_LARGER);
     });
-
 });

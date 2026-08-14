@@ -19,30 +19,30 @@
  *   limitations under the License.
  *
  */
-import assert from "node:assert/strict";
-import path from "path"
-import {Bastet} from "../../../../../src/bastet/Bastet";
-import {AnalysisResult, MultiPropertyAnalysisResult} from "../../../../../src/bastet/procedures/AnalysisProcedure";
+import assert from 'node:assert/strict';
+import path from 'path';
+import { Bastet } from '../../../../../src/bastet/Bastet';
+import { AnalysisResult, MultiPropertyAnalysisResult } from '../../../../../src/bastet/procedures/AnalysisProcedure';
 
-const intermediateRelPath = "../../../../../src/public/library.sc";
+const intermediateRelPath = '../../../../../src/public/library.sc';
 const intermediatePath = path.join(__dirname, intermediateRelPath);
 
-const configRelPath = "../../../../../config/default.json";
+const configRelPath = '../../../../../config/default.json';
 const configFilePath = path.join(__dirname, configRelPath);
 
-const ciConfigRelPath = "../../../../../config/ci.delta.json";
+const ciConfigRelPath = '../../../../../config/ci.delta.json';
 const ciConfigFilePath = path.join(__dirname, ciConfigRelPath);
 
-const specRelPath = "../../../../specs/empty.sc";
+const specRelPath = '../../../../specs/empty.sc';
 const specFilePath = path.join(__dirname, specRelPath);
 
 let timeout: number = 120000; // in milliseconds
-export {timeout, execFixture, execute, execute_explicit};
+export { timeout, execFixture, execute, execute_explicit };
 
 async function execFixture(
     fixturePath: string,
     configurationFilepaths: string[] = [configFilePath, ciConfigFilePath],
-    libraryFilepath: string = intermediatePath,
+    libraryFilepath: string = intermediatePath
 ): Promise<void> {
     const bastet = new Bastet();
     await execute(bastet, fixturePath, configurationFilepaths, libraryFilepath);
@@ -52,14 +52,14 @@ async function execute(
     bastet: Bastet,
     fixturePath: string,
     configurationFilepaths: string[] = [configFilePath, ciConfigFilePath],
-    libraryFilepath: string = intermediatePath,
+    libraryFilepath: string = intermediatePath
 ): Promise<void> {
-    if (fixturePath.endsWith("_SAFE.sc")) {
+    if (fixturePath.endsWith('_SAFE.sc')) {
         await execute_explicit(bastet, fixturePath, true, configurationFilepaths, libraryFilepath);
-    } else if (fixturePath.endsWith("_UNSAFE.sc")) {
+    } else if (fixturePath.endsWith('_UNSAFE.sc')) {
         await execute_explicit(bastet, fixturePath, false, configurationFilepaths, libraryFilepath);
     } else {
-        throw new Error("Fixture file does not fit the _SAFE.sc/_UNSAFE.sc naming scheme");
+        throw new Error('Fixture file does not fit the _SAFE.sc/_UNSAFE.sc naming scheme');
     }
 }
 
@@ -68,13 +68,13 @@ async function execute_explicit(
     fixturePath: string,
     expectSuccess: boolean,
     configurationFilepaths: string[] = [configFilePath, ciConfigFilePath],
-    libraryFilepath: string = intermediatePath,
+    libraryFilepath: string = intermediatePath
 ): Promise<void> {
     const result: AnalysisResult = await bastet.runFor(
         configurationFilepaths,
         libraryFilepath,
         fixturePath,
-        specFilePath,
+        specFilePath
     );
     const analysisResult = result as MultiPropertyAnalysisResult;
 

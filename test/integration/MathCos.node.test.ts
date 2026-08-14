@@ -19,37 +19,35 @@
  *   limitations under the License.
  *
  */
-import {test} from "node:test";
-import * as utils from "../bastet/procedures/analyses/data/TestUtils";
+import { test } from 'node:test';
+import * as utils from '../bastet/procedures/analyses/data/TestUtils';
 
-test("Test Cos 1 safe", {timeout: utils.timeout}, async () => {
-    const fixtureRelPath: string = "test/programs/library-coverage/math-Cos-1_SAFE.sc"
+test('Test Cos 1 safe', { timeout: utils.timeout }, async () => {
+    const fixtureRelPath: string = 'test/programs/library-coverage/math-Cos-1_SAFE.sc';
     await utils.execFixture(fixtureRelPath);
 });
 
-test("Test Cos 2 safe", {timeout: utils.timeout}, async () => {
-    const fixtureRelPath: string = "test/programs/library-coverage/math-Cos-2_SAFE.sc"
+test('Test Cos 2 safe', { timeout: utils.timeout }, async () => {
+    const fixtureRelPath: string = 'test/programs/library-coverage/math-Cos-2_SAFE.sc';
     await utils.execFixture(fixtureRelPath);
 });
 
-test("Test Cos 3 safe", {timeout: utils.timeout}, async () => {
-    const fixtureRelPath: string = "test/programs/library-coverage/math-Cos-3_SAFE.sc"
+test('Test Cos 3 safe', { timeout: utils.timeout }, async () => {
+    const fixtureRelPath: string = 'test/programs/library-coverage/math-Cos-3_SAFE.sc';
     await utils.execFixture(fixtureRelPath);
 });
 
-test("Test Cos 1 unsafe", {timeout: utils.timeout}, async () => {
-    const fixtureRelPath: string = "test/programs/library-coverage/math-Cos-1_UNSAFE.sc"
+test('Test Cos 1 unsafe', { timeout: utils.timeout }, async () => {
+    const fixtureRelPath: string = 'test/programs/library-coverage/math-Cos-1_UNSAFE.sc';
     await utils.execFixture(fixtureRelPath);
 });
 
-test("Test Cos 2 unsafe", {timeout: utils.timeout}, async () => {
-    const fixtureRelPath: string = "test/programs/library-coverage/math-Cos-2_UNSAFE.sc"
+test('Test Cos 2 unsafe', { timeout: utils.timeout }, async () => {
+    const fixtureRelPath: string = 'test/programs/library-coverage/math-Cos-2_UNSAFE.sc';
     await utils.execFixture(fixtureRelPath);
 });
 
-test("Test Cos 3 unsafe", {timeout: utils.timeout}, async () => {
-    const fixtureRelPath: string = "test/programs/library-coverage/math-Cos-3_UNSAFE.sc"
+test('Test Cos 3 unsafe', { timeout: utils.timeout }, async () => {
+    const fixtureRelPath: string = 'test/programs/library-coverage/math-Cos-3_UNSAFE.sc';
     await utils.execFixture(fixtureRelPath);
 });
-
-

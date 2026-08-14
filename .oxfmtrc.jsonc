@@ -3,8 +3,14 @@
     "printWidth": 120,
     "trailingComma": "es5",
     "tabWidth": 4,
-    "semi": false,
+    "semi": true,
     "singleQuote": true,
     "sortPackageJson": false,
-    "ignorePatterns": ["src/bastet/syntax/parser/grammar/*.ts"],
+    "ignorePatterns": [
+        "docker.sh.inc",
+        "LICENCE.md",
+        "src/bastet/syntax/parser/grammar/*.ts",
+        "src/lib/z3/libz3.so.js",
+        "test/programs/**",
+    ],
 }

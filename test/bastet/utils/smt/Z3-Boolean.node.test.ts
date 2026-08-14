@@ -23,39 +23,45 @@
  *
  */
 
-import assert from "node:assert/strict";
-import {before, test} from "node:test";
-import {SMTFactory, Z3SMT} from "../../../../src/bastet/utils/smt/z3/Z3SMT";
-import {VariableWithDataLocation} from "../../../../src/bastet/syntax/ast/core/Variable";
-import {DataLocations} from "../../../../src/bastet/syntax/app/controlflow/DataLocation";
-import {BooleanType} from "../../../../src/bastet/syntax/ast/core/ScratchType";
-import {Identifier} from "../../../../src/bastet/syntax/ast/core/Identifier";
-import {AnalysisStatistics} from "../../../../src/bastet/procedures/analyses/AnalysisStatistics";
-import * as utils from "../../../bastet/procedures/analyses/data/TestUtils";
+import assert from 'node:assert/strict';
+import { before, test } from 'node:test';
+import { SMTFactory, Z3SMT } from '../../../../src/bastet/utils/smt/z3/Z3SMT';
+import { VariableWithDataLocation } from '../../../../src/bastet/syntax/ast/core/Variable';
+import { DataLocations } from '../../../../src/bastet/syntax/app/controlflow/DataLocation';
+import { BooleanType } from '../../../../src/bastet/syntax/ast/core/ScratchType';
+import { Identifier } from '../../../../src/bastet/syntax/ast/core/Identifier';
+import { AnalysisStatistics } from '../../../../src/bastet/procedures/analyses/AnalysisStatistics';
+import * as utils from '../../../bastet/procedures/analyses/data/TestUtils';
 
 let smt: Z3SMT;
 let ctx;
 let theories;
 let prover;
 
-before(async () => {
-    smt = await SMTFactory.createZ3();
-    ctx = smt.createContext();
-    theories = smt.createTheories(ctx);
-    prover = smt.createProver(ctx, new AnalysisStatistics("Test", {}));
-}, {timeout: utils.timeout});
+before(
+    async () => {
+        smt = await SMTFactory.createZ3();
+        ctx = smt.createContext();
+        theories = smt.createTheories(ctx);
+        prover = smt.createProver(ctx, new AnalysisStatistics('Test', {}));
+    },
+    { timeout: utils.timeout }
+);
 
-test("Must not cause an assertion in the solver", {timeout: utils.timeout}, async () => {
+test('Must not cause an assertion in the solver', { timeout: utils.timeout }, async () => {
     try {
-        const x = new VariableWithDataLocation(DataLocations.createTypedLocation(Identifier.of("x"), BooleanType.instance()));
-        const y = new VariableWithDataLocation(DataLocations.createTypedLocation(Identifier.of("y"), BooleanType.instance()));
+        const x = new VariableWithDataLocation(
+            DataLocations.createTypedLocation(Identifier.of('x'), BooleanType.instance())
+        );
+        const y = new VariableWithDataLocation(
+            DataLocations.createTypedLocation(Identifier.of('y'), BooleanType.instance())
+        );
 
         const bx = theories.boolTheory.abstractBooleanValue(x);
         const by = theories.boolTheory.abstractBooleanValue(y);
 
         const f = theories.boolTheory.or(
-            theories.boolTheory.not(
-                theories.boolTheory.and(theories.boolTheory.equal(bx, by), bx)),
+            theories.boolTheory.not(theories.boolTheory.and(theories.boolTheory.equal(bx, by), bx)),
             theories.boolTheory.falseBool()
         );
 

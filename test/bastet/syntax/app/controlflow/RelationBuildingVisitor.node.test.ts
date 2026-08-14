@@ -21,42 +21,39 @@
  */
 
 import assert from 'node:assert/strict';
-import {describe, test} from 'node:test';
-import {RelationBuildingVisitor} from "../../../../../src/bastet/syntax/app/controlflow/RelationBuildingVisitor";
-import {UntilQueriedConditionStatement} from "../../../../../src/bastet/syntax/ast/core/statements/ControlStatement";
-import {
-    BooleanLiteral,
-} from "../../../../../src/bastet/syntax/ast/core/expressions/BooleanExpression";
-import {VariableWithDataLocation} from "../../../../../src/bastet/syntax/ast/core/Variable";
-import {BooleanType} from "../../../../../src/bastet/syntax/ast/core/ScratchType";
-import {DataLocations} from "../../../../../src/bastet/syntax/app/controlflow/DataLocation";
-import {Identifier} from "../../../../../src/bastet/syntax/ast/core/Identifier";
-import {StatementList} from "../../../../../src/bastet/syntax/ast/core/statements/Statement";
-import {StoreEvalResultToVariableStatement} from "../../../../../src/bastet/syntax/ast/core/statements/SetStatement";
-import {CallStatement} from "../../../../../src/bastet/syntax/ast/core/statements/CallStatement";
-import {ExpressionList} from "../../../../../src/bastet/syntax/ast/core/expressions/ExpressionList";
-import {OptionalAstNode} from "../../../../../src/bastet/syntax/ast/AstNode";
+import { describe, test } from 'node:test';
+import { RelationBuildingVisitor } from '../../../../../src/bastet/syntax/app/controlflow/RelationBuildingVisitor';
+import { UntilQueriedConditionStatement } from '../../../../../src/bastet/syntax/ast/core/statements/ControlStatement';
+import { BooleanLiteral } from '../../../../../src/bastet/syntax/ast/core/expressions/BooleanExpression';
+import { VariableWithDataLocation } from '../../../../../src/bastet/syntax/ast/core/Variable';
+import { BooleanType } from '../../../../../src/bastet/syntax/ast/core/ScratchType';
+import { DataLocations } from '../../../../../src/bastet/syntax/app/controlflow/DataLocation';
+import { Identifier } from '../../../../../src/bastet/syntax/ast/core/Identifier';
+import { StatementList } from '../../../../../src/bastet/syntax/ast/core/statements/Statement';
+import { StoreEvalResultToVariableStatement } from '../../../../../src/bastet/syntax/ast/core/statements/SetStatement';
+import { CallStatement } from '../../../../../src/bastet/syntax/ast/core/statements/CallStatement';
+import { ExpressionList } from '../../../../../src/bastet/syntax/ast/core/expressions/ExpressionList';
+import { OptionalAstNode } from '../../../../../src/bastet/syntax/ast/AstNode';
 
-describe("RelationBuildingVisitor", () => {
-
+describe('RelationBuildingVisitor', () => {
     const visitor = new RelationBuildingVisitor();
 
-    test("UntilQueriedConditionStatement", async () => {
+    test('UntilQueriedConditionStatement', async () => {
         const boolVar = new VariableWithDataLocation(
-            DataLocations.createTypedLocation(Identifier.of("v"), BooleanType.instance()));
+            DataLocations.createTypedLocation(Identifier.of('v'), BooleanType.instance())
+        );
 
         const stmt = new UntilQueriedConditionStatement(
             boolVar,
             new StatementList([new StoreEvalResultToVariableStatement(boolVar, BooleanLiteral.true())]),
-            new StatementList([new CallStatement(Identifier.of("foo"),
-                new ExpressionList([]), OptionalAstNode.absent())]));
+            new StatementList([
+                new CallStatement(Identifier.of('foo'), new ExpressionList([]), OptionalAstNode.absent()),
+            ])
+        );
 
         const result = stmt.accept(visitor);
 
         assert.deepStrictEqual(result.entryLocationSet.size, 1);
         assert.deepStrictEqual(result.exitLocationSet.size, 1);
-
-
     });
-
 });

@@ -23,29 +23,24 @@
  *
  */
 
-import fs from "fs";
-import {Preconditions} from "./Preconditions";
+import fs from 'fs';
+import { Preconditions } from './Preconditions';
 
 export interface SystemLayer {
-
     readFileAsJson(filePath: string): {};
 
     basename(filePath: string): string;
-
 }
 
 export class NodeSystemLayer implements SystemLayer {
-
     readFileAsJson(filePath: string): {} {
-        Preconditions.checkArgument(fs.existsSync(filePath), `File "${filePath}" does not exists.`)
+        Preconditions.checkArgument(fs.existsSync(filePath), `File "${filePath}" does not exists.`);
         const data: string = fs.readFileSync(filePath, 'utf8');
         return JSON.parse(data);
     }
 
     basename(filePath: string): string {
-        const sp = filePath.split("/");
-        return sp[sp.length-1];
+        const sp = filePath.split('/');
+        return sp[sp.length - 1];
     }
-
 }
-

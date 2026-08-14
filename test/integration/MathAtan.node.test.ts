@@ -19,27 +19,25 @@
  *   limitations under the License.
  *
  */
-import {test} from "node:test";
-import * as utils from "../bastet/procedures/analyses/data/TestUtils";
+import { test } from 'node:test';
+import * as utils from '../bastet/procedures/analyses/data/TestUtils';
 
-test("Test Atan 1 safe", {timeout: utils.timeout}, async () => {
-    const fixtureRelPath: string = "test/programs/library-coverage/math-Atan-1_SAFE.sc"
+test('Test Atan 1 safe', { timeout: utils.timeout }, async () => {
+    const fixtureRelPath: string = 'test/programs/library-coverage/math-Atan-1_SAFE.sc';
     await utils.execFixture(fixtureRelPath);
 });
 
-test("Test Atan 2 safe", {timeout: utils.timeout}, async () => {
-    const fixtureRelPath: string = "test/programs/library-coverage/math-Atan-2_SAFE.sc"
+test('Test Atan 2 safe', { timeout: utils.timeout }, async () => {
+    const fixtureRelPath: string = 'test/programs/library-coverage/math-Atan-2_SAFE.sc';
     await utils.execFixture(fixtureRelPath);
 });
 
-test("Test Atan 1 unsafe", {timeout: utils.timeout}, async () => {
-    const fixtureRelPath: string = "test/programs/library-coverage/math-Atan-1_UNSAFE.sc"
+test('Test Atan 1 unsafe', { timeout: utils.timeout }, async () => {
+    const fixtureRelPath: string = 'test/programs/library-coverage/math-Atan-1_UNSAFE.sc';
     await utils.execFixture(fixtureRelPath);
 });
 
-test("Test Atan 2 unsafe", {timeout: utils.timeout}, async () => {
-    const fixtureRelPath: string = "test/programs/library-coverage/math-Atan-2_UNSAFE.sc"
+test('Test Atan 2 unsafe', { timeout: utils.timeout }, async () => {
+    const fixtureRelPath: string = 'test/programs/library-coverage/math-Atan-2_UNSAFE.sc';
     await utils.execFixture(fixtureRelPath);
 });
-
-

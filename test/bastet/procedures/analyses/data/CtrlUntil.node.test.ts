@@ -19,15 +19,15 @@
  *   limitations under the License.
  *
  */
-import {test} from "node:test";
-import * as utils from './TestUtils'
+import { test } from 'node:test';
+import * as utils from './TestUtils';
 
-test("Test ctrl until 1 safe", {timeout: utils.timeout}, async () => {
-    const fixtureRelPath: string = "test/programs/language-coverage/ctrl-until-1_SAFE.sc"
+test('Test ctrl until 1 safe', { timeout: utils.timeout }, async () => {
+    const fixtureRelPath: string = 'test/programs/language-coverage/ctrl-until-1_SAFE.sc';
     await utils.execFixture(fixtureRelPath);
 });
 
-test("Test ctrl until 1 unsafe", {timeout: utils.timeout}, async () => {
-    const fixtureRelPath: string = "test/programs/language-coverage/ctrl-until-1_UNSAFE.sc"
+test('Test ctrl until 1 unsafe', { timeout: utils.timeout }, async () => {
+    const fixtureRelPath: string = 'test/programs/language-coverage/ctrl-until-1_UNSAFE.sc';
     await utils.execFixture(fixtureRelPath);
 });

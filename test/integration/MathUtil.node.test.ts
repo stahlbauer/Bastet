@@ -20,78 +20,75 @@
  *
  */
 
-import {test} from "node:test";
-import * as utils from "../bastet/procedures/analyses/data/TestUtils";
+import { test } from 'node:test';
+import * as utils from '../bastet/procedures/analyses/data/TestUtils';
 
-test("Test WrapClamp 1 safe", {timeout: utils.timeout}, async () => {
-    const fixtureRelPath: string = "test/programs/library-coverage/math-WrapClamp-1_SAFE.sc"
+test('Test WrapClamp 1 safe', { timeout: utils.timeout }, async () => {
+    const fixtureRelPath: string = 'test/programs/library-coverage/math-WrapClamp-1_SAFE.sc';
     await utils.execFixture(fixtureRelPath);
 });
 
-test("Test WrapClamp 1 unsafe", {timeout: utils.timeout}, async () => {
-    const fixtureRelPath: string = "test/programs/library-coverage/math-WrapClamp-1_UNSAFE.sc"
+test('Test WrapClamp 1 unsafe', { timeout: utils.timeout }, async () => {
+    const fixtureRelPath: string = 'test/programs/library-coverage/math-WrapClamp-1_UNSAFE.sc';
     await utils.execFixture(fixtureRelPath);
 });
 
-
-test("Test MathFloor 1 safe", {timeout: utils.timeout}, async () => {
-    const fixtureRelPath: string = "test/programs/library-coverage/math-MathFloor-1_SAFE.sc"
+test('Test MathFloor 1 safe', { timeout: utils.timeout }, async () => {
+    const fixtureRelPath: string = 'test/programs/library-coverage/math-MathFloor-1_SAFE.sc';
     await utils.execFixture(fixtureRelPath);
 });
 
-test("Test MathFloor 1 unsafe", {timeout: utils.timeout}, async () => {
-    const fixtureRelPath: string = "test/programs/library-coverage/math-MathFloor-1_UNSAFE.sc"
+test('Test MathFloor 1 unsafe', { timeout: utils.timeout }, async () => {
+    const fixtureRelPath: string = 'test/programs/library-coverage/math-MathFloor-1_UNSAFE.sc';
     await utils.execFixture(fixtureRelPath);
 });
 
-test("Test MathSqrt 1 safe", {timeout: utils.timeout}, async () => {
-    const fixtureRelPath: string = "test/programs/library-coverage/math-Sqrt-1_SAFE.sc"
+test('Test MathSqrt 1 safe', { timeout: utils.timeout }, async () => {
+    const fixtureRelPath: string = 'test/programs/library-coverage/math-Sqrt-1_SAFE.sc';
     await utils.execFixture(fixtureRelPath);
 });
 
-test("Test MathSqrt 1 unsafe", {timeout: utils.timeout}, async () => {
-    const fixtureRelPath: string = "test/programs/library-coverage/math-Sqrt-1_UNSAFE.sc"
+test('Test MathSqrt 1 unsafe', { timeout: utils.timeout }, async () => {
+    const fixtureRelPath: string = 'test/programs/library-coverage/math-Sqrt-1_UNSAFE.sc';
     await utils.execFixture(fixtureRelPath);
 });
 
-test("Test MathSqrt 2 safe", {timeout: utils.timeout}, async () => {
-    const fixtureRelPath: string = "test/programs/library-coverage/math-Sqrt-2_SAFE.sc"
+test('Test MathSqrt 2 safe', { timeout: utils.timeout }, async () => {
+    const fixtureRelPath: string = 'test/programs/library-coverage/math-Sqrt-2_SAFE.sc';
     await utils.execFixture(fixtureRelPath);
 });
 
-test("Test MathSqrt 2 unsafe", {timeout: utils.timeout}, async () => {
-    const fixtureRelPath: string = "test/programs/library-coverage/math-Sqrt-2_UNSAFE.sc"
+test('Test MathSqrt 2 unsafe', { timeout: utils.timeout }, async () => {
+    const fixtureRelPath: string = 'test/programs/library-coverage/math-Sqrt-2_UNSAFE.sc';
     await utils.execFixture(fixtureRelPath);
 });
 
-test("Test MathSqrt 3 safe", {timeout: utils.timeout}, async () => {
-    const fixtureRelPath: string = "test/programs/library-coverage/math-Sqrt-3_SAFE.sc"
+test('Test MathSqrt 3 safe', { timeout: utils.timeout }, async () => {
+    const fixtureRelPath: string = 'test/programs/library-coverage/math-Sqrt-3_SAFE.sc';
     await utils.execFixture(fixtureRelPath);
 });
 
-test("Test Nearest Perfect Sqrt 1 safe", {timeout: utils.timeout}, async () => {
-    const fixtureRelPath: string = "test/programs/library-coverage/math-NearestPerfectSqrt-1_SAFE.sc"
+test('Test Nearest Perfect Sqrt 1 safe', { timeout: utils.timeout }, async () => {
+    const fixtureRelPath: string = 'test/programs/library-coverage/math-NearestPerfectSqrt-1_SAFE.sc';
     await utils.execFixture(fixtureRelPath);
 });
 
-test("Test Nearest Perfect Sqrt 2 safe", {timeout: utils.timeout}, async () => {
-    const fixtureRelPath: string = "test/programs/library-coverage/math-NearestPerfectSqrt-2_SAFE.sc"
+test('Test Nearest Perfect Sqrt 2 safe', { timeout: utils.timeout }, async () => {
+    const fixtureRelPath: string = 'test/programs/library-coverage/math-NearestPerfectSqrt-2_SAFE.sc';
     await utils.execFixture(fixtureRelPath);
 });
 
-
-test("Test Nearest Perfect Sqrt 1 unsafe", {timeout: utils.timeout}, async () => {
-    const fixtureRelPath: string = "test/programs/library-coverage/math-NearestPerfectSqrt-1_UNSAFE.sc"
+test('Test Nearest Perfect Sqrt 1 unsafe', { timeout: utils.timeout }, async () => {
+    const fixtureRelPath: string = 'test/programs/library-coverage/math-NearestPerfectSqrt-1_UNSAFE.sc';
     await utils.execFixture(fixtureRelPath);
 });
 
-test("Test MathAbsF 1 unsafe", {timeout: utils.timeout}, async () => {
-    const fixtureRelPath: string = "test/programs/library-coverage/math-AbsF-1_UNSAFE.sc"
+test('Test MathAbsF 1 unsafe', { timeout: utils.timeout }, async () => {
+    const fixtureRelPath: string = 'test/programs/library-coverage/math-AbsF-1_UNSAFE.sc';
     await utils.execFixture(fixtureRelPath);
 });
 
-test("Test MathAbsF 1 safe", {timeout: utils.timeout}, async () => {
-    const fixtureRelPath: string = "test/programs/library-coverage/math-AbsF-1_SAFE.sc"
+test('Test MathAbsF 1 safe', { timeout: utils.timeout }, async () => {
+    const fixtureRelPath: string = 'test/programs/library-coverage/math-AbsF-1_SAFE.sc';
     await utils.execFixture(fixtureRelPath);
 });
-

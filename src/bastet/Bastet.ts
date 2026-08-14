@@ -25,59 +25,56 @@
 
 'use strict';
 
-import {ProgramParserFactory} from "./syntax/parser/ProgramParserFactory";
-import {ControlFlows} from "./syntax/app/ControlFlows";
-import {App} from "./syntax/app/App";
-import {AnalysisProcedure, AnalysisResult, NullAnalysisResult} from "./procedures/AnalysisProcedure";
-import {ProgramParser} from "./syntax/parser/ProgramParser";
-import {Preconditions} from "./utils/Preconditions";
-import {AppBuilder} from "./syntax/app/AppBuilder";
-import {ParseTree, RuleNode} from "antlr4ts/tree";
-import {AstNode} from "./syntax/ast/AstNode";
-import {AnalysisProcedureFactory} from "./procedures/AnalysisProcedureFactory";
-import {AppToDot} from "./syntax/app/AppToDot";
-import {IllegalArgumentException} from "./core/exceptions/IllegalArgumentException";
-import {AnalysisStatistics} from "./procedures/analyses/AnalysisStatistics";
-import {TypeInformationStorage} from "./syntax/DeclarationScopes";
-import {ToIntermediateTransformer} from "./syntax/transformers/ToIntermediateTransformer";
-import * as fs from "fs";
-import {BastetConfiguration, mergeConfigFilesToJson} from "./utils/BastetConfiguration";
-import {ParsingException} from "./core/exceptions/ParsingException";
-import {NodeSystemLayer} from "./utils/SystemLayer";
+import { ProgramParserFactory } from './syntax/parser/ProgramParserFactory';
+import { ControlFlows } from './syntax/app/ControlFlows';
+import { App } from './syntax/app/App';
+import { AnalysisProcedure, AnalysisResult, NullAnalysisResult } from './procedures/AnalysisProcedure';
+import { ProgramParser } from './syntax/parser/ProgramParser';
+import { Preconditions } from './utils/Preconditions';
+import { AppBuilder } from './syntax/app/AppBuilder';
+import { ParseTree, RuleNode } from 'antlr4ts/tree';
+import { AstNode } from './syntax/ast/AstNode';
+import { AnalysisProcedureFactory } from './procedures/AnalysisProcedureFactory';
+import { AppToDot } from './syntax/app/AppToDot';
+import { IllegalArgumentException } from './core/exceptions/IllegalArgumentException';
+import { AnalysisStatistics } from './procedures/analyses/AnalysisStatistics';
+import { TypeInformationStorage } from './syntax/DeclarationScopes';
+import { ToIntermediateTransformer } from './syntax/transformers/ToIntermediateTransformer';
+import * as fs from 'fs';
+import { BastetConfiguration, mergeConfigFilesToJson } from './utils/BastetConfiguration';
+import { ParsingException } from './core/exceptions/ParsingException';
+import { NodeSystemLayer } from './utils/SystemLayer';
 import {
     CallStmtContext,
     MessageReceivedEventContext,
     ScriptContext,
-    StringLiteralExpressionContext
-} from "./syntax/parser/grammar/LeilaParser";
+    StringLiteralExpressionContext,
+} from './syntax/parser/grammar/LeilaParser';
 
 const process = require('process');
 
 const commander = require('commander');
 
 class BastetRootConfig extends BastetConfiguration {
-
     constructor(dict: {}) {
         super(dict, []);
     }
 
     get outputDir(): string {
-        return this.getStringProperty('output-dir', "./output/");
+        return this.getStringProperty('output-dir', './output/');
     }
 
     get terminateAfterParsing(): boolean {
         return this.getBoolProperty('terminate-after-parsing', false);
     }
-
 }
 
 /**
  * The main class of the Main program analyses framework.
  */
 export class Bastet {
-
     private parseProgramArguments(): any {
-        function commaSeparatedList(value, dummy) {
+        function commaSeparatedList(value) {
             return value.split(',');
         }
 
@@ -86,7 +83,10 @@ export class Bastet {
             .version('0.0.1')
             .option('-d, --debug', 'Debugging mode')
             .option('-c, --configuration <required>', 'Configuration files, separated by comma', commaSeparatedList)
-            .requiredOption('-I, --intermediateLibrary <required>', 'Program file that defines the intermediate functions')
+            .requiredOption(
+                '-I, --intermediateLibrary <required>',
+                'Program file that defines the intermediate functions'
+            )
             .requiredOption('-P, --program <required>', 'Program file')
             .requiredOption('-S, --specification <required>', 'Specification file')
             .parse(process.argv)
@@ -94,7 +94,7 @@ export class Bastet {
     }
 
     private async nullResult(): Promise<AnalysisResult> {
-        return new NullAnalysisResult(new AnalysisStatistics("NULL", {}));
+        return new NullAnalysisResult(new AnalysisStatistics('NULL', {}));
     }
 
     /**
@@ -114,26 +114,31 @@ export class Bastet {
         const intermLibFilepath: string = cmdlineArguments.intermediateLibrary;
         const programFilepath: string = cmdlineArguments.program;
         const specFilepath: string = cmdlineArguments.specification;
-        const configFilepaths: string[] = cmdlineArguments['configuration'] || ["./config/default.json"];
+        const configFilepaths: string[] = cmdlineArguments['configuration'] || ['./config/default.json'];
 
         return this.runFor(configFilepaths, intermLibFilepath, programFilepath, specFilepath);
     }
 
     public registerOnExitNotifiers() {
         process.on('SIGINT', function () {
-            console.log("Caught SIGINT signal");
+            console.log('Caught SIGINT signal');
             process.exit();
         });
 
         process.on('beforeExit', function () {
-            console.log("Caught beforeExit signal");
+            console.log('Caught beforeExit signal');
         });
     }
 
-    public async runFor(configFilepath: string[], libraryFilepath: string, programFilepath: string, specFilepath: string): Promise<AnalysisResult> {
-        Preconditions.checkArgument(fs.existsSync(libraryFilepath), "Library File does not exists.");
-        Preconditions.checkArgument(fs.existsSync(programFilepath), "Program File does not exists.");
-        Preconditions.checkArgument(fs.existsSync(specFilepath), "Spec File does not exists.");
+    public async runFor(
+        configFilepath: string[],
+        libraryFilepath: string,
+        programFilepath: string,
+        specFilepath: string
+    ): Promise<AnalysisResult> {
+        Preconditions.checkArgument(fs.existsSync(libraryFilepath), 'Library File does not exists.');
+        Preconditions.checkArgument(fs.existsSync(programFilepath), 'Program File does not exists.');
+        Preconditions.checkArgument(fs.existsSync(specFilepath), 'Spec File does not exists.');
 
         const config: {} = mergeConfigFilesToJson(configFilepath);
         const rootConfig = new BastetRootConfig(config);
@@ -147,10 +152,9 @@ export class Bastet {
         }
 
         // Build the analyses procedure as defined by the configuration
-        const analysisProcedure = await this.buildAnalysisProcedure(config)
-            .catch((e) => {
-                throw new IllegalArgumentException(e);
-            });
+        const analysisProcedure = await this.buildAnalysisProcedure(config).catch((e) => {
+            throw new IllegalArgumentException(e);
+        });
 
         // Run the analyses procedure on the task and return the result
         return this.runAnalysis(staticTaskModel, analysisProcedure);
@@ -167,25 +171,41 @@ export class Bastet {
         this.adjustConfigTaskspecific(programFilepath, config);
 
         // Build the set of methods for translating into the intermediate AST
-        const staticLibraryModel: App = this.parseFromIntermediateCode("library", libraryFilepath, typeStorage, config);
+        const staticLibraryModel: App = this.parseFromIntermediateCode('library', libraryFilepath, typeStorage, config);
 
         // Parse the program (a Scratch program) into an intermediate AST
-        const staticProgramModel: App = this.parseFromRawCode("program", programFilepath, staticLibraryModel, typeStorage, config);
+        const staticProgramModel: App = this.parseFromRawCode(
+            'program',
+            programFilepath,
+            staticLibraryModel,
+            typeStorage,
+            config
+        );
 
         // Parse the specification (also a Scratch program) into an intermediate AST
-        const staticSpecModel: App = this.parseFromRawCode("spec", specFilepath, staticLibraryModel, typeStorage, config);
+        const staticSpecModel: App = this.parseFromRawCode(
+            'spec',
+            specFilepath,
+            staticLibraryModel,
+            typeStorage,
+            config
+        );
 
         // Create the control-flow structure of the verification task
-        const staticTaskModelWithInheritance: App = ControlFlows.unionOf(staticLibraryModel,
-            ControlFlows.unionOf(staticProgramModel, staticSpecModel, "task"), "task_and_library");
+        const staticTaskModelWithInheritance: App = ControlFlows.unionOf(
+            staticLibraryModel,
+            ControlFlows.unionOf(staticProgramModel, staticSpecModel, 'task'),
+            'task_and_library'
+        );
 
         // The intermediate language supports a (simple) version of prototypical inheritance.
         // Dissolve all inheritance relations now such the later analyses steps must not
         // care about handling inheritance.
         const staticTaskModel: App = AppBuilder.removeIrrelevantMethods(
-            AppBuilder.dissolveInheritance(staticTaskModelWithInheritance));
+            AppBuilder.dissolveInheritance(staticTaskModelWithInheritance)
+        );
         const add: AppToDot = new AppToDot();
-        add.exportApp(staticTaskModel, "static");
+        add.exportApp(staticTaskModel, 'static');
 
         return staticTaskModel;
     }
@@ -195,7 +215,12 @@ export class Bastet {
         return AnalysisProcedureFactory.createAnalysisProcedure(config);
     }
 
-    private parseFromIntermediateCode(ident: string, filepath: string, typeStorage: TypeInformationStorage, config: {}): App {
+    private parseFromIntermediateCode(
+        ident: string,
+        filepath: string,
+        typeStorage: TypeInformationStorage,
+        config: {}
+    ): App {
         return this.parseFromRawCode(ident, filepath, App.empty(), typeStorage, config);
     }
 
@@ -205,9 +230,13 @@ export class Bastet {
      *
      * @param filepath
      */
-    private parseFromRawCode(ident: string, filepath: string,
-                             staticLibraryModel: App, typeStorage: TypeInformationStorage,
-                             config: {}): App {
+    private parseFromRawCode(
+        ident: string,
+        filepath: string,
+        staticLibraryModel: App,
+        typeStorage: TypeInformationStorage,
+        config: {}
+    ): App {
         Preconditions.checkNotEmpty(filepath);
 
         try {
@@ -220,7 +249,13 @@ export class Bastet {
             // Transform the AST: Replaces specific statements or expressions
             // by generic constructs.
             const transformer = new ToIntermediateTransformer();
-            const intermediateAST: AstNode = transformer.transform(staticLibraryModel, rawAST, typeStorage, config, filepath);
+            const intermediateAST: AstNode = transformer.transform(
+                staticLibraryModel,
+                rawAST,
+                typeStorage,
+                config,
+                filepath
+            );
 
             return this.createControlFlowFrom(filepath, intermediateAST, staticLibraryModel, typeStorage);
         } catch (e) {
@@ -233,8 +268,12 @@ export class Bastet {
         }
     }
 
-    private createControlFlowFrom(programOrigin: string, intermediateSpecAST: AstNode, libraryModule: App,
-                                  typeStorage: TypeInformationStorage): App {
+    private createControlFlowFrom(
+        programOrigin: string,
+        intermediateSpecAST: AstNode,
+        libraryModule: App,
+        typeStorage: TypeInformationStorage
+    ): App {
         const ab: AppBuilder = new AppBuilder(libraryModule);
         return ab.buildFromSyntaxTree(programOrigin, intermediateSpecAST, typeStorage);
     }
@@ -257,9 +296,12 @@ export class Bastet {
                 if (script.event() instanceof MessageReceivedEventContext) {
                     const msgEvent = script.event() as MessageReceivedEventContext;
                     if (msgEvent.stringExpr() instanceof StringLiteralExpressionContext) {
-                        const str = (msgEvent.stringExpr() as StringLiteralExpressionContext).text.replace(/['"]+/g, '');
-                        if (str.startsWith("KEY_") || str.startsWith("SPRITE_CLICK")) {
-                            eventLoopNeeded = true
+                        const str = (msgEvent.stringExpr() as StringLiteralExpressionContext).text.replace(
+                            /['"]+/g,
+                            ''
+                        );
+                        if (str.startsWith('KEY_') || str.startsWith('SPRITE_CLICK')) {
+                            eventLoopNeeded = true;
                         }
                     }
                 }
@@ -267,8 +309,8 @@ export class Bastet {
 
             if (work instanceof CallStmtContext) {
                 const call = work as CallStmtContext;
-                if (call.ident().text == "mouseX" || call.ident().text == "mouseY") {
-                    eventLoopNeeded = true
+                if (call.ident().text == 'mouseX' || call.ident().text == 'mouseY') {
+                    eventLoopNeeded = true;
                 }
             }
 
@@ -279,11 +321,10 @@ export class Bastet {
         }
 
         if (eventLoopNeeded) {
-            config["Transformer"] = config["Transformer"] || {};
-            config["Transformer"]["enable-message-dispatcher-loop"] = eventLoopNeeded;
+            config['Transformer'] = config['Transformer'] || {};
+            config['Transformer']['enable-message-dispatcher-loop'] = eventLoopNeeded;
 
-            console.log("ATTENTION: Enabled the message dispatcher loop since it is needed by the given program.")
+            console.log('ATTENTION: Enabled the message dispatcher loop since it is needed by the given program.');
         }
     }
-
 }

@@ -1,6 +1,6 @@
-const tsParser = require('@typescript-eslint/parser')
-const tsPlugin = require('@typescript-eslint/eslint-plugin')
-const unusedImportsPlugin = require('eslint-plugin-unused-imports')
+const tsParser = require('@typescript-eslint/parser');
+const tsPlugin = require('@typescript-eslint/eslint-plugin');
+const unusedImportsPlugin = require('eslint-plugin-unused-imports');
 
 module.exports = [
     {
@@ -23,4 +23,4 @@ module.exports = [
             'unused-imports/no-unused-imports': 'error',
         },
     },
-]
+];

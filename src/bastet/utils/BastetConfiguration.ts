@@ -23,11 +23,11 @@
  *
  */
 
-import {ImplementMeException} from "../core/exceptions/ImplementMeException";
-import {Preconditions} from "./Preconditions";
+import { ImplementMeException } from '../core/exceptions/ImplementMeException';
+import { Preconditions } from './Preconditions';
 
-import {NodeSystemLayer} from "./SystemLayer";
-import * as _ from "lodash";
+import { NodeSystemLayer } from './SystemLayer';
+import * as _ from 'lodash';
 
 export function mergeConfigFilesToJson(files: string[]): {} {
     let result: {} = {};
@@ -40,7 +40,6 @@ export function mergeConfigFilesToJson(files: string[]): {} {
 }
 
 export class BastetConfiguration {
-
     private readonly dict: {};
 
     private readonly scope: string[];
@@ -89,5 +88,4 @@ export class BastetConfiguration {
     public getNumberListProperty(name: string, def?: number[]): number[] {
         return this.getProperty(name, def) as number[];
     }
-
 }

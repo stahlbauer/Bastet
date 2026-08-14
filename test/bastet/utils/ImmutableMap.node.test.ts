@@ -18,72 +18,65 @@
  */
 
 import assert from 'node:assert/strict';
-import {beforeEach, describe, test} from 'node:test';
-import {ImmutableMap} from "../../../src/bastet/utils/ImmutableMap";
+import { beforeEach, describe, test } from 'node:test';
+import { ImmutableMap } from '../../../src/bastet/utils/ImmutableMap';
 
-describe("ImmutableMap", () => {
-
-    describe("constructor", () => {
-
-        describe("case: empty argument", () => {
-
-            test("creates an empty map form a map", async () => {
+describe('ImmutableMap', () => {
+    describe('constructor', () => {
+        describe('case: empty argument', () => {
+            test('creates an empty map form a map', async () => {
                 const emptyMap: Map<string, number> = new Map();
                 const map = new ImmutableMap<string, number>(emptyMap.entries());
 
                 assert.strictEqual(map.size, 0);
             });
 
-            test("creates an empty map from an array", async () => {
+            test('creates an empty map from an array', async () => {
                 const myArray: Array<[string, number]> = new Array();
                 const map = new ImmutableMap<string, number>(myArray.values());
 
                 assert.strictEqual(map.size, 0);
             });
-
         });
 
-        describe("case: non-empty argument", () => {
-
-            test("creates an map from an array", async () => {
-                const myArray: Array<[string, number]> = [["a", 1], ["b", 1]];
+        describe('case: non-empty argument', () => {
+            test('creates an map from an array', async () => {
+                const myArray: Array<[string, number]> = [
+                    ['a', 1],
+                    ['b', 1],
+                ];
                 const map = new ImmutableMap<string, number>(myArray.values());
 
                 assert.strictEqual(map.size, 2);
             });
-
         });
-
     });
 
-    describe("get", () => {
-
+    describe('get', () => {
         let subject: ImmutableMap<string, number>;
 
         beforeEach(async () => {
-            const myArray: Array<[string, number]> = [["a", 1], ["b", 2], ["d", 4]];
+            const myArray: Array<[string, number]> = [
+                ['a', 1],
+                ['b', 2],
+                ['d', 4],
+            ];
             subject = new ImmutableMap<string, number>(myArray.values());
         });
 
-        describe("case: existing element", () => {
-
-            test("provides the element", async () => {
-                assert.deepStrictEqual(subject.get("a"), 1);
-                assert.deepStrictEqual(subject.get("b"), 2);
-                assert.deepStrictEqual(subject.get("d"), 4);
+        describe('case: existing element', () => {
+            test('provides the element', async () => {
+                assert.deepStrictEqual(subject.get('a'), 1);
+                assert.deepStrictEqual(subject.get('b'), 2);
+                assert.deepStrictEqual(subject.get('d'), 4);
             });
-
         });
 
-        describe("case: NOT existing element", () => {
-
-            test("returns undefined", async () => {
-                assert.strictEqual(subject.get("c"), undefined);
-                assert.strictEqual(subject.get("f"), undefined);
+        describe('case: NOT existing element', () => {
+            test('returns undefined', async () => {
+                assert.strictEqual(subject.get('c'), undefined);
+                assert.strictEqual(subject.get('f'), undefined);
             });
-
         });
-
     });
-
 });

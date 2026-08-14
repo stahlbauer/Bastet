@@ -25,20 +25,17 @@
 
 // Test by Robert Pernerstorfer
 
-import assert from "node:assert/strict";
-import {afterEach, before, beforeEach, test} from "node:test";
-import {SMTFactory, Z3Model, Z3SMT} from "../../../../src/bastet/utils/smt/z3/Z3SMT";
-import {VariableWithDataLocation} from "../../../../src/bastet/syntax/ast/core/Variable";
-import {DataLocations} from "../../../../src/bastet/syntax/app/controlflow/DataLocation";
-import {Identifier} from "../../../../src/bastet/syntax/ast/core/Identifier";
-import {ConcreteNumber} from "../../../../src/bastet/procedures/domains/ConcreteElements";
-import {
-    Z3BooleanFormula,
-    Z3Theories
-} from "../../../../src/bastet/utils/smt/z3/Z3Theories";
-import {BooleanType, IntegerType} from "../../../../src/bastet/syntax/ast/core/ScratchType";
-import {FirstOrderDomain} from "../../../../src/bastet/procedures/domains/FirstOrderDomain";
-import {AnalysisStatistics} from "../../../../src/bastet/procedures/analyses/AnalysisStatistics";
+import assert from 'node:assert/strict';
+import { afterEach, before, beforeEach, test } from 'node:test';
+import { SMTFactory, Z3Model, Z3SMT } from '../../../../src/bastet/utils/smt/z3/Z3SMT';
+import { VariableWithDataLocation } from '../../../../src/bastet/syntax/ast/core/Variable';
+import { DataLocations } from '../../../../src/bastet/syntax/app/controlflow/DataLocation';
+import { Identifier } from '../../../../src/bastet/syntax/ast/core/Identifier';
+import { ConcreteNumber } from '../../../../src/bastet/procedures/domains/ConcreteElements';
+import { Z3BooleanFormula, Z3Theories } from '../../../../src/bastet/utils/smt/z3/Z3Theories';
+import { BooleanType, IntegerType } from '../../../../src/bastet/syntax/ast/core/ScratchType';
+import { FirstOrderDomain } from '../../../../src/bastet/procedures/domains/FirstOrderDomain';
+import { AnalysisStatistics } from '../../../../src/bastet/procedures/analyses/AnalysisStatistics';
 
 let smt: Z3SMT;
 let ctx;
@@ -54,38 +51,46 @@ before(async () => {
 });
 
 beforeEach(() => {
-    prover = smt.createProver(ctx, new AnalysisStatistics("Test", {}));
+    prover = smt.createProver(ctx, new AnalysisStatistics('Test', {}));
 });
 
 afterEach(() => {
     prover.release();
 });
 
-test("Bool: Short 1", async () => {
-    const x = new VariableWithDataLocation(DataLocations.createTypedLocation(Identifier.of("x"), BooleanType.instance()));
+test('Bool: Short 1', async () => {
+    const x = new VariableWithDataLocation(
+        DataLocations.createTypedLocation(Identifier.of('x'), BooleanType.instance())
+    );
     const bx = theories.boolTheory.abstractBooleanValue(x);
     prover.assert(bx);
     assert.equal(prover.isSat(), true);
-})
+});
 
-test("Bool: Short 2", async () => {
-    const x = new VariableWithDataLocation(DataLocations.createTypedLocation(Identifier.of("x"), BooleanType.instance()));
+test('Bool: Short 2', async () => {
+    const x = new VariableWithDataLocation(
+        DataLocations.createTypedLocation(Identifier.of('x'), BooleanType.instance())
+    );
     const bx = theories.boolTheory.abstractBooleanValue(x);
     prover.assert(bx);
     assert.equal(prover.isUnsat(), false);
-})
+});
 
-test("Bool: Short 3", async () => {
-    const x = new VariableWithDataLocation(DataLocations.createTypedLocation(Identifier.of("x"), BooleanType.instance()));
+test('Bool: Short 3', async () => {
+    const x = new VariableWithDataLocation(
+        DataLocations.createTypedLocation(Identifier.of('x'), BooleanType.instance())
+    );
     const bx = theories.boolTheory.abstractBooleanValue(x);
-    const y = new VariableWithDataLocation(DataLocations.createTypedLocation(Identifier.of("y"), BooleanType.instance()));
+    const y = new VariableWithDataLocation(
+        DataLocations.createTypedLocation(Identifier.of('y'), BooleanType.instance())
+    );
     const by = theories.boolTheory.abstractBooleanValue(y);
 
     const test = theories.boolTheory.xor(bx, by);
 
     prover.assert(test);
     assert.equal(prover.isSat(), true);
-})
+});
 
 // test("Bool: Short 4", async () => {
 //     const x = new VariableWithDataLocation(DataLocations.createTypedLocation(Identifier.of("x"), BooleanType.instance()));
@@ -95,16 +100,19 @@ test("Bool: Short 3", async () => {
 //     assert.equal(prover.isSat(), true);
 // })
 
-test("Bool: Long 1", async () => {
-    const x = new VariableWithDataLocation(DataLocations.createTypedLocation(Identifier.of("x"), BooleanType.instance()));
+test('Bool: Long 1', async () => {
+    const x = new VariableWithDataLocation(
+        DataLocations.createTypedLocation(Identifier.of('x'), BooleanType.instance())
+    );
     const bx = theories.boolTheory.abstractBooleanValue(x);
-    const y = new VariableWithDataLocation(DataLocations.createTypedLocation(Identifier.of("y"), BooleanType.instance()));
+    const y = new VariableWithDataLocation(
+        DataLocations.createTypedLocation(Identifier.of('y'), BooleanType.instance())
+    );
     const by = theories.boolTheory.abstractBooleanValue(y);
 
     const xor = theories.boolTheory.and(
         theories.boolTheory.or(bx, by),
-        theories.boolTheory.not(
-            theories.boolTheory.and(bx, by)),
+        theories.boolTheory.not(theories.boolTheory.and(bx, by))
     );
 
     // There seems to be no 'xor' in boolTheory  :(
@@ -121,54 +129,56 @@ test("Bool: Long 1", async () => {
     assert.equal(prover.isSat(), true);
     const model: Z3Model = prover.getModel();
     //const Z3Const[] = model.getConstValues();
-})
+});
 
-test("Bool: Long 2", async () => {
-    const x = new VariableWithDataLocation(DataLocations.createTypedLocation(Identifier.of("x"), BooleanType.instance()));
-    const y = new VariableWithDataLocation(DataLocations.createTypedLocation(Identifier.of("y"), BooleanType.instance()));
-    const z = new VariableWithDataLocation(DataLocations.createTypedLocation(Identifier.of("z"), BooleanType.instance()));
+test('Bool: Long 2', async () => {
+    const x = new VariableWithDataLocation(
+        DataLocations.createTypedLocation(Identifier.of('x'), BooleanType.instance())
+    );
+    const y = new VariableWithDataLocation(
+        DataLocations.createTypedLocation(Identifier.of('y'), BooleanType.instance())
+    );
+    const z = new VariableWithDataLocation(
+        DataLocations.createTypedLocation(Identifier.of('z'), BooleanType.instance())
+    );
     const bx = theories.boolTheory.abstractBooleanValue(x);
     const by = theories.boolTheory.abstractBooleanValue(y);
     const bz = theories.boolTheory.abstractBooleanValue(z);
 
-
-    prover.push()
+    prover.push();
     const conjecture = theories.boolTheory.implies(
-        theories.boolTheory.and(
-            theories.boolTheory.implies(bx, by),
-            theories.boolTheory.implies(by, bz)),
-        theories.boolTheory.implies(bx, bz));
+        theories.boolTheory.and(theories.boolTheory.implies(bx, by), theories.boolTheory.implies(by, bz)),
+        theories.boolTheory.implies(bx, bz)
+    );
 
     const proof = theories.boolTheory.not(conjecture);
 
     prover.assert(proof);
     assert.equal(prover.isUnsat(), true);
-})
+});
 
-test("Bool: Long 3", async () => {
-    const x = new VariableWithDataLocation(DataLocations.createTypedLocation(Identifier.of("x"), BooleanType.instance()));
+test('Bool: Long 3', async () => {
+    const x = new VariableWithDataLocation(
+        DataLocations.createTypedLocation(Identifier.of('x'), BooleanType.instance())
+    );
     const bx = theories.boolTheory.abstractBooleanValue(x);
-    const y = new VariableWithDataLocation(DataLocations.createTypedLocation(Identifier.of("y"), BooleanType.instance()));
+    const y = new VariableWithDataLocation(
+        DataLocations.createTypedLocation(Identifier.of('y'), BooleanType.instance())
+    );
     const by = theories.boolTheory.abstractBooleanValue(y);
 
     const xor1 = theories.boolTheory.and(
         theories.boolTheory.or(bx, by),
-        theories.boolTheory.not(
-            theories.boolTheory.and(bx, by)),
+        theories.boolTheory.not(theories.boolTheory.and(bx, by))
     );
 
-    const test = theories.boolTheory.not(
-        theories.boolTheory.equal(
-            xor1, theories.boolTheory.xor(bx, by)
-        )
-    );
-
+    const test = theories.boolTheory.not(theories.boolTheory.equal(xor1, theories.boolTheory.xor(bx, by)));
 
     prover.assert(test);
     assert.equal(prover.isUnsat(), true);
-})
+});
 
-test("AllSat 1", async () => {
+test('AllSat 1', async () => {
     const basicTerm = builder.basicBoolTerm1();
     const predicates = builder.predicForBoolTerm1();
 
@@ -186,11 +196,9 @@ test("AllSat 1", async () => {
     prover.assert(abstractProblem);
     assert.equal(prover.isSat(), true);
     prover.pop();
+});
 
-})
-
-test("AllSat 2", async () => {
-
+test('AllSat 2', async () => {
     const basicTerm = builder.basicBoolTerm1();
     const predicates = builder.predicForBoolTerm1();
 
@@ -205,22 +213,21 @@ test("AllSat 2", async () => {
             [false, true, true],
             [true, true, true],
             [true, true, false],
-        ].map((row) => JSON.stringify(row)).sort(),
+        ]
+            .map((row) => JSON.stringify(row))
+            .sort()
     );
+});
 
-})
-
-test("BPA 1",() => {
+test('BPA 1', () => {
     const basicTerm = builder.basicBoolTerm1();
     const abstractPrec = builder.abstrPrecForBoolTerm1();
 
     const fOLattice = smt.createLattice(prover, theories.boolTheory);
     const fOD = new FirstOrderDomain(fOLattice);
-
-})
+});
 
 class TestFormulaBuilder {
-
     private _theories: Z3Theories;
     private i_a;
     private i_b;
@@ -230,65 +237,115 @@ class TestFormulaBuilder {
     private b_v2;
     private b_v3;
 
-
     constructor(theories: Z3Theories) {
         this._theories = theories;
 
-        const a = new VariableWithDataLocation(DataLocations.createTypedLocation(Identifier.of("a"), IntegerType.instance()));
+        const a = new VariableWithDataLocation(
+            DataLocations.createTypedLocation(Identifier.of('a'), IntegerType.instance())
+        );
         this.i_a = theories.intTheory.abstractNumberValue(a);
-        const b = new VariableWithDataLocation(DataLocations.createTypedLocation(Identifier.of("b"), IntegerType.instance()));
+        const b = new VariableWithDataLocation(
+            DataLocations.createTypedLocation(Identifier.of('b'), IntegerType.instance())
+        );
         this.i_b = theories.intTheory.abstractNumberValue(b);
-        const i = new VariableWithDataLocation(DataLocations.createTypedLocation(Identifier.of("i"), IntegerType.instance()));
+        const i = new VariableWithDataLocation(
+            DataLocations.createTypedLocation(Identifier.of('i'), IntegerType.instance())
+        );
         this.i_i = theories.intTheory.abstractNumberValue(i);
-        const x = new VariableWithDataLocation(DataLocations.createTypedLocation(Identifier.of("x"), IntegerType.instance()));
+        const x = new VariableWithDataLocation(
+            DataLocations.createTypedLocation(Identifier.of('x'), IntegerType.instance())
+        );
         this.i_x = theories.intTheory.abstractNumberValue(x);
 
-        const v1 = new VariableWithDataLocation(DataLocations.createTypedLocation(Identifier.of("v1"), BooleanType.instance()));
+        const v1 = new VariableWithDataLocation(
+            DataLocations.createTypedLocation(Identifier.of('v1'), BooleanType.instance())
+        );
         this.b_v1 = theories.boolTheory.abstractBooleanValue(v1);
-        const v2 = new VariableWithDataLocation(DataLocations.createTypedLocation(Identifier.of("v2"), BooleanType.instance()));
+        const v2 = new VariableWithDataLocation(
+            DataLocations.createTypedLocation(Identifier.of('v2'), BooleanType.instance())
+        );
         this.b_v2 = theories.boolTheory.abstractBooleanValue(v2);
-        const v3 = new VariableWithDataLocation(DataLocations.createTypedLocation(Identifier.of("v3"), BooleanType.instance()));
+        const v3 = new VariableWithDataLocation(
+            DataLocations.createTypedLocation(Identifier.of('v3'), BooleanType.instance())
+        );
         this.b_v3 = theories.boolTheory.abstractBooleanValue(v3);
     }
 
     public basicBoolTerm1(): Z3BooleanFormula {
-
         const basicTerm = theories.boolTheory.and(
             theories.intTheory.isNumberEqualTo(this.i_x, theories.intTheory.fromConcreteNumber(new ConcreteNumber(2))),
-            theories.boolTheory.or(theories.boolTheory.or(
-                theories.boolTheory.and(theories.boolTheory.and(
-                    theories.intTheory.isNumberEqualTo(this.i_b, this.i_x),
-                    theories.intTheory.isGreaterThan(this.i_a, theories.intTheory.zero())),
-                    theories.intTheory.isNumberEqualTo(this.i_i, theories.intTheory.fromConcreteNumber(new ConcreteNumber(64)))),
-                theories.boolTheory.and(theories.boolTheory.and(
-                    theories.intTheory.isNumberEqualTo(this.i_b,
-                        theories.intTheory.minus(this.i_x, theories.intTheory.one())),
-                    theories.intTheory.isGreaterThan(this.i_i, theories.intTheory.fromConcreteNumber(new ConcreteNumber(128)))),
-                    theories.intTheory.isNumberEqualTo(this.i_a, theories.intTheory.zero()))),
-                theories.intTheory.isNumberEqualTo(this.i_i, theories.intTheory.fromConcreteNumber(new ConcreteNumber(64)))));
+            theories.boolTheory.or(
+                theories.boolTheory.or(
+                    theories.boolTheory.and(
+                        theories.boolTheory.and(
+                            theories.intTheory.isNumberEqualTo(this.i_b, this.i_x),
+                            theories.intTheory.isGreaterThan(this.i_a, theories.intTheory.zero())
+                        ),
+                        theories.intTheory.isNumberEqualTo(
+                            this.i_i,
+                            theories.intTheory.fromConcreteNumber(new ConcreteNumber(64))
+                        )
+                    ),
+                    theories.boolTheory.and(
+                        theories.boolTheory.and(
+                            theories.intTheory.isNumberEqualTo(
+                                this.i_b,
+                                theories.intTheory.minus(this.i_x, theories.intTheory.one())
+                            ),
+                            theories.intTheory.isGreaterThan(
+                                this.i_i,
+                                theories.intTheory.fromConcreteNumber(new ConcreteNumber(128))
+                            )
+                        ),
+                        theories.intTheory.isNumberEqualTo(this.i_a, theories.intTheory.zero())
+                    )
+                ),
+                theories.intTheory.isNumberEqualTo(
+                    this.i_i,
+                    theories.intTheory.fromConcreteNumber(new ConcreteNumber(64))
+                )
+            )
+        );
         return basicTerm;
     }
 
     public predicForBoolTerm1(): Z3BooleanFormula {
-        const predicates = theories.boolTheory.and(theories.boolTheory.and(
-            theories.boolTheory.equal(this.b_v1,
-                theories.intTheory.isNumberEqualTo(this.i_b, theories.intTheory.one())),
-            theories.boolTheory.equal(this.b_v2,
-                theories.intTheory.isNumberEqualTo(this.i_x, theories.intTheory.fromConcreteNumber(new ConcreteNumber(2))))),
-            theories.boolTheory.equal(this.b_v3,
-                theories.intTheory.isLessEqual(this.i_i, theories.intTheory.fromConcreteNumber(new ConcreteNumber(90)))));
+        const predicates = theories.boolTheory.and(
+            theories.boolTheory.and(
+                theories.boolTheory.equal(
+                    this.b_v1,
+                    theories.intTheory.isNumberEqualTo(this.i_b, theories.intTheory.one())
+                ),
+                theories.boolTheory.equal(
+                    this.b_v2,
+                    theories.intTheory.isNumberEqualTo(
+                        this.i_x,
+                        theories.intTheory.fromConcreteNumber(new ConcreteNumber(2))
+                    )
+                )
+            ),
+            theories.boolTheory.equal(
+                this.b_v3,
+                theories.intTheory.isLessEqual(this.i_i, theories.intTheory.fromConcreteNumber(new ConcreteNumber(90)))
+            )
+        );
 
         return predicates;
     }
 
     public abstrPrecForBoolTerm1(): Z3BooleanFormula[] {
-        return [theories.intTheory.isNumberEqualTo(this.i_b, theories.intTheory.one()),
+        return [
+            theories.intTheory.isNumberEqualTo(this.i_b, theories.intTheory.one()),
             theories.intTheory.isNumberEqualTo(this.i_x, theories.intTheory.fromConcreteNumber(new ConcreteNumber(2))),
-            theories.intTheory.isLessEqual(this.i_i, theories.intTheory.fromConcreteNumber(new ConcreteNumber(90)))];
+            theories.intTheory.isLessEqual(this.i_i, theories.intTheory.fromConcreteNumber(new ConcreteNumber(90))),
+        ];
     }
 
     public propVarsTerm1(): [string, Z3BooleanFormula][] {
-        return [["v1", this.b_v1], ["v2", this.b_v2], ["v3", this.b_v3]];
+        return [
+            ['v1', this.b_v1],
+            ['v2', this.b_v2],
+            ['v3', this.b_v3],
+        ];
     }
-
 }

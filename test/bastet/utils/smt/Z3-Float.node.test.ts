@@ -20,37 +20,40 @@
  *
  */
 
-import assert from "node:assert/strict";
-import {afterEach, before, beforeEach, test} from "node:test";
-import {SMTFactory, Z3SMT} from "../../../../src/bastet/utils/smt/z3/Z3SMT";
-import {ConcreteNumber, ConcreteString} from "../../../../src/bastet/procedures/domains/ConcreteElements";
-import {VariableWithDataLocation} from "../../../../src/bastet/syntax/ast/core/Variable";
-import {DataLocations} from "../../../../src/bastet/syntax/app/controlflow/DataLocation";
-import {FloatType} from "../../../../src/bastet/syntax/ast/core/ScratchType";
-import {Identifier} from "../../../../src/bastet/syntax/ast/core/Identifier";
-import {AnalysisStatistics} from "../../../../src/bastet/procedures/analyses/AnalysisStatistics";
-import * as utils from "../../procedures/analyses/data/TestUtils";
+import assert from 'node:assert/strict';
+import { afterEach, before, beforeEach, test } from 'node:test';
+import { SMTFactory, Z3SMT } from '../../../../src/bastet/utils/smt/z3/Z3SMT';
+import { ConcreteNumber, ConcreteString } from '../../../../src/bastet/procedures/domains/ConcreteElements';
+import { VariableWithDataLocation } from '../../../../src/bastet/syntax/ast/core/Variable';
+import { DataLocations } from '../../../../src/bastet/syntax/app/controlflow/DataLocation';
+import { FloatType } from '../../../../src/bastet/syntax/ast/core/ScratchType';
+import { Identifier } from '../../../../src/bastet/syntax/ast/core/Identifier';
+import { AnalysisStatistics } from '../../../../src/bastet/procedures/analyses/AnalysisStatistics';
+import * as utils from '../../procedures/analyses/data/TestUtils';
 
 let smt: Z3SMT;
 let ctx;
 let theories;
 let prover;
 
-before(async () => {
-    smt = await SMTFactory.createZ3();
-    ctx = smt.createContext();
-    theories = smt.createTheories(ctx);
-}, {timeout: utils.timeout});
+before(
+    async () => {
+        smt = await SMTFactory.createZ3();
+        ctx = smt.createContext();
+        theories = smt.createTheories(ctx);
+    },
+    { timeout: utils.timeout }
+);
 
 beforeEach(() => {
-    prover = smt.createProver(ctx, new AnalysisStatistics("Test", {}));
+    prover = smt.createProver(ctx, new AnalysisStatistics('Test', {}));
 });
 
 afterEach(() => {
     prover.release();
 });
 
-test ("Case: 1 < 0", async () => {
+test('Case: 1 < 0', async () => {
     prover.push();
     const falseFormula = theories.floatTheory.isLessThan(theories.floatTheory.one(), theories.floatTheory.zero());
     prover.assert(falseFormula);
@@ -59,7 +62,7 @@ test ("Case: 1 < 0", async () => {
     prover.pop();
 });
 
-test ("Case: 1 > 0", async () => {
+test('Case: 1 > 0', async () => {
     prover.push();
     const falseFormula = theories.floatTheory.isGreaterThan(theories.floatTheory.one(), theories.floatTheory.zero());
     prover.assert(falseFormula);
@@ -68,47 +71,62 @@ test ("Case: 1 > 0", async () => {
     prover.pop();
 });
 
-test ("Case: Cast float from int. True", async () => {
+test('Case: Cast float from int. True', async () => {
     prover.push();
     const intFormula = theories.intTheory.fromConcreteNumber(new ConcreteNumber(42));
     const floatFormula = theories.floatTheory.castFrom(intFormula);
-    const formula = theories.floatTheory.isNumberEqualTo(floatFormula, theories.floatTheory.fromConcreteNumber(new ConcreteNumber(42)));
+    const formula = theories.floatTheory.isNumberEqualTo(
+        floatFormula,
+        theories.floatTheory.fromConcreteNumber(new ConcreteNumber(42))
+    );
     prover.assert(formula);
     const isUnsat: boolean = prover.isUnsat();
     assert.equal(isUnsat, false);
     prover.pop();
 });
 
-test ("Case: Cast float from int. False", async () => {
+test('Case: Cast float from int. False', async () => {
     prover.push();
     const intFormula = theories.intTheory.fromConcreteNumber(new ConcreteNumber(42));
     const floatFormula = theories.floatTheory.castFrom(intFormula);
-    const formula = theories.boolTheory.not(theories.floatTheory.isNumberEqualTo(floatFormula, theories.floatTheory.fromConcreteNumber(new ConcreteNumber(42))));
+    const formula = theories.boolTheory.not(
+        theories.floatTheory.isNumberEqualTo(
+            floatFormula,
+            theories.floatTheory.fromConcreteNumber(new ConcreteNumber(42))
+        )
+    );
     prover.assert(formula);
     const isUnsat: boolean = prover.isUnsat();
     assert.equal(isUnsat, true);
     prover.pop();
 });
 
-test ("Case: Cast float to int. True", async () => {
+test('Case: Cast float to int. True', async () => {
     prover.push();
     const floatFormula = theories.floatTheory.fromConcreteNumber(new ConcreteNumber(1.1));
     const intFormula = theories.intTheory.castFrom(floatFormula);
-    const formula = theories.intTheory.isNumberEqualTo(intFormula, theories.intTheory.fromConcreteNumber(new ConcreteNumber(1)));
+    const formula = theories.intTheory.isNumberEqualTo(
+        intFormula,
+        theories.intTheory.fromConcreteNumber(new ConcreteNumber(1))
+    );
     prover.assert(theories.boolTheory.not(formula));
     const isUnsat: boolean = prover.isUnsat();
     assert.equal(isUnsat, true);
     prover.pop();
 });
 
-test ("Case: Cast float to int. Variables. True", async () => {
+test('Case: Cast float to int. Variables. True', async () => {
     prover.push();
     const floatOneOne = theories.floatTheory.fromConcreteNumber(new ConcreteNumber(1.1));
     const floatVar = theories.floatTheory.abstractNumberValue(
-        new VariableWithDataLocation(DataLocations.createTypedLocation(Identifier.of("f"), FloatType.instance())));
+        new VariableWithDataLocation(DataLocations.createTypedLocation(Identifier.of('f'), FloatType.instance()))
+    );
     const floatVarEq = theories.floatTheory.isNumberEqualTo(floatVar, floatOneOne);
     const intFromFloatVar = theories.intTheory.castFrom(floatVar);
-    const checkCastResult = theories.intTheory.isNumberEqualTo(intFromFloatVar, theories.intTheory.fromConcreteNumber(new ConcreteNumber(1)));
+    const checkCastResult = theories.intTheory.isNumberEqualTo(
+        intFromFloatVar,
+        theories.intTheory.fromConcreteNumber(new ConcreteNumber(1))
+    );
     prover.assert(floatVarEq);
     prover.assert(theories.boolTheory.not(checkCastResult));
     const isUnsat: boolean = prover.isUnsat();
@@ -116,24 +134,23 @@ test ("Case: Cast float to int. Variables. True", async () => {
     prover.pop();
 });
 
-test ("Case: Cast negative float to int truncates toward zero", async () => {
+test('Case: Cast negative float to int truncates toward zero', async () => {
     prover.push();
     const floatFormula = theories.floatTheory.fromConcreteNumber(new ConcreteNumber(-1.9));
     const intFormula = theories.intTheory.castFrom(floatFormula);
     const formula = theories.intTheory.isNumberEqualTo(
         intFormula,
-        theories.intTheory.fromConcreteNumber(new ConcreteNumber(-1)),
+        theories.intTheory.fromConcreteNumber(new ConcreteNumber(-1))
     );
     prover.assert(formula);
     assert.equal(prover.isSat(), true);
     prover.pop();
 });
 
-
-test ("Case: From string. True", async () => {
+test('Case: From string. True', async () => {
     prover.push();
-    const floatFormula1 = theories.floatTheory.fromConcreteString(new ConcreteString("12.4"));
-    const floatFormula2 = theories.floatTheory.fromConcreteString(new ConcreteString("12.5"));
+    const floatFormula1 = theories.floatTheory.fromConcreteString(new ConcreteString('12.4'));
+    const floatFormula2 = theories.floatTheory.fromConcreteString(new ConcreteString('12.5'));
     const formula = theories.floatTheory.isGreaterThan(floatFormula1, floatFormula2);
     prover.assert(formula);
     const isUnsat: boolean = prover.isUnsat();
@@ -141,10 +158,10 @@ test ("Case: From string. True", async () => {
     prover.pop();
 });
 
-test ("Case: From string. False", async () => {
+test('Case: From string. False', async () => {
     prover.push();
-    const floatFormula1 = theories.floatTheory.fromConcreteString(new ConcreteString("12.4"));
-    const floatFormula2 = theories.floatTheory.fromConcreteString(new ConcreteString("12.5"));
+    const floatFormula1 = theories.floatTheory.fromConcreteString(new ConcreteString('12.4'));
+    const floatFormula2 = theories.floatTheory.fromConcreteString(new ConcreteString('12.5'));
     const formula = theories.floatTheory.isLessThan(floatFormula1, floatFormula2);
     prover.assert(formula);
     const isUnsat: boolean = prover.isUnsat();

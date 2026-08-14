@@ -1,8 +1,8 @@
 'use strict';
 
 const assert = require('node:assert/strict');
-const {describe, test} = require('node:test');
-const {findPolicyViolations} = require('../../scripts/check-test-policy');
+const { describe, test } = require('node:test');
+const { findPolicyViolations } = require('../../scripts/check-test-policy');
 
 function messages(source) {
     return findPolicyViolations(source).map((violation) => violation.message);

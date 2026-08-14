@@ -2,16 +2,12 @@
 
 const fs = require('fs');
 const path = require('path');
-const {spawn, spawnSync} = require('child_process');
+const { spawn, spawnSync } = require('child_process');
 
 const repositoryRoot = path.resolve(__dirname, '..');
 const testRoot = path.join(repositoryRoot, 'test');
 const nativeTestSuffix = '.node.test.ts';
-const slowRootPrefixes = [
-    'test/bastet/procedures/analyses/data/',
-    'test/bastet/utils/smt/',
-    'test/integration/',
-];
+const slowRootPrefixes = ['test/bastet/procedures/analyses/data/', 'test/bastet/utils/smt/', 'test/integration/'];
 
 function isSlowTest(relativePath) {
     const normalizedPath = relativePath.split(path.sep).join('/');
@@ -19,7 +15,7 @@ function isSlowTest(relativePath) {
 }
 
 function collectNativeTests(directory) {
-    return fs.readdirSync(directory, {withFileTypes: true}).flatMap((entry) => {
+    return fs.readdirSync(directory, { withFileTypes: true }).flatMap((entry) => {
         const entryPath = path.join(directory, entry.name);
         if (entry.isDirectory()) return collectNativeTests(entryPath);
         return entry.name.endsWith(nativeTestSuffix) ? [entryPath] : [];
@@ -93,12 +89,13 @@ try {
     process.exit(2);
 }
 
-const tests = options.tests.length > 0
-    ? options.tests
-    : collectNativeTests(testRoot)
-        .sort()
-        .map((testPath) => path.relative(repositoryRoot, testPath))
-        .filter((testPath) => !isSlowTest(testPath));
+const tests =
+    options.tests.length > 0
+        ? options.tests
+        : collectNativeTests(testRoot)
+              .sort()
+              .map((testPath) => path.relative(repositoryRoot, testPath))
+              .filter((testPath) => !isSlowTest(testPath));
 
 const nodeArguments = [
     '--import',
@@ -119,7 +116,7 @@ function watchTests() {
         restartRequested = false;
         child = spawn(process.execPath, nodeArguments, {
             cwd: repositoryRoot,
-            env: {...process.env, CI: process.env.CI || 'true'},
+            env: { ...process.env, CI: process.env.CI || 'true' },
             stdio: 'inherit',
         });
         child.once('error', (error) => console.error(error.message));
@@ -140,10 +137,9 @@ function watchTests() {
         }, 50);
     }
 
-    const watchers = tests.map((testPath) => fs.watch(
-        path.resolve(repositoryRoot, testPath),
-        () => requestRestart(testPath),
-    ));
+    const watchers = tests.map((testPath) =>
+        fs.watch(path.resolve(repositoryRoot, testPath), () => requestRestart(testPath))
+    );
     function stop() {
         clearTimeout(restartTimer);
         for (const watcher of watchers) watcher.close();
@@ -162,7 +158,7 @@ if (options.watch) {
 
 const result = spawnSync(process.execPath, nodeArguments, {
     cwd: repositoryRoot,
-    env: {...process.env, CI: process.env.CI || 'true'},
+    env: { ...process.env, CI: process.env.CI || 'true' },
     stdio: 'inherit',
 });
 

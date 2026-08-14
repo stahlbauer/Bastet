@@ -24,7 +24,6 @@
  */
 
 export class ImmutableSet<E> implements ReadonlySet<E> {
-
     private readonly _elements: Set<E>;
 
     constructor(elements: Iterable<E>) {
@@ -62,5 +61,4 @@ export class ImmutableSet<E> implements ReadonlySet<E> {
     static copyOf<E>(entries: Set<E>) {
         return new ImmutableSet(entries);
     }
-
 }

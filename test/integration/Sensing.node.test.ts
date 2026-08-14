@@ -19,35 +19,35 @@
  *   limitations under the License.
  *
  */
-import {test} from "node:test";
-import * as utils from "../bastet/procedures/analyses/data/TestUtils";
+import { test } from 'node:test';
+import * as utils from '../bastet/procedures/analyses/data/TestUtils';
 
-test("Test touchingObject 1 safe", {timeout: utils.timeout}, async () => {
-    const fixtureRelPath: string = "test/programs/library-coverage/sensing/sensing-touchingObject-1_SAFE.sc"
+test('Test touchingObject 1 safe', { timeout: utils.timeout }, async () => {
+    const fixtureRelPath: string = 'test/programs/library-coverage/sensing/sensing-touchingObject-1_SAFE.sc';
     await utils.execFixture(fixtureRelPath);
 });
 
-test("Test touchingObject 1 unsafe", {timeout: utils.timeout}, async () => {
-    const fixtureRelPath: string = "test/programs/library-coverage/sensing/sensing-touchingObject-1_UNSAFE.sc"
+test('Test touchingObject 1 unsafe', { timeout: utils.timeout }, async () => {
+    const fixtureRelPath: string = 'test/programs/library-coverage/sensing/sensing-touchingObject-1_UNSAFE.sc';
     await utils.execFixture(fixtureRelPath);
 });
 
-test("Test touchingObjects 1 safe", {timeout: utils.timeout}, async () => {
-    const fixtureRelPath: string = "test/programs/library-coverage/sensing/sensing-touchingObjects-1_SAFE.sc"
+test('Test touchingObjects 1 safe', { timeout: utils.timeout }, async () => {
+    const fixtureRelPath: string = 'test/programs/library-coverage/sensing/sensing-touchingObjects-1_SAFE.sc';
     await utils.execFixture(fixtureRelPath);
 });
 
-test("Test touchingObjects 1 unsafe", {timeout: utils.timeout}, async () => {
-    const fixtureRelPath: string = "test/programs/library-coverage/sensing/sensing-touchingObjects-1_UNSAFE.sc"
+test('Test touchingObjects 1 unsafe', { timeout: utils.timeout }, async () => {
+    const fixtureRelPath: string = 'test/programs/library-coverage/sensing/sensing-touchingObjects-1_UNSAFE.sc';
     await utils.execFixture(fixtureRelPath);
 });
 
-test("Test touchingObject 2 unsafe", {timeout: utils.timeout}, async () => {
-    const fixtureRelPath: string = "test/programs/library-coverage/sensing/sensing-touchingObject-2_UNSAFE.sc"
+test('Test touchingObject 2 unsafe', { timeout: utils.timeout }, async () => {
+    const fixtureRelPath: string = 'test/programs/library-coverage/sensing/sensing-touchingObject-2_UNSAFE.sc';
     await utils.execFixture(fixtureRelPath);
 });
 
-test("Test isDisjointFrom 1 unsafe", {timeout: utils.timeout}, async () => {
-    const fixtureRelPath: string = "test/programs/library-coverage/sensing/sensing-isDisjointFrom-1_UNSAFE.sc"
+test('Test isDisjointFrom 1 unsafe', { timeout: utils.timeout }, async () => {
+    const fixtureRelPath: string = 'test/programs/library-coverage/sensing/sensing-isDisjointFrom-1_UNSAFE.sc';
     await utils.execFixture(fixtureRelPath);
 });

@@ -3,15 +3,11 @@
 const fs = require('fs');
 const os = require('os');
 const path = require('path');
-const {spawn, spawnSync} = require('child_process');
-const {performance} = require('perf_hooks');
+const { spawn, spawnSync } = require('child_process');
+const { performance } = require('perf_hooks');
 
 const repositoryRoot = path.resolve(__dirname, '..');
-const slowRoots = [
-    'test/bastet/procedures/analyses/data',
-    'test/bastet/utils/smt',
-    'test/integration',
-];
+const slowRoots = ['test/bastet/procedures/analyses/data', 'test/bastet/utils/smt', 'test/integration'];
 const testTimeoutMs = 120_000;
 const suiteTimeoutMs = 240_000;
 const maxConcurrency = 4;
@@ -27,7 +23,7 @@ function isSlowTest(filename) {
 }
 
 function collectTests(directory) {
-    return fs.readdirSync(directory, {withFileTypes: true}).flatMap((entry) => {
+    return fs.readdirSync(directory, { withFileTypes: true }).flatMap((entry) => {
         const entryPath = path.join(directory, entry.name);
         if (entry.isDirectory()) return collectTests(entryPath);
         return isSlowTest(entry.name) ? [entryPath] : [];
@@ -50,7 +46,7 @@ function relativeTestPath(testPath) {
 }
 
 function parseArguments(argv) {
-    const options = {concurrency: 1, probeTimeout: false, tests: []};
+    const options = { concurrency: 1, probeTimeout: false, tests: [] };
     const args = argv.filter((argument) => argument !== '--');
 
     while (args.length > 0) {
@@ -81,14 +77,7 @@ function parseArguments(argv) {
 function commandForSuite(testPath) {
     return {
         command: process.execPath,
-        args: [
-            '--import',
-            'tsx',
-            '--test',
-            '--test-concurrency=1',
-            `--test-timeout=${testTimeoutMs}`,
-            testPath,
-        ],
+        args: ['--import', 'tsx', '--test', '--test-concurrency=1', `--test-timeout=${testTimeoutMs}`, testPath],
     };
 }
 
@@ -96,7 +85,7 @@ function killProcessTree(child, signal) {
     if (!child.pid || child.exitCode !== null) return;
     try {
         if (process.platform === 'win32') {
-            spawnSync('taskkill', ['/pid', String(child.pid), '/t', '/f'], {stdio: 'ignore'});
+            spawnSync('taskkill', ['/pid', String(child.pid), '/t', '/f'], { stdio: 'ignore' });
         } else {
             process.kill(-child.pid, signal);
         }
@@ -108,11 +97,11 @@ function killProcessTree(child, signal) {
 function runSuite(testPath, timeoutMs = suiteTimeoutMs, extraEnv = {}) {
     return new Promise((resolve) => {
         const startedAt = performance.now();
-        const {command, args} = commandForSuite(testPath);
+        const { command, args } = commandForSuite(testPath);
         const child = spawn(command, args, {
             cwd: repositoryRoot,
             detached: process.platform !== 'win32',
-            env: {...process.env, ...extraEnv, CI: process.env.CI || 'true'},
+            env: { ...process.env, ...extraEnv, CI: process.env.CI || 'true' },
             stdio: 'inherit',
         });
         activeChildren.add(child);
@@ -165,7 +154,9 @@ async function runTests(tests, concurrency) {
                 console.error(`[slow] ERROR ${testPath}: ${result.error.message}`);
                 failed = true;
             } else if (result.code !== 0) {
-                console.error(`[slow] FAIL ${testPath} (${formatDuration(result.durationMs)}, exit ${result.code ?? result.signal})`);
+                console.error(
+                    `[slow] FAIL ${testPath} (${formatDuration(result.durationMs)}, exit ${result.code ?? result.signal})`
+                );
                 failed = true;
             } else {
                 console.log(`[slow] PASS ${testPath} (${formatDuration(result.durationMs)})`);
@@ -173,7 +164,7 @@ async function runTests(tests, concurrency) {
         }
     }
 
-    await Promise.all(Array.from({length: Math.min(concurrency, tests.length)}, worker));
+    await Promise.all(Array.from({ length: Math.min(concurrency, tests.length) }, worker));
     const totalDuration = performance.now() - startedAt;
     console.log(`\n[slow] ${completed}/${tests.length} suite(s) completed in ${formatDuration(totalDuration)}`);
     return !failed && !interrupted && completed === tests.length;
@@ -206,25 +197,23 @@ async function probeTimeoutCleanup() {
     const temporaryDirectory = fs.mkdtempSync(path.join(os.tmpdir(), 'bastet-slow-runner-'));
     const pidPath = path.join(temporaryDirectory, 'descendant.pid');
     try {
-        const result = await runSuite(
-            'test/fixtures/stuck-slow-suite.node.js',
-            1_000,
-            {BASTET_DESCENDANT_PID_PATH: pidPath},
-        );
+        const result = await runSuite('test/fixtures/stuck-slow-suite.node.js', 1_000, {
+            BASTET_DESCENDANT_PID_PATH: pidPath,
+        });
         if (!result.timedOut || !fs.existsSync(pidPath)) {
             console.error('[slow:probe] The stuck suite did not reach the expected outer timeout.');
             return false;
         }
 
         const descendantPid = Number(fs.readFileSync(pidPath, 'utf8'));
-        if (!Number.isInteger(descendantPid) || !await waitForProcessExit(descendantPid, 2_000)) {
+        if (!Number.isInteger(descendantPid) || !(await waitForProcessExit(descendantPid, 2_000))) {
             console.error(`[slow:probe] Descendant process ${descendantPid} survived suite termination.`);
             return false;
         }
         console.log('[slow:probe] Outer timeout terminated the suite process and its descendant.');
         return true;
     } finally {
-        fs.rmSync(temporaryDirectory, {force: true, recursive: true});
+        fs.rmSync(temporaryDirectory, { force: true, recursive: true });
     }
 }
 
@@ -245,16 +234,17 @@ async function main() {
         return 2;
     }
 
-    if (options.probeTimeout) return await probeTimeoutCleanup() ? 0 : 1;
+    if (options.probeTimeout) return (await probeTimeoutCleanup()) ? 0 : 1;
 
-    const tests = options.tests.length > 0
-        ? options.tests
-        : slowRoots
-            .flatMap((root) => collectTests(path.join(repositoryRoot, root)))
-            .sort()
-            .map((testPath) => normalizePath(path.relative(repositoryRoot, testPath)));
+    const tests =
+        options.tests.length > 0
+            ? options.tests
+            : slowRoots
+                  .flatMap((root) => collectTests(path.join(repositoryRoot, root)))
+                  .sort()
+                  .map((testPath) => normalizePath(path.relative(repositoryRoot, testPath)));
 
-    return await runTests(tests, options.concurrency) ? 0 : 1;
+    return (await runTests(tests, options.concurrency)) ? 0 : 1;
 }
 
 main()

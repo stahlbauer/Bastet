@@ -19,21 +19,20 @@
  *   limitations under the License.
  *
  */
-import {test} from "node:test";
-import * as utils from "../bastet/procedures/analyses/data/TestUtils";
+import { test } from 'node:test';
+import * as utils from '../bastet/procedures/analyses/data/TestUtils';
 
-test("Test radToDeg 1 safe", {timeout: utils.timeout}, async () => {
-    const fixtureRelPath: string = "test/programs/library-coverage/math-radToDeg-1_SAFE.sc"
+test('Test radToDeg 1 safe', { timeout: utils.timeout }, async () => {
+    const fixtureRelPath: string = 'test/programs/library-coverage/math-radToDeg-1_SAFE.sc';
     await utils.execFixture(fixtureRelPath);
 });
 
-test("Test radToDeg 2 safe", {timeout: utils.timeout}, async () => {
-    const fixtureRelPath: string = "test/programs/library-coverage/math-radToDeg-2_SAFE.sc"
+test('Test radToDeg 2 safe', { timeout: utils.timeout }, async () => {
+    const fixtureRelPath: string = 'test/programs/library-coverage/math-radToDeg-2_SAFE.sc';
     await utils.execFixture(fixtureRelPath);
 });
 
-test("Test radToDeg 1 unsafe", {timeout: utils.timeout}, async () => {
-    const fixtureRelPath: string = "test/programs/library-coverage/math-radToDeg-1_UNSAFE.sc"
+test('Test radToDeg 1 unsafe', { timeout: utils.timeout }, async () => {
+    const fixtureRelPath: string = 'test/programs/library-coverage/math-radToDeg-1_UNSAFE.sc';
     await utils.execFixture(fixtureRelPath);
 });
-

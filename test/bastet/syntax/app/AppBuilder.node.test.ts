@@ -20,15 +20,13 @@
  */
 
 import assert from 'node:assert/strict';
-import {describe, test} from 'node:test';
-import {App} from "../../../../src/bastet/syntax/app/App";
-import {AppBuilder} from "../../../../src/bastet/syntax/app/AppBuilder";
-import {CodeToApp} from "../../../../src/bastet/syntax/transformers/CodeToApp";
+import { describe, test } from 'node:test';
+import { App } from '../../../../src/bastet/syntax/app/App';
+import { AppBuilder } from '../../../../src/bastet/syntax/app/AppBuilder';
+import { CodeToApp } from '../../../../src/bastet/syntax/transformers/CodeToApp';
 
-describe("AppBuilder", () => {
-
-    describe("dissolveInheritance", () => {
-
+describe('AppBuilder', () => {
+    describe('dissolveInheritance', () => {
         const code: string = `
             program Test
             
@@ -60,20 +58,18 @@ describe("AppBuilder", () => {
 
         test('Results in two actors: D and C', async () => {
             assert.deepStrictEqual(diss.nonBootActors.length, 2);
-            assert.ok([...(diss.actorNames)].includes("D"));
-            assert.ok([...(diss.actorNames)].includes("C"));
+            assert.ok([...diss.actorNames].includes('D'));
+            assert.ok([...diss.actorNames].includes('C'));
         });
 
-        test("copies all attributes and methods from the actors it inherits from", async () => {
-            assert.ok(![...(diss.getActorByName("D").methodMap.keys())].includes("caesar"));
-            assert.ok([...(diss.getActorByName("D").methodMap.keys())].includes("anton"));
-            assert.ok(![...(diss.getActorByName("D").methodMap.keys())].includes("_RUN_foo"));
-            assert.ok([...(diss.getActorByName("D").externalMethodMap.keys())].includes("_RUN_foo"));
-            assert.ok([...(diss.getActorByName("D").methodMap.keys())].includes("base"));
-            assert.ok([...(diss.getActorByName("C").methodMap.keys())].includes("assert"));
-            assert.ok([...(diss.getActorByName("C").methodMap.keys())].includes("base"));
+        test('copies all attributes and methods from the actors it inherits from', async () => {
+            assert.ok(![...diss.getActorByName('D').methodMap.keys()].includes('caesar'));
+            assert.ok([...diss.getActorByName('D').methodMap.keys()].includes('anton'));
+            assert.ok(![...diss.getActorByName('D').methodMap.keys()].includes('_RUN_foo'));
+            assert.ok([...diss.getActorByName('D').externalMethodMap.keys()].includes('_RUN_foo'));
+            assert.ok([...diss.getActorByName('D').methodMap.keys()].includes('base'));
+            assert.ok([...diss.getActorByName('C').methodMap.keys()].includes('assert'));
+            assert.ok([...diss.getActorByName('C').methodMap.keys()].includes('base'));
         });
-
     });
-
 });

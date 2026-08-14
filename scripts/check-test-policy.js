@@ -12,7 +12,7 @@ const prohibitedStandaloneNames = new Set(['only', 'skip']);
 const prohibitedLegacyNames = new Set(['fdescribe', 'fit', 'xit', 'xtest']);
 
 function collectTestFiles(directory) {
-    return fs.readdirSync(directory, {withFileTypes: true}).flatMap((entry) => {
+    return fs.readdirSync(directory, { withFileTypes: true }).flatMap((entry) => {
         const entryPath = path.join(directory, entry.name);
         if (entry.isDirectory()) return collectTestFiles(entryPath);
         return testFilePattern.test(entry.name) ? [entryPath] : [];
@@ -43,7 +43,7 @@ function findPolicyViolations(sourceText, filename = 'test.ts') {
         sourceText,
         ts.ScriptTarget.Latest,
         true,
-        filename.endsWith('.js') ? ts.ScriptKind.JS : ts.ScriptKind.TS,
+        filename.endsWith('.js') ? ts.ScriptKind.JS : ts.ScriptKind.TS
     );
     const importedTests = new Set();
     const importedProhibited = new Map();
@@ -61,9 +61,12 @@ function findPolicyViolations(sourceText, filename = 'test.ts') {
     }
 
     for (const statement of sourceFile.statements) {
-        if (!ts.isImportDeclaration(statement)
-            || statement.moduleSpecifier.text !== 'node:test'
-            || !statement.importClause) continue;
+        if (
+            !ts.isImportDeclaration(statement) ||
+            statement.moduleSpecifier.text !== 'node:test' ||
+            !statement.importClause
+        )
+            continue;
 
         if (statement.importClause.name) importedTests.add(statement.importClause.name.text);
         const bindings = statement.importClause.namedBindings;
@@ -85,11 +88,11 @@ function findPolicyViolations(sourceText, filename = 'test.ts') {
         if (ts.isIdentifier(node)) {
             return testFunctionNames.has(node.text) || importedTests.has(node.text);
         }
-        if ((ts.isPropertyAccessExpression(node) || ts.isElementAccessExpression(node))) {
+        if (ts.isPropertyAccessExpression(node) || ts.isElementAccessExpression(node)) {
             const name = propertyName(node);
             if (!testFunctionNames.has(name)) return false;
             const owner = node.expression;
-            return (ts.isIdentifier(owner) && (nodeTestNamespaces.has(owner.text) || contextNames.has(owner.text)));
+            return ts.isIdentifier(owner) && (nodeTestNamespaces.has(owner.text) || contextNames.has(owner.text));
         }
         return false;
     }
@@ -98,8 +101,11 @@ function findPolicyViolations(sourceText, filename = 'test.ts') {
         if (!isTestFunction(call.expression)) return [];
         const added = [];
         for (const argument of call.arguments) {
-            if ((!ts.isArrowFunction(argument) && !ts.isFunctionExpression(argument))
-                || argument.parameters.length === 0) continue;
+            if (
+                (!ts.isArrowFunction(argument) && !ts.isFunctionExpression(argument)) ||
+                argument.parameters.length === 0
+            )
+                continue;
             const parameter = argument.parameters[0].name;
             if (ts.isIdentifier(parameter) && !contextNames.has(parameter.text)) {
                 contextNames.add(parameter.text);
@@ -135,9 +141,11 @@ function findPolicyViolations(sourceText, filename = 'test.ts') {
 
         if (!ts.isPropertyAccessExpression(expression) && !ts.isElementAccessExpression(expression)) return;
         const name = propertyName(expression);
-        if ((name === 'skip' || name === 'only')
-            && ts.isIdentifier(expression.expression)
-            && nodeTestNamespaces.has(expression.expression.text)) {
+        if (
+            (name === 'skip' || name === 'only') &&
+            ts.isIdentifier(expression.expression) &&
+            nodeTestNamespaces.has(expression.expression.text)
+        ) {
             report(expression, `node:test ${name}() is prohibited`);
             return;
         }
@@ -169,8 +177,12 @@ function findPolicyViolations(sourceText, filename = 'test.ts') {
 }
 
 function checkFiles(files) {
-    return files.flatMap((filename) => findPolicyViolations(fs.readFileSync(filename, 'utf8'), filename)
-        .map((violation) => ({...violation, filename})));
+    return files.flatMap((filename) =>
+        findPolicyViolations(fs.readFileSync(filename, 'utf8'), filename).map((violation) => ({
+            ...violation,
+            filename,
+        }))
+    );
 }
 
 function main() {
@@ -190,4 +202,4 @@ function main() {
 
 if (require.main === module) process.exitCode = main();
 
-module.exports = {checkFiles, collectTestFiles, findPolicyViolations};
+module.exports = { checkFiles, collectTestFiles, findPolicyViolations };

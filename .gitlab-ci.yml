@@ -1,37 +1,37 @@
 image: node:24
 
 before_script:
-  - corepack enable
-  - pnpm config set store-dir .pnpm-store
+    - corepack enable
+    - pnpm config set store-dir .pnpm-store
 
 stages:
-  - build
-  - test
+    - build
+    - test
 
 cache:
-  paths:
-    - .pnpm-store/
+    paths:
+        - .pnpm-store/
 
 install_dependencies:
-  stage: build
-  script:
-    - pnpm install --frozen-lockfile
-    - mkdir -p output/static
-  artifacts:
-    paths:
-      - node_modules/
+    stage: build
+    script:
+        - pnpm install --frozen-lockfile
+        - mkdir -p output/static
+    artifacts:
+        paths:
+            - node_modules/
 
 testing_fast:
-  stage: test
-  script:
-    - pnpm run build-no-lint
-    - pnpm run test:fast
-    - mkdir -p output/static
+    stage: test
+    script:
+        - pnpm run build-no-lint
+        - pnpm run test:fast
+        - mkdir -p output/static
 
 testing_slow:
-  stage: test
-  script:
-    - pnpm run build-no-lint
-    - pnpm run test:slow
-    - pnpm run test:slow:deadline
-    - mkdir -p output/static
+    stage: test
+    script:
+        - pnpm run build-no-lint
+        - pnpm run test:slow
+        - pnpm run test:slow:deadline
+        - mkdir -p output/static

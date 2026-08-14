@@ -19,44 +19,41 @@
  *   limitations under the License.
  *
  */
-import {test} from "node:test";
-import * as utils from "../bastet/procedures/analyses/data/TestUtils";
-import path from "path";
+import { test } from 'node:test';
+import * as utils from '../bastet/procedures/analyses/data/TestUtils';
+import path from 'path';
 
-const predicateConfig = path.join(__dirname, "../../config/predicate-abstraction.json");
-const ciConfig = path.join(__dirname, "../../config/ci.delta.json");
-const defaultConfig = path.join(__dirname, "../../config/default.json");
-const minimalMotionLibrary = path.join(
-    __dirname,
-    "../programs/library-coverage/motion/minimal-library.sc",
-);
+const predicateConfig = path.join(__dirname, '../../config/predicate-abstraction.json');
+const ciConfig = path.join(__dirname, '../../config/ci.delta.json');
+const defaultConfig = path.join(__dirname, '../../config/default.json');
+const minimalMotionLibrary = path.join(__dirname, '../programs/library-coverage/motion/minimal-library.sc');
 
-test("Test pointTowards 1 safe", {timeout: utils.timeout}, async () => {
-    const fixtureRelPath: string = "test/programs/library-coverage/motion/motion-pointTowards-1_SAFE.sc"
+test('Test pointTowards 1 safe', { timeout: utils.timeout }, async () => {
+    const fixtureRelPath: string = 'test/programs/library-coverage/motion/motion-pointTowards-1_SAFE.sc';
     await utils.execFixture(fixtureRelPath);
 });
 
-test("Test pointTowards 1 unsafe", {timeout: utils.timeout}, async () => {
-    const fixtureRelPath: string = "test/programs/library-coverage/motion/motion-pointTowards-1_UNSAFE.sc"
+test('Test pointTowards 1 unsafe', { timeout: utils.timeout }, async () => {
+    const fixtureRelPath: string = 'test/programs/library-coverage/motion/motion-pointTowards-1_UNSAFE.sc';
     await utils.execFixture(fixtureRelPath, [defaultConfig, ciConfig], minimalMotionLibrary);
 });
 
-test("Test pointTowardsPos 1 safe", {timeout: utils.timeout}, async () => {
-    const fixtureRelPath: string = "test/programs/library-coverage/motion/motion-pointTowardsPos-1_SAFE.sc"
+test('Test pointTowardsPos 1 safe', { timeout: utils.timeout }, async () => {
+    const fixtureRelPath: string = 'test/programs/library-coverage/motion/motion-pointTowardsPos-1_SAFE.sc';
     await utils.execFixture(fixtureRelPath);
 });
 
-test("Test pointTowardsPos 1 unsafe", {timeout: utils.timeout}, async () => {
-    const fixtureRelPath: string = "test/programs/library-coverage/motion/motion-pointTowardsPos-1_UNSAFE.sc"
+test('Test pointTowardsPos 1 unsafe', { timeout: utils.timeout }, async () => {
+    const fixtureRelPath: string = 'test/programs/library-coverage/motion/motion-pointTowardsPos-1_UNSAFE.sc';
     await utils.execFixture(fixtureRelPath);
 });
 
-test("Test moveSteps 1 safe", {timeout: utils.timeout}, async () => {
-    const fixtureRelPath: string = "test/programs/library-coverage/motion/motion-moveSteps-1_SAFE.sc"
+test('Test moveSteps 1 safe', { timeout: utils.timeout }, async () => {
+    const fixtureRelPath: string = 'test/programs/library-coverage/motion/motion-moveSteps-1_SAFE.sc';
     await utils.execFixture(fixtureRelPath);
 });
 
-test("Test moveSteps 1 unsafe", {timeout: utils.timeout}, async () => {
-    const fixtureRelPath: string = "test/programs/library-coverage/motion/motion-moveSteps-1_UNSAFE.sc"
+test('Test moveSteps 1 unsafe', { timeout: utils.timeout }, async () => {
+    const fixtureRelPath: string = 'test/programs/library-coverage/motion/motion-moveSteps-1_UNSAFE.sc';
     await utils.execFixture(fixtureRelPath);
 });

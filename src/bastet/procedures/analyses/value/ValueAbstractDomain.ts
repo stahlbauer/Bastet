@@ -23,16 +23,15 @@
  *
  */
 
-import { Lattice} from "../../../lattices/Lattice";
-import {ImplementMeException} from "../../../core/exceptions/ImplementMeException";
-import {AbstractDomain} from "../../domains/AbstractDomain";
-import {ConcreteDomain, ConcreteElement, ConcreteMemory, ConcreteMemoryLattice,} from "../../domains/ConcreteElements";
-import {AbstractionPrecision} from "../../AbstractionPrecision";
+import { Lattice } from '../../../lattices/Lattice';
+import { ImplementMeException } from '../../../core/exceptions/ImplementMeException';
+import { AbstractDomain } from '../../domains/AbstractDomain';
+import { ConcreteDomain, ConcreteElement, ConcreteMemory, ConcreteMemoryLattice } from '../../domains/ConcreteElements';
+import { AbstractionPrecision } from '../../AbstractionPrecision';
 
 export type ValueAbstractState = ConcreteMemory;
 
 export class ValueAbstractDomain implements AbstractDomain<ConcreteMemory, ConcreteMemory> {
-
     private readonly _lattice: Lattice<ConcreteMemory>;
 
     constructor() {
@@ -71,5 +70,3 @@ export class ValueAbstractDomain implements AbstractDomain<ConcreteMemory, Concr
         throw new ImplementMeException();
     }
 }
-
-
