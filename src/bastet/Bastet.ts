@@ -70,9 +70,10 @@ class BastetRootConfig extends BastetConfiguration {
 }
 
 /**
- * The main class of the Main program analyses framework.
+ * The main class of the program analyses framework.
  */
 export class Bastet {
+    
     private parseProgramArguments(): any {
         function commaSeparatedList(value) {
             return value.split(',');
