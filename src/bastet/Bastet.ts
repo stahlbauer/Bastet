@@ -41,7 +41,7 @@ import { AnalysisStatistics } from './procedures/analyses/AnalysisStatistics';
 import { TypeInformationStorage } from './syntax/DeclarationScopes';
 import { ToIntermediateTransformer } from './syntax/transformers/ToIntermediateTransformer';
 import * as fs from 'fs';
-import { BastetConfiguration, mergeConfigFilesToJson } from './utils/BastetConfiguration';
+import { BastetConfiguration, loadJsonFilesMerged } from './utils/BastetConfiguration';
 import { ParsingException } from './core/exceptions/ParsingException';
 import { NodeSystemLayer } from './utils/SystemLayer';
 import {
@@ -73,7 +73,30 @@ class BastetRootConfig extends BastetConfiguration {
  * The main class of the program analyses framework.
  */
 export class Bastet {
-    
+
+    /**
+     * Runs the requested analyses on a given analyses task.
+     *
+     * @returns a JSON object with the analyses result.
+     */
+    public async run(): Promise<AnalysisResult> {
+        const cmdlineArguments = this.parseProgramArguments();
+        if (!cmdlineArguments) {
+            return this.nullResult();
+        }
+
+        this.registerOnExitNotifiers();
+
+        // Collect command line arguments
+        const intermLibFilepath: string = cmdlineArguments.intermediateLibrary;
+        const programFilepath: string = cmdlineArguments.program;
+        const specFilepath: string = cmdlineArguments.specification;
+        const configFilepaths: string[] = cmdlineArguments['configuration'] || ['./config/default.json'];
+
+        // ... and run for the command line arguments.
+        return this.runFor(configFilepaths, intermLibFilepath, programFilepath, specFilepath);
+    }
+
     private parseProgramArguments(): any {
         function commaSeparatedList(value) {
             return value.split(',');
@@ -98,29 +121,7 @@ export class Bastet {
         return new NullAnalysisResult(new AnalysisStatistics('NULL', {}));
     }
 
-    /**
-     * Runs the requested analyses on a given analyses task.
-     *
-     * @returns a JSON object with the analyses result.
-     */
-    public async run(): Promise<AnalysisResult> {
-        // Parsing of command line options
-        const cmdlineArguments = this.parseProgramArguments();
-        if (!cmdlineArguments) {
-            return this.nullResult();
-        }
-
-        this.registerOnExitNotifiers();
-
-        const intermLibFilepath: string = cmdlineArguments.intermediateLibrary;
-        const programFilepath: string = cmdlineArguments.program;
-        const specFilepath: string = cmdlineArguments.specification;
-        const configFilepaths: string[] = cmdlineArguments['configuration'] || ['./config/default.json'];
-
-        return this.runFor(configFilepaths, intermLibFilepath, programFilepath, specFilepath);
-    }
-
-    public registerOnExitNotifiers() {
+    private registerOnExitNotifiers() {
         process.on('SIGINT', function () {
             console.log('Caught SIGINT signal');
             process.exit();
@@ -141,11 +142,11 @@ export class Bastet {
         Preconditions.checkArgument(fs.existsSync(programFilepath), 'Program File does not exists.');
         Preconditions.checkArgument(fs.existsSync(specFilepath), 'Spec File does not exists.');
 
-        const config: {} = mergeConfigFilesToJson(configFilepath);
+        const config = loadJsonFilesMerged(configFilepath);
         const rootConfig = new BastetRootConfig(config);
 
-        // Build the static task model
-        const staticTaskModel: App = this.buildTaskModel(libraryFilepath, programFilepath, specFilepath, config);
+        // Build the static analysis task model
+        const staticAnalysisTaskModel: App = this.buildAnalysisTaskModel(libraryFilepath, programFilepath, specFilepath, config);
 
         // We might terminate after parsing the input project (to check if the project is parsable by BASTET)
         if (rootConfig.terminateAfterParsing) {
@@ -158,14 +159,14 @@ export class Bastet {
         });
 
         // Run the analyses procedure on the task and return the result
-        return this.runAnalysis(staticTaskModel, analysisProcedure);
+        return this.runAnalysis(staticAnalysisTaskModel, analysisProcedure);
     }
 
     private runAnalysis(staticTaskModel: App, analysisProcedure: AnalysisProcedure): Promise<AnalysisResult> {
         return analysisProcedure.run(staticTaskModel);
     }
 
-    private buildTaskModel(libraryFilepath: string, programFilepath: string, specFilepath: string, config: {}): App {
+    private buildAnalysisTaskModel(libraryFilepath: string, programFilepath: string, specFilepath: string, config: {}): App {
         const typeStorage = new TypeInformationStorage();
 
         // Hack: Adjust some configuration parameters based on the features used in the given task

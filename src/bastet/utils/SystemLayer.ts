@@ -26,12 +26,20 @@
 import fs from 'fs';
 import { Preconditions } from './Preconditions';
 
+/**
+ * Functionality for accessing the host system, for example, its file system.
+ */
 export interface SystemLayer {
+    /** Read a given file as JSON. */
     readFileAsJson(filePath: string): {};
 
+    /** Return the base name of a given path. */
     basename(filePath: string): string;
 }
 
+/**
+ * System layer access based on NodeJs.
+ */
 export class NodeSystemLayer implements SystemLayer {
     readFileAsJson(filePath: string): {} {
         Preconditions.checkArgument(fs.existsSync(filePath), `File "${filePath}" does not exists.`);
